@@ -121,5 +121,6 @@ var vm = new Vue({
                 page:page
             }).trigger("reloadGrid");
 		}
+
 	}
 });
