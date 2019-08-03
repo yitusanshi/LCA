@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2016-2019 人人开源 All rights reserved.
  *
- * https://www.renren.io
+ * .io
  *
  * 版权所有，侵权必究！
  */
@@ -45,7 +45,7 @@ public class SwaggerConfig{
         return new ApiInfoBuilder()
             .title("人人开源")
             .description("renren-admin文档")
-            .termsOfServiceUrl("https://www.renren.io")
+            .termsOfServiceUrl(".io")
             .version("4.0.0")
             .build();
     }
