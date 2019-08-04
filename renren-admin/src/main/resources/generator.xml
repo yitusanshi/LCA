@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 配置mysql 驱动jar包路径.用了绝对路径 -->
+    <classPathEntry
+            location="D:\jar\mysql-connector-java-5.1.46\mysql-connector-java-5.1.46-bin.jar"/>
+   <!-- <classPathEntry
+            location="D:\Git\spring2\lib\mysql-connector-java-5.1.30-bin.jar"/>-->
+    <context id="mysql_tables" >
+        <!-- 防止生成的代码中有很多注释，加入下面的配置控制 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+            <property name="suppressDate" value="true" />
+        </commentGenerator>
+
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/renren_security?serverTimezone=UTC"
+                        userId="root"
+                        password="root"/>
+        <javaModelGenerator targetPackage="io.renren.modules.sys.entity" targetProject="src\main\java" />
+        <sqlMapGenerator targetPackage="mapper.sys" targetProject="src\main\resources" />
+        <javaClientGenerator targetPackage="io.renren.modules.sys.dao" targetProject="src\main\java" type="XMLMAPPER" />
+
+        <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
+        <!--   <table schema="test" tableName="users" domainObjectName="User"
+                  enableCountByExample="false" enableUpdateByExample="false"
+                  enableDeleteByExample="false" enableSelectByExample="false"
+                  selectByExampleQueryId="false">
+           </table>-->
+        <table tableName="factor_table">
+            <!--<columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>-->
+        </table>
+        <table tableName="featrue_factor">
+             <!--<columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>-->
+        </table>
+        <table tableName="life_cycle">
+             <columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>
+        </table>
+        <table tableName="product_define">
+             <!--<columnOverride column="classify_desc" jdbcType="VARCHAR"> </columnOverride>-->
+        </table>
+        <table tableName="transport">
+             <!--<columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>-->
+        </table>
+        <table tableName="usage_statistics">
+            <columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>
+        </table>
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.renren.modules.sys.dao.FeatrueFactorMapper" >
+  <resultMap id="BaseResultMap" type="io.renren.modules.sys.entity.FeatrueFactor" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="zh_name" property="zhName" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="abb" property="abb" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="user_name" property="userName" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, zh_name, en_name, abb, unit, source, created_time, user_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="io.renren.modules.sys.entity.FeatrueFactorExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from featrue_factor
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="io.renren.modules.sys.entity.FeatrueFactorExample" >
+    delete from featrue_factor
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="io.renren.modules.sys.entity.FeatrueFactor" >
+    insert into featrue_factor (id, zh_name, en_name, 
+      abb, unit, source, 
+      created_time, user_name)
+    values (#{id,jdbcType=INTEGER}, #{zhName,jdbcType=VARCHAR}, #{enName,jdbcType=VARCHAR}, 
+      #{abb,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{userName,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="io.renren.modules.sys.entity.FeatrueFactor" >
+    insert into featrue_factor
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="zhName != null" >
+        zh_name,
+      </if>
+      <if test="enName != null" >
+        en_name,
+      </if>
+      <if test="abb != null" >
+        abb,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="zhName != null" >
+        #{zhName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="abb != null" >
+        #{abb,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="io.renren.modules.sys.entity.FeatrueFactorExample" resultType="java.lang.Integer" >
+    select count(*) from featrue_factor
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update featrue_factor
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.zhName != null" >
+        zh_name = #{record.zhName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enName != null" >
+        en_name = #{record.enName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.abb != null" >
+        abb = #{record.abb,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unit != null" >
+        unit = #{record.unit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null" >
+        source = #{record.source,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdTime != null" >
+        created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update featrue_factor
+    set id = #{record.id,jdbcType=INTEGER},
+      zh_name = #{record.zhName,jdbcType=VARCHAR},
+      en_name = #{record.enName,jdbcType=VARCHAR},
+      abb = #{record.abb,jdbcType=VARCHAR},
+      unit = #{record.unit,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=VARCHAR},
+      created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      user_name = #{record.userName,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>
