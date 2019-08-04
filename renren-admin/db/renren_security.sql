@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2019-08-03 21:36:30
+Date: 2019-08-04 20:55:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -69,6 +69,25 @@ CREATE TABLE `featrue_factor` (
 
 -- ----------------------------
 -- Records of featrue_factor
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for life_cycle
+-- ----------------------------
+DROP TABLE IF EXISTS `life_cycle`;
+CREATE TABLE `life_cycle` (
+  `material_id` int(10) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(10) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `unit` varchar(255) DEFAULT NULL,
+  `desc` text,
+  `created_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`material_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='可参考sys_menu';
+
+-- ----------------------------
+-- Records of life_cycle
 -- ----------------------------
 
 -- ----------------------------
@@ -708,3 +727,46 @@ CREATE TABLE `tb_user` (
 -- Records of tb_user
 -- ----------------------------
 INSERT INTO `tb_user` VALUES ('1', 'mark', '13612345678', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '2017-03-23 22:37:41');
+
+-- ----------------------------
+-- Table structure for transport
+-- ----------------------------
+DROP TABLE IF EXISTS `transport`;
+CREATE TABLE `transport` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `material_id` int(10) NOT NULL,
+  `source` varchar(255) DEFAULT NULL,
+  `type` int(5) DEFAULT '0' COMMENT '0海， 1陆， 2空',
+  `distance` double NOT NULL DEFAULT '0',
+  `version` varchar(255) NOT NULL,
+  `user_id` int(255) DEFAULT NULL,
+  `created_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of transport
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for usage_statistics
+-- ----------------------------
+DROP TABLE IF EXISTS `usage_statistics`;
+CREATE TABLE `usage_statistics` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `material_id` int(10) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `usage` double NOT NULL DEFAULT '0',
+  `unit` varchar(255) DEFAULT NULL,
+  `desc` text,
+  `parent_id` int(10) DEFAULT NULL,
+  `flag` int(11) NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `version` varchar(255) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='使用量';
+
+-- ----------------------------
+-- Records of usage_statistics
+-- ----------------------------
