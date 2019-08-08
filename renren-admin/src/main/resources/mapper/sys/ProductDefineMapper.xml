@@ -78,20 +78,7 @@
     id, pr_name, company_name, model_type, product_type, shape, function_unit, eval_num, 
     system_boundary, year, industry_id, user_id, insert_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="io.renren.modules.sys.entity.ProductDefineExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from product_define
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -101,12 +88,6 @@
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from product_define
     where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="io.renren.modules.sys.entity.ProductDefineExample" >
-    delete from product_define
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
   </delete>
   <insert id="insert" parameterType="io.renren.modules.sys.entity.ProductDefine" >
     insert into product_define (id, pr_name, company_name, 
@@ -205,12 +186,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="io.renren.modules.sys.entity.ProductDefineExample" resultType="java.lang.Integer" >
-    select count(*) from product_define
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
   <update id="updateByExampleSelective" parameterType="map" >
     update product_define
     <set >

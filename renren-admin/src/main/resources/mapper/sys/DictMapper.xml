@@ -69,26 +69,7 @@
   <sql id="Base_Column_List" >
     type_id, second_id, second_name, desc, created_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="io.renren.modules.sys.entity.DictExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from dict
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <delete id="deleteByExample" parameterType="io.renren.modules.sys.entity.DictExample" >
-    delete from dict
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
+
   <insert id="insert" parameterType="io.renren.modules.sys.entity.Dict" >
     insert into dict (type_id, second_id, second_name, 
       desc, created_time)
@@ -132,12 +113,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="io.renren.modules.sys.entity.DictExample" resultType="java.lang.Integer" >
-    select count(*) from dict
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
   <update id="updateByExampleSelective" parameterType="map" >
     update dict
     <set >
