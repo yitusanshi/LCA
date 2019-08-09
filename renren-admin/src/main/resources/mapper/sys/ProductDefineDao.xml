@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ProductDefineDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ProductDefineEntity" id="productDefineMap">
+        <result property="id" column="id"/>
+        <result property="prName" column="pr_name"/>
+        <result property="companyName" column="company_name"/>
+        <result property="modelType" column="model_type"/>
+        <result property="productType" column="product_type"/>
+        <result property="shape" column="shape"/>
+        <result property="functionUnit" column="function_unit"/>
+        <result property="evalNum" column="eval_num"/>
+        <result property="systemBoundary" column="system_boundary"/>
+        <result property="year" column="year"/>
+        <result property="industryId" column="industry_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="insertTime" column="insert_time"/>
+    </resultMap>
+
+
+</mapper>
