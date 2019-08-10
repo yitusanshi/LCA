@@ -1,5 +1,7 @@
 package io.renren.modules.sys.service.impl;
 
+import io.renren.common.utils.Constant;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -18,10 +20,20 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<ProductDefineEntity> page = this.page(
-                new Query<ProductDefineEntity>().getPage(params),
-                new QueryWrapper<ProductDefineEntity>()
-        );
+        Integer industryId = (Integer)params.get("industryId");
+        IPage<ProductDefineEntity> page = null;
+        if (industryId == null){
+            page = this.page(
+                    new Query<ProductDefineEntity>().getPage(params),
+                    new QueryWrapper<ProductDefineEntity>()
+            );
+        }else {
+            page = this.page(
+                    new Query<ProductDefineEntity>().getPage(params),
+                    new QueryWrapper<ProductDefineEntity>().eq("industry_id", industryId)
+            );
+        }
+        System.out.println(222);
 
         return new PageUtils(page);
     }

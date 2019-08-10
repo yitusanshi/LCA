@@ -27,7 +27,7 @@ import io.renren.common.utils.R;
  * @date 2019-08-09 19:23:59
  */
 @RestController
-@RequestMapping("sys/dict")
+@RequestMapping("sys/lcadict")
 public class DictController {
     @Autowired
     private DictService dictService;

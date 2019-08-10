@@ -38,6 +38,7 @@ public class ProductDefineController {
     @RequestMapping("/list")
     @RequiresPermissions("sys:productdefine:list")
     public R list(@RequestParam Map<String, Object> params){
+        System.out.println(111);
         PageUtils page = productDefineService.queryPage(params);
 
         return R.ok().put("page", page);
