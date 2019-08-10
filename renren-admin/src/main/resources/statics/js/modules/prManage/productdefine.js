@@ -3,19 +3,21 @@ $(function () {
         url: baseURL + 'sys/productdefine/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: '序号', name: 'id', index: 'id', width: 50, key: true },
 			{ label: '产品名称', name: 'prName', index: 'pr_name', width: 80 }, 			
-			{ label: '公司名称', name: 'companyName', index: 'company_name', width: 80 }, 			
-			{ label: '规则型号', name: 'modelType', index: 'model_type', width: 80 }, 			
-			{ label: '产品类别', name: 'productType', index: 'product_type', width: 80 }, 			
-			{ label: '形状与形态', name: 'shape', index: 'shape', width: 80 }, 			
+			{ label: '公司名称', name: 'companyName', index: 'company_name', width: 80 },
+            { label: '所属行业', name: 'industryName', index: 'second_name', width: 80 },
+            { label: '系统边界', name: 'systemBoundary', index: 'system_boundary', width: 80 },
+			/*{ label: '规则型号', name: 'modelType', index: 'model_type', width: 80 }, */
+			/*{ label: '产品类别', name: 'productType', index: 'product_type', width: 80 },
+			{ label: '形状与形态', name: 'shape', index: 'shape', width: 80 }, 	*/
 			{ label: '功能单位', name: 'functionUnit', index: 'function_unit', width: 80 }, 			
 			{ label: '评价数量', name: 'evalNum', index: 'eval_num', width: 80 }, 			
-			{ label: '', name: 'systemBoundary', index: 'system_boundary', width: 80 }, 			
-			{ label: '', name: 'year', index: 'year', width: 80 }, 			
-			{ label: '', name: 'industryId', index: 'industry_id', width: 80 }, 			
-			{ label: '', name: 'userId', index: 'user_id', width: 80 }, 			
-			{ label: '', name: 'insertTime', index: 'insert_time', width: 80 }			
+
+			{ label: '创建时间', name: 'insertTime', index: 'insert_time', width: 80 },
+
+			{ label: '创建人', name: 'userName', index: 'username', width: 80 },
+			{ label: '创建时间', name: 'insertTime', index: 'insert_time', width: 80 }
         ],
 		viewrecords: true,
         height: 385,
@@ -42,15 +44,24 @@ $(function () {
         	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
         }
     });
+
 });
 
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
+        q:{
+            prName: null
+        },
 		showList: true,
 		title: null,
-		productDefine: {}
+		productDefine: {},
+        options:[]
 	},
+    mounted(){
+	    alert("a")
+	    this.send();
+    },
 	methods: {
 		query: function () {
 			vm.reload();
@@ -122,6 +133,19 @@ var vm = new Vue({
              }, function(){
              });
 		},
+        send() {
+		    alert("b")
+            $.ajax({
+                method:'post',
+                url: baseURL + "sys/productdefine/save"
+            }).then(resp => {
+                alert("c");
+                this.options = resp.options;
+            }).catch(resp => {
+                console.log('请求失败：'+resp.status+','+resp.statusText);
+            });
+        },
+
 		getInfo: function(id){
 			$.get(baseURL + "sys/productdefine/info/"+id, function(r){
                 vm.productDefine = r.productDefine;
@@ -132,7 +156,9 @@ var vm = new Vue({
             alert("11");
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
-                page:page
+                page:page,
+                postData:{'roleName': vm.q.prName,
+                'id': vm.q.id}
             }).trigger("reloadGrid");
 		}
 	}

@@ -67,10 +67,13 @@ public class ProductDefineEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Integer userId;
+	private Long userId;
 	/**
 	 * 
 	 */
 	private Date insertTime;
 
+	//前端适配字段
+	private String userName;
+	private String industryName;
 }

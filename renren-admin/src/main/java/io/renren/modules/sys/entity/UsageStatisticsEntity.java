@@ -63,6 +63,6 @@ public class UsageStatisticsEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Integer userId;
+	private long userId;
 
 }

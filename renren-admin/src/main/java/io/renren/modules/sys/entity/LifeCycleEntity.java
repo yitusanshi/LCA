@@ -47,6 +47,6 @@ public class LifeCycleEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Integer userId;
+	private Long userId;
 
 }

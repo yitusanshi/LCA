@@ -47,7 +47,7 @@ public class TransportEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Integer userId;
+	private Long userId;
 	/**
 	 * 
 	 */

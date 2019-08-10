@@ -18,7 +18,15 @@
         <result property="industryId" column="industry_id"/>
         <result property="userId" column="user_id"/>
         <result property="insertTime" column="insert_time"/>
+        <result property="userName" column="username"/>
+        <result property="industryName" column="second_name"/>
     </resultMap>
-
+    <select id="getQueryList" parameterType="java.util.HashMap" resultMap="productDefineMap">
+        SELECT * FROM product_define p LEFT JOIN sys_user u on p.user_id = u.user_id LEFT JOIN dict d on p.industry_id = d.second_id WHERE
+         <if test = '"userid" == NULL' >
+         p.user_id = #{userid}
+         </if>
+          industry_id = #{industryId} AND d.second_name LIKE "%"#{prName}"%"
+    </select>
 
 </mapper>
