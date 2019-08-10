@@ -1,8 +1,8 @@
-package io.renren.modules.sys.service;
+package io.renren.modules.prManage.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
-import io.renren.modules.sys.entity.ProductDefineEntity;
+import io.renren.modules.prManage.entity.ProductDefineEntity;
 
 import java.util.Map;
 

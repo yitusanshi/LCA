@@ -1,4 +1,4 @@
-package io.renren.modules.sys.controller;
+package io.renren.modules.prManage.controller;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.renren.modules.sys.entity.ProductDefineEntity;
-import io.renren.modules.sys.service.ProductDefineService;
+import io.renren.modules.prManage.entity.ProductDefineEntity;
+import io.renren.modules.prManage.service.ProductDefineService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 

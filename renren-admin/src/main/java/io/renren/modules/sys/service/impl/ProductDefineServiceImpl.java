@@ -8,9 +8,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
-import io.renren.modules.sys.dao.ProductDefineDao;
-import io.renren.modules.sys.entity.ProductDefineEntity;
-import io.renren.modules.sys.service.ProductDefineService;
+import io.renren.modules.prManage.dao.ProductDefineDao;
+import io.renren.modules.prManage.entity.ProductDefineEntity;
+import io.renren.modules.prManage.service.ProductDefineService;
 
 
 @Service("productDefineService")

@@ -18,7 +18,6 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
 
-
 /**
  * 字段映射表  id和name的映射
  *
@@ -27,7 +26,7 @@ import io.renren.common.utils.R;
  * @date 2019-08-09 19:23:59
  */
 @RestController
-@RequestMapping("sys/dict")
+@RequestMapping("sys/lcadict")
 public class DictController {
     @Autowired
     private DictService dictService;
@@ -37,7 +36,7 @@ public class DictController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:dict:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = dictService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -49,7 +48,7 @@ public class DictController {
      */
     @RequestMapping("/info/{typeId}")
     @RequiresPermissions("sys:dict:info")
-    public R info(@PathVariable("typeId") Integer typeId){
+    public R info(@PathVariable("typeId") Integer typeId) {
         DictEntity dict = dictService.getById(typeId);
 
         return R.ok().put("dict", dict);
@@ -60,7 +59,7 @@ public class DictController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:dict:save")
-    public R save(@RequestBody DictEntity dict){
+    public R save(@RequestBody DictEntity dict) {
         dictService.save(dict);
 
         return R.ok();
@@ -71,10 +70,10 @@ public class DictController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("sys:dict:update")
-    public R update(@RequestBody DictEntity dict){
+    public R update(@RequestBody DictEntity dict) {
         ValidatorUtils.validateEntity(dict);
         dictService.updateById(dict);
-        
+
         return R.ok();
     }
 
@@ -83,7 +82,7 @@ public class DictController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("sys:dict:delete")
-    public R delete(@RequestBody Integer[] typeIds){
+    public R delete(@RequestBody Integer[] typeIds) {
         dictService.removeByIds(Arrays.asList(typeIds));
 
         return R.ok();

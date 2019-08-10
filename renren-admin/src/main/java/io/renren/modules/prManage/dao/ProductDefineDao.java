@@ -1,6 +1,6 @@
-package io.renren.modules.sys.dao;
+package io.renren.modules.prManage.dao;
 
-import io.renren.modules.sys.entity.ProductDefineEntity;
+import io.renren.modules.prManage.entity.ProductDefineEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

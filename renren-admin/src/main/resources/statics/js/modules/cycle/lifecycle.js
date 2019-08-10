@@ -3,12 +3,12 @@ $(function () {
         url: baseURL + 'sys/lifecycle/list',
         datatype: "json",
         colModel: [			
-			{ label: 'materialId', name: 'materialId', index: 'material_id', width: 50, key: true },
-			{ label: '', name: 'parentId', index: 'parent_id', width: 80 }, 			
-			{ label: '', name: 'name', index: 'name', width: 80 }, 			
-			{ label: '', name: 'unit', index: 'unit', width: 80 }, 			
-			{ label: '', name: 'desc', index: 'desc', width: 80 }, 			
-			{ label: '', name: 'createdTime', index: 'created_time', width: 80 }, 			
+			{ label: '原材料名名称', name: 'materialId', index: 'material_id', width: 50, key: true },
+			{ label: '上游原材料名称', name: 'parentId', index: 'parent_id', width: 80 },
+			{ label: '消耗量', name: 'name', index: 'name', width: 80 },
+			{ label: '单位', name: 'unit', index: 'unit', width: 80 },
+			{ label: '备注', name: 'desc', index: 'desc', width: 80 },
+			{ label: '操作', name: 'createdTime', index: 'created_time', width: 80 },
 			{ label: '', name: 'userId', index: 'user_id', width: 80 }			
         ],
 		viewrecords: true,
