@@ -1,6 +1,6 @@
-package io.renren.modules.sys.dao;
+package io.renren.modules.cycle.dao;
 
-import io.renren.modules.sys.entity.UsageStatisticsEntity;
+import io.renren.modules.cycle.entity.UsageStatisticsEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

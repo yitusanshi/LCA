@@ -4,6 +4,9 @@ import io.renren.modules.prManage.entity.ProductDefineEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * 目标产品定义表
  * 
@@ -13,5 +16,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ProductDefineDao extends BaseMapper<ProductDefineEntity> {
-	
+	List<ProductDefineEntity> getQueryList(HashMap<String, Object> map);
 }

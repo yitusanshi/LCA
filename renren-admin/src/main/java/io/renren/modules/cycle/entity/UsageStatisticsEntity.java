@@ -1,4 +1,4 @@
-package io.renren.modules.sys.entity;
+package io.renren.modules.cycle.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -63,6 +63,6 @@ public class UsageStatisticsEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Integer userId;
+	private long userId;
 
 }

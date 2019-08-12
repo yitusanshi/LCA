@@ -1,19 +1,19 @@
-package io.renren.modules.sys.service;
+package io.renren.modules.batch.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
-import io.renren.modules.sys.entity.UsageStatisticsEntity;
+import io.renren.modules.batch.entity.BatchEntity;
 
 import java.util.Map;
 
 /**
- * 使用量
+ * 
  *
  * @author Mark
  * @email sunlightcs@gmail.com
- * @date 2019-08-09 19:23:59
+ * @date 2019-08-12 23:58:32
  */
-public interface UsageStatisticsService extends IService<UsageStatisticsEntity> {
+public interface BatchService extends IService<BatchEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 }

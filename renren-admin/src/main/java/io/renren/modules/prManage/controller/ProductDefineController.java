@@ -1,9 +1,11 @@
 package io.renren.modules.prManage.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysUserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +33,8 @@ import io.renren.common.utils.R;
 public class ProductDefineController {
     @Autowired
     private ProductDefineService productDefineService;
+    @Autowired
+    private SysUserService sysUserService;
 
     /**
      * 列表
@@ -38,6 +42,14 @@ public class ProductDefineController {
     @RequestMapping("/list")
     @RequiresPermissions("sys:productdefine:list")
     public R list(@RequestParam Map<String, Object> params){
+        Set<Map.Entry<String, Object>> s=params.entrySet();
+        Set<String> r=params.keySet();
+        for(Map.Entry<String, Object> en:s){
+            System.out.println(en.getKey()+","+en.getValue());
+        }
+        System.out.println(params.get("id"));
+        System.out.println(111);
+
         PageUtils page = productDefineService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -50,9 +62,12 @@ public class ProductDefineController {
     @RequestMapping("/info/{id}")
     @RequiresPermissions("sys:productdefine:info")
     public R info(@PathVariable("id") Integer id){
-        ProductDefineEntity productDefine = productDefineService.getById(id);
-
-        return R.ok().put("productDefine", productDefine);
+        //ProductDefineEntity productDefine = productDefineService.getById(id);
+        List<String> list = new ArrayList<>();
+        list.add("a");
+        list.add("b");
+        System.out.println("---------------------------");
+        return R.ok().put("options", list);
     }
 
     /**
@@ -60,10 +75,14 @@ public class ProductDefineController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:productdefine:save")
-    public R save(@RequestBody ProductDefineEntity productDefine){
-        productDefineService.save(productDefine);
-
-        return R.ok();
+    public R save(){
+        //productDefineService.save(productDefine);
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        list.add("2");
+        System.out.println("---------------------------");
+        return R.ok().put("options", list);
+        //return R.ok();
     }
 
     /**

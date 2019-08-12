@@ -8,9 +8,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
-import io.renren.modules.sys.dao.UsageStatisticsDao;
-import io.renren.modules.sys.entity.UsageStatisticsEntity;
-import io.renren.modules.sys.service.UsageStatisticsService;
+import io.renren.modules.cycle.dao.UsageStatisticsDao;
+import io.renren.modules.cycle.entity.UsageStatisticsEntity;
+import io.renren.modules.cycle.service.UsageStatisticsService;
 
 
 @Service("usageStatisticsService")
