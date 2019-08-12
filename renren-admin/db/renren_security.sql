@@ -8457,5 +8457,17 @@ CREATE TABLE `usage_statistics` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='使用量';
 
 -- ----------------------------
+-- Table structure for batch
+-- ----------------------------
+DROP TABLE IF EXISTS `batch`;
+CREATE TABLE `batch` (
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `batch_no` varchar(255) NOT NULL COMMENT '批次号对应version',
+  `batch_name` varchar(255) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- ----------------------------
 -- Records of usage_statistics
 -- ----------------------------
