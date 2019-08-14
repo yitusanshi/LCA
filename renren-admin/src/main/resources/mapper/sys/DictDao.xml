@@ -10,7 +10,10 @@
         <result property="secondName" column="second_name"/>
         <result property="desc" column="desc"/>
         <result property="createdTime" column="created_time"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
-
+    <select id="getQueryList" parameterType="java.util.HashMap" resultMap="dictMap">
+        SELECT * FROM dict WHERE type_id = #{typeid} AND user_id = #{userid}
+    </select>
 
 </mapper>

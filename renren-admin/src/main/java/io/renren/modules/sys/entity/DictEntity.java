@@ -41,4 +41,6 @@ public class DictEntity implements Serializable {
 	 */
 	private Date createdTime;
 
+	private Long userId;
+
 }
