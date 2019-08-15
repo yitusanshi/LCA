@@ -35,10 +35,10 @@ public class DictController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("sys:dict:list")
+   // @RequiresPermissions("sys:lcadict:list")
     public R list(@RequestParam Map<String, Object> params) {
+        System.out.println(111111);
         PageUtils page = dictService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
@@ -47,7 +47,7 @@ public class DictController {
      * 信息
      */
     @RequestMapping("/info/{typeId}")
-    @RequiresPermissions("sys:dict:info")
+    @RequiresPermissions("sys:lcadict:info")
     public R info(@PathVariable("typeId") Integer typeId) {
         DictEntity dict = dictService.getById(typeId);
 
@@ -58,7 +58,7 @@ public class DictController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("sys:dict:save")
+    @RequiresPermissions("sys:lcadict:save")
     public R save(@RequestBody DictEntity dict) {
         dictService.save(dict);
 
@@ -69,7 +69,7 @@ public class DictController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("sys:dict:update")
+    @RequiresPermissions("sys:lcadict:update")
     public R update(@RequestBody DictEntity dict) {
         ValidatorUtils.validateEntity(dict);
         dictService.updateById(dict);
@@ -81,7 +81,7 @@ public class DictController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("sys:dict:delete")
+    @RequiresPermissions("sys:lcadict:delete")
     public R delete(@RequestBody Integer[] typeIds) {
         dictService.removeByIds(Arrays.asList(typeIds));
 

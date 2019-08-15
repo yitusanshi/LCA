@@ -3,11 +3,10 @@ $(function () {
         url: baseURL + 'sys/lcadict/list',
         datatype: "json",
         colModel: [
-            {label: '备注', name: 'remark', index: 'remark', width: 80},
-            {label: '字典值', name: 'value', index: 'value', width: 80},
-            {label: '行业名称', name: 'name', index: 'name', width: 80},
-            {label: '添加时间', name: 'type', index: 'type', width: 80},
-            {label: '备注', name: 'code', index: 'code', width: 80}
+            {label: '序号', name: 'secondId', index: 'second_id', width: 80},
+            {label: '行业名称', name: 'secondName', index: 'second_name', width: 80},
+            {label: '添加时间', name: 'createdTime', index: 'created_time', width: 80},
+            {label: '备注', name: 'desc', index: 'desc', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -113,16 +112,12 @@ var vm = new Vue({
             });
         },
         reload: function (event) {
-            alert(11);
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {
-                'typeid': 1
-                },
+                postData: {'typeid': 1},
                 page: page
             }).trigger("reloadGrid");
         }
-
     }
 });

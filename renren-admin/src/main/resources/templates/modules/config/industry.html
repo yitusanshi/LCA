@@ -8,7 +8,8 @@
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
-            <shiro.hasPermission name="sys:lcadict:save">
+            <a class="btn btn-default" @click="query">查询</a>
+          <shiro.hasPermission name="sys:lcadict:save">
                 <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
             </shiro.hasPermission>
             <shiro.hasPermission name="sys:lcadict:update">
@@ -28,13 +29,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">行业名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="dictEntity.secondName" placeholder="登录账号"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">备注</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" style="cursor:pointer;" v-model="dictEntity.desc" @click="deptTree" readonly="readonly" placeholder="所属部门"/>
+                    <input type="text" class="form-control" v-model="dict.secondName" placeholder="行业名称"/>
                 </div>
             </div>
             <div class="form-group">
