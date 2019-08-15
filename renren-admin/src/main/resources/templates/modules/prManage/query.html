@@ -16,9 +16,9 @@
                 </select>
 
             </div>
-               <a class="btn btn-default">选择行业</a>
-                <input type="text" class="form-control col-sm-2" v-model="q.prName" @keyup.enter="query" placeholder="产品名称">
-                <a class="btn btn-default" @click="query">查询</a>
+            <a class="btn btn-default">选择行业</a>
+            <input type="text" class="form-control col-sm-2" v-model="q.prName" @keyup.enter="query" placeholder="产品名称">
+            <a class="btn btn-default" @click="query">查询</a>
 
 
             <!--<shiro.hasPermission name="sys:productdefine:save">
@@ -27,96 +27,96 @@
         <shiro.hasPermission name="sys:productdefine:update">
         <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
         </shiro.hasPermission>-->
-    <shiro.hasPermission name="sys:productdefine:delete">
-    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-    </shiro.hasPermission>
-</div>
-<table id="jqGrid"></table>
-<div id="jqGridPager"></div>
-</div>
+            <shiro.hasPermission name="sys:productdefine:delete">
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </shiro.hasPermission>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
 
-<div v-show="!showList" class="panel panel-default">
-    <div class="panel-heading">{{title}}</div>
-    <form class="form-horizontal">
-        <div class="form-group">
-            <div class="col-sm-2 control-label">产品名称</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.prName" placeholder="产品名称"/>
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">产品名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.prName" placeholder="产品名称"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label">公司名称</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.companyName" placeholder="公司名称"/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">公司名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.companyName" placeholder="公司名称"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label">规则型号</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.modelType" placeholder="规则型号"/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">规则型号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.modelType" placeholder="规则型号"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label">产品类别</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.productType" placeholder="产品类别"/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">产品类别</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.productType" placeholder="产品类别"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label">形状与形态</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.shape" placeholder="形状与形态"/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">形状与形态</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.shape" placeholder="形状与形态"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label">功能单位</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.functionUnit" placeholder="功能单位"/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">功能单位</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.functionUnit" placeholder="功能单位"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label">评价数量</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.evalNum" placeholder="评价数量"/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">评价数量</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.evalNum" placeholder="评价数量"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label"></div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.systemBoundary" placeholder=""/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.systemBoundary" placeholder=""/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label"></div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.year" placeholder=""/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.year" placeholder=""/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label"></div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.industryId" placeholder=""/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.industryId" placeholder=""/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label"></div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.userId" placeholder=""/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.userId" placeholder=""/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label"></div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" v-model="productDefine.insertTime" placeholder=""/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="productDefine.insertTime" placeholder=""/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2 control-label"></div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
             <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..." @click="saveOrUpdate" value="确定"/>
-            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-        </div>
-    </form>
-</div>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="${request.contextPath}/statics/js/modules/prManage/productdefine.js?_${.now?long}"></script>

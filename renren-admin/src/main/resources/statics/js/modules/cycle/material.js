@@ -43,126 +43,150 @@ $(function () {
 });
 
 var vm = new Vue({
-    el: '#rrapp',
-    data: {
-        showList: true,
-        title: null,
-        batchNo: null,
-        batchName: null,
-        usageStatistics: {}
-    },
-    methods: {
-        query: function () {
-            vm.reload();
+        el: '#rrapp',
+        data: {
+            showList: true,
+            title: null,
+            bNo: "",
+            bName: "",
+            usageStatistics: {},
+            batchNos: [],
+            batchSelect: ""
         },
-        add: function () {
-            vm.showList = false;
-            vm.title = "新增";
-            vm.usageStatistics = {};
+        mounted() {
+            this.getBatchNo();
         },
-        addBatchNo: function () {
-            layer.open({
-                type: 1,
-                skin: 'layui-layer-molv',
-                title: "新增批次号",
-                area: ['550px', '270px'],
-                shadeClose: false,
-                content: jQuery("#batchNo"),
-                btn: ['保存', '取消'],
-                btn1: function (index) {
-                    var data = "batchNo=" + vm.batchNo + "&batchName=" + vm.batchName;
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + "sys/batch/save",
-                        data: data,
-                        dataType: "json",
-                        success: function (result) {
-                            if (result.code == 0) {
-                                layer.close(index);
-                                layer.alert('保存成功', function (index) {
-                                    location.reload();
-                                });
-                            } else {
-                                layer.alert(result.msg);
+        methods: {
+            query: function () {
+                vm.reload();
+            },
+            add: function () {
+                vm.showList = false;
+                vm.title = "新增";
+                vm.usageStatistics = {};
+            },
+            addBatchNo: function () {
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-molv',
+                    title: "新增批次号",
+                    area: ['550px', '270px'],
+                    shadeClose: false,
+                    content: jQuery("#batchNo"),
+                    btn: ['保存', '取消'],
+                    btn1: function (index) {
+                        var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName;
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + "sys/batch/save",
+                            data: data,
+                            dataType: "json",
+                            success: function (result) {
+                                if (result.code == 0) {
+                                    layer.close(index);
+                                    layer.alert('保存成功', function (index) {
+                                        location.reload();
+                                    });
+                                } else {
+                                    layer.alert(result.msg);
+                                }
                             }
-                        }
-                    });
-                }
-            });
-        },
-        update: function (event) {
-            var id = getSelectedRow();
-            if (id == null) {
-                return;
-            }
-            vm.showList = false;
-            vm.title = "修改";
-
-            vm.getInfo(id)
-        },
-        saveOrUpdate: function (event) {
-            $('#btnSaveOrUpdate').button('loading').delay(1000).queue(function () {
-                var url = vm.usageStatistics.id == null ? "sys/usagestatistics/save" : "sys/usagestatistics/update";
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + url,
-                    contentType: "application/json",
-                    data: JSON.stringify(vm.usageStatistics),
-                    success: function (r) {
-                        if (r.code === 0) {
-                            layer.msg("操作成功", {icon: 1});
-                            vm.reload();
-                            $('#btnSaveOrUpdate').button('reset');
-                            $('#btnSaveOrUpdate').dequeue();
-                        } else {
-                            layer.alert(r.msg);
-                            $('#btnSaveOrUpdate').button('reset');
-                            $('#btnSaveOrUpdate').dequeue();
-                        }
+                        });
                     }
                 });
-            });
-        },
-        del: function (event) {
-            var ids = getSelectedRows();
-            if (ids == null) {
-                return;
-            }
-            var lock = false;
-            layer.confirm('确定要删除选中的记录？', {
-                btn: ['确定', '取消'] //按钮
-            }, function () {
-                if (!lock) {
-                    lock = true;
+            },
+            update: function (event) {
+                var id = getSelectedRow();
+                if (id == null) {
+                    return;
+                }
+                vm.showList = false;
+                vm.title = "修改";
+
+                vm.getInfo(id)
+            },
+            getBatchNo: function () {
+                $.ajax({
+                    method: 'post',
+                    url: baseURL + "sys/batch/getBatch",
+                    contentType: "application/json",
+                    datatype: "json",
+                    success: function (r) {
+                        if (r.code == 0) {
+                            vm.batchNos = r.batchNos;
+                        } else {
+                            alert(r.msg);
+                        }
+                    },
+                });
+            },
+            saveOrUpdate: function (event) {
+                $('#btnSaveOrUpdate').button('loading').delay(1000).queue(function () {
+                    var url = vm.usageStatistics.id == null ? "sys/usagestatistics/save" : "sys/usagestatistics/update";
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "sys/usagestatistics/delete",
+                        url: baseURL + url,
                         contentType: "application/json",
-                        data: JSON.stringify(ids),
+                        data: JSON.stringify(vm.usageStatistics),
                         success: function (r) {
-                            if (r.code == 0) {
+                            if (r.code === 0) {
                                 layer.msg("操作成功", {icon: 1});
-                                $("#jqGrid").trigger("reloadGrid");
+                                vm.reload();
+                                $('#btnSaveOrUpdate').button('reset');
+                                $('#btnSaveOrUpdate').dequeue();
                             } else {
                                 layer.alert(r.msg);
+                                $('#btnSaveOrUpdate').button('reset');
+                                $('#btnSaveOrUpdate').dequeue();
                             }
                         }
                     });
+                });
+            }
+            ,
+            del: function (event) {
+                var ids = getSelectedRows();
+                if (ids == null) {
+                    return;
                 }
-            }, function () {
-            });
-        },
-        getInfo: function (id) {
-            $.get(baseURL + "sys/usagestatistics/info/" + id, function (r) {
-                vm.usageStatistics = r.usageStatistics;
-            });
-        },
-        reload: function (event) {
-            vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
-            $("#jqGrid").jqGrid('setGridParam', {
-                page: page
-            }).trigger("reloadGrid");
+                var lock = false;
+                layer.confirm('确定要删除选中的记录？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    if (!lock) {
+                        lock = true;
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + "sys/usagestatistics/delete",
+                            contentType: "application/json",
+                            data: JSON.stringify(ids),
+                            success: function (r) {
+                                if (r.code == 0) {
+                                    layer.msg("操作成功", {icon: 1});
+                                    $("#jqGrid").trigger("reloadGrid");
+                                } else {
+                                    layer.alert(r.msg);
+                                }
+                            }
+                        });
+                    }
+                }, function () {
+                });
+            }
+            ,
+            getInfo: function (id) {
+                $.get(baseURL + "sys/usagestatistics/info/" + id, function (r) {
+                    vm.usageStatistics = r.usageStatistics;
+                });
+            }
+            ,
+            reload: function (event) {
+                vm.showList = true;
+                var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+                $("#jqGrid").jqGrid('setGridParam', {
+                    page: page
+                }).trigger("reloadGrid");
+            }
         }
-    }
-});
+    })
+;
