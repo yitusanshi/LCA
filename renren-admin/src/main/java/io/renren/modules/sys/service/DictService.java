@@ -16,5 +16,6 @@ import java.util.Map;
 public interface DictService extends IService<DictEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
 }
 

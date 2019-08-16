@@ -16,6 +16,7 @@ $(function () {
         rownumWidth: 25,
         autowidth: true,
         multiselect: true,
+        postData:{'typeid': '1'},
         pager: "#jqGridPager",
         jsonReader: {
             root: "page.list",
@@ -43,7 +44,9 @@ var vm = new Vue({
         },
         showList: true,
         title: null,
-        dict: {}
+        dict: {
+            typeId: '1'
+        }
     },
     methods: {
         query: function () {
@@ -65,6 +68,7 @@ var vm = new Vue({
             vm.getInfo(id)
         },
         saveOrUpdate: function (event) {
+            console.log("vm", vm.dict);
             var url = vm.dict.id == null ? "sys/lcadict/save" : "sys/lcadict/update";
             $.ajax({
                 type: "POST",
@@ -115,7 +119,7 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {'typeid': 1},
+                postData: {'typeid': '1'},
                 page: page
             }).trigger("reloadGrid");
         }

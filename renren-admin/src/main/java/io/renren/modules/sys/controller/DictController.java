@@ -3,6 +3,8 @@ package io.renren.modules.sys.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.renren.common.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,7 @@ public class DictController {
      * 列表
      */
     @RequestMapping("/list")
-   // @RequiresPermissions("sys:lcadict:list")
+    @RequiresPermissions("sys:lcadict:list")
     public R list(@RequestParam Map<String, Object> params) {
         System.out.println(111111);
         PageUtils page = dictService.queryPage(params);
@@ -60,6 +62,7 @@ public class DictController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:lcadict:save")
     public R save(@RequestBody DictEntity dict) {
+        System.out.println(JSON.toJSONString(dict));
         dictService.save(dict);
 
         return R.ok();
