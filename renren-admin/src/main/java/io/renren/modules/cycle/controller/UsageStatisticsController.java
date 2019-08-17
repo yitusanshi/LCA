@@ -1,10 +1,14 @@
 package io.renren.modules.cycle.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import io.renren.common.annotation.SysLog;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.renren.common.utils.Query;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +32,7 @@ import io.renren.common.utils.R;
  */
 @RestController
 @RequestMapping("sys/usagestatistics")
-public class UsageStatisticsController {
+public class UsageStatisticsController extends AbstractController {
     @Autowired
     private UsageStatisticsService usageStatisticsService;
 
@@ -39,10 +43,27 @@ public class UsageStatisticsController {
     @RequiresPermissions("sys:usagestatistics:list")
     public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = usageStatisticsService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
+    //通过用户的的version和用户ID查询用户的信息
+    @RequestMapping("/listMaterial")
+    public R listMaterial(@RequestParam Map<String, Object> params) {
+        System.out.println("已经进来了。。。。。。。。。。。。。。。。。。");
+        String batchNo = (String) params.get("batchNo");
+        System.out.println(batchNo + "=====-=============" + getUserId());
+        if (batchNo == "-1" || "-1".equals(batchNo)) {
+            return R.ok();
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("version", batchNo);
+        map.put("user_id", getUserId());
+        map.put("flag", 1);
+        IPage<UsageStatisticsEntity> page = new Query<UsageStatisticsEntity>().getPage(params);
+        List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
+        page.setRecords(usageStatisticsEntityList);
+        return R.ok().put("page", new PageUtils(page));
+    }
 
     /**
      * 信息

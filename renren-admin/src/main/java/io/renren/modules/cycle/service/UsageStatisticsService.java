@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.cycle.entity.UsageStatisticsEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface UsageStatisticsService extends IService<UsageStatisticsEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<UsageStatisticsEntity> getMaterialByBatch(Map<String, Object> map);
 }
 

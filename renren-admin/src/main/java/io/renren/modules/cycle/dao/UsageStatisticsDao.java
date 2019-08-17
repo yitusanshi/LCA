@@ -4,6 +4,9 @@ import io.renren.modules.cycle.entity.UsageStatisticsEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 使用量
  * 
@@ -13,5 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UsageStatisticsDao extends BaseMapper<UsageStatisticsEntity> {
+
+    List<UsageStatisticsEntity> getMaterialByBatch(Map<String, Object> map);
 	
 }
