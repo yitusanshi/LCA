@@ -1,12 +1,16 @@
 package io.renren.modules.batch.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.batch.entity.BatchEntity;
 import io.renren.modules.batch.service.BatchService;
+import io.renren.modules.batch.vo.BatchVo;
 import io.renren.modules.sys.controller.AbstractController;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +41,6 @@ public class BatchController extends AbstractController {
     @RequiresPermissions("sys:batch:list")
     public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = batchService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
@@ -59,13 +62,27 @@ public class BatchController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:batch:save")
     public R save(String batchNo, String batchName) {
+        System.out.println(batchNo + "===" + batchName);
+        if (!StringUtils.isNotBlank(batchNo) || batchNo == null) {
+            return R.error("批次号为空！");
+        }
+
+        BatchVo batchVo = new BatchVo();
+        batchVo.setBatchNo(batchNo);
+        batchVo.setUserId(getUserId());
+
+
+        List<BatchEntity> list = batchService.getBatchByBatchVo(batchVo);
+        if (list.size() > 0) {
+            return R.error("该用户下已经存在此批次号：" + batchNo);
+        }
         BatchEntity batch = new BatchEntity();
         batch.setBatchName(batchName);
         batch.setBatchNo(batchNo);
         batch.setUserId(getUserId());
-        System.out.println(batchNo + "====" + batchName + "===" + getUserId());
-        batchService.save(batch);
 
+
+        batchService.save(batch);
         return R.ok();
     }
 
@@ -88,8 +105,13 @@ public class BatchController extends AbstractController {
     @RequiresPermissions("sys:batch:delete")
     public R delete(@RequestBody Long[] userIds) {
         batchService.removeByIds(Arrays.asList(userIds));
-
         return R.ok();
+    }
+
+    @RequestMapping("/getBatch")
+    public R getBatch() {
+        List<BatchEntity> listBatch = batchService.getBatchByUserId(getUserId());
+        return R.ok().put("batchNos", listBatch);
     }
 
 }
