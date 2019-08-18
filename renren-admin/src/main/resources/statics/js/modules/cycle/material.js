@@ -3,12 +3,13 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "json",
         colModel: [
-            /* {label: '序号', name: 'selectItem',index:'', radio: true},*/
-            {label: '批次号', name: 'version', index: 'version', align: 'center', valign: 'middle', width: '80px'},
-            {label: '原材料名称', name: 'name', iddex: 'name', align: 'center', valign: 'middle', width: '80px'},
-            {label: '使用量', name: 'usage', index: 'usage', align: 'center', valign: 'middle', width: '80px'},
-            {label: '单位', name: 'unit', index: 'unit', align: 'center', valign: 'middle', width: '80px'}
+            {label: '批次号', name: 'version', index: 'version', width: '80px'},
+            {label: '原材料名称', name: 'name', iddex: 'name', width: '80px'},
+            {label: '使用量', name: 'usage', index: 'usage', width: '80px'},
+            {label: '单位', name: 'unit', index: 'unit', width: '80px'},
+            {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
         ],
+
         postData: {"batchNo": vm.batchSelect},
         viewrecords: true,
         height: 385,
@@ -58,6 +59,9 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.usageStatistics = {};
+        },
+        adds: function () {
+            alert("出现的值是：");
         },
         addBatchNo: function () {
             layer.open({
@@ -140,8 +144,7 @@ var vm = new Vue({
                     }
                 });
             });
-        }
-        ,
+        },
         del: function (event) {
             var ids = getSelectedRows();
             if (ids == null) {
@@ -170,14 +173,12 @@ var vm = new Vue({
                 }
             }, function () {
             });
-        }
-        ,
+        },
         getInfo: function (id) {
             $.get(baseURL + "sys/usagestatistics/info/" + id, function (r) {
                 vm.usageStatistics = r.usageStatistics;
             });
-        }
-        ,
+        },
         reload: function (event) {
             vm.showList = true;
             var page = $("#menuMaterialTable").jqGrid('getGridParam', 'page');
