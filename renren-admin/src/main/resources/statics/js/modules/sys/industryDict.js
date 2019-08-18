@@ -107,7 +107,7 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             console.log("vm", vm.dict);
-            var url = vm.dict.typeId == null ? "sys/lcadict/save" : "sys/lcadict/update";
+            var url = vm.dict.secondId == null ? "sys/lcadict/save" : "sys/lcadict/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
