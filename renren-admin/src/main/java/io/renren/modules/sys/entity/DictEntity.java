@@ -22,11 +22,12 @@ public class DictEntity implements Serializable {
 	/**
 	 * 属于哪种映射
 	 */
-	@TableId
+
 	private Integer typeId;
 	/**
 	 * 映射关系的id
 	 */
+	@TableId
 	private Integer secondId;
 	/**
 	 * 
@@ -40,5 +41,7 @@ public class DictEntity implements Serializable {
 	 * 
 	 */
 	private Date createdTime;
+
+	private Long userId;
 
 }

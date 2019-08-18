@@ -197,6 +197,7 @@ var vm = new Vue({
             });
         },
         reload: function () {
+            alert(11);
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam','page');
             $("#jqGrid").jqGrid('setGridParam',{

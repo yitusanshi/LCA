@@ -56,10 +56,18 @@ var vm = new Vue({
         showList: true,
         title: null,
         productDefine: {},
-        options: []
+        options: [],
+        shapeOptions: [],
+        systemOptions: []
     },
     mounted() {
-        this.send();
+        /*    alert("a")*/
+        //行业管理
+        this.send(1);
+        //形状与形态
+        this.send(3);
+        //系统边界
+        this.send(4);
     },
     methods: {
         query: function () {
@@ -81,6 +89,7 @@ var vm = new Vue({
             vm.getInfo(id)
         },
         saveOrUpdate: function (event) {
+            console.log("123");
             $('#btnSaveOrUpdate').button('loading').delay(1000).queue(function () {
                 var url = vm.productDefine.id == null ? "sys/productdefine/save" : "sys/productdefine/update";
                 $.ajax({
@@ -116,7 +125,7 @@ var vm = new Vue({
                     lock = true;
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "sys/productdefine/delete",
+                        url: baseURL + "sys/lcadict/query/" + i,
                         contentType: "application/json",
                         data: JSON.stringify(ids),
                         success: function (r) {
@@ -132,16 +141,53 @@ var vm = new Vue({
             }, function () {
             });
         },
-        send() {
+        send: function (i) {
             $.ajax({
                 method: 'post',
-                url: baseURL + "sys/productdefine/save"
-            }).then(resp => {
-                this.options = resp.options;
-            }).catch(resp => {
-                console.log('请求失败：' + resp.status + ',' + resp.statusText);
+                url: baseURL + "sys/lcadict/query/" + i,
+                contentType: "application/json",
+                datatype: "json",
+                success: function (r) {
+                    console.log(r.msg);
+                    console.log(r.dictList);
+                    if (r.code == 0) {
+                        if (i == 1) {
+                            vm.options = r.dictList;
+                            console.log("11" + vm.options + "===" + r.dictList[0].secondName);
+                        }
+                        if (i == 3) {
+                            vm.shapeOptions = r.dictList;
+                        }
+                        if (i == 4) {
+                            vm.systemOptions = r.dictList;
+                        }
+                    } else {
+                        alert(r.msg);
+                    }
+                },
             });
         },
+        /*send(i) {
+		    alert("b")
+            $.ajax({
+                method:'post',
+                url: baseURL + "sys/lcadict/query/" + i,
+            }).then(resp => {
+                alert("c");
+                /!*if (i == 1){*!/
+                    this.options = resp.options;
+                    console.log("11", this.options);
+                /!*}*!/
+                /!*if (i == 3){
+                    this.shapeOptions = resp.options;
+                }
+                if (i == 4){
+                    this.systemOptions = resp.options;
+                }*!/
+            }).catch(resp => {
+                console.log('请求失败：'+resp.status+','+resp.statusText);
+            });
+        },*/
 
         getInfo: function (id) {
             $.get(baseURL + "sys/productdefine/info/" + id, function (r) {

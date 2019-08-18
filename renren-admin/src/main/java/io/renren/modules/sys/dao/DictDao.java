@@ -4,6 +4,9 @@ import io.renren.modules.sys.entity.DictEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * 字段映射表  id和name的映射
  * 
@@ -13,5 +16,10 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface DictDao extends BaseMapper<DictEntity> {
-	
+	List<DictEntity> getQueryList(HashMap<String, Object> map);
+	DictEntity getByseconId(int secondId);
+	public void updateBysencondId(DictEntity dictEntity);
+	void removeSecondIds(List<Integer> list);
+	Integer saveDict(DictEntity dictEntity);
+	List<DictEntity> quertByTypeId(int typeId);
 }

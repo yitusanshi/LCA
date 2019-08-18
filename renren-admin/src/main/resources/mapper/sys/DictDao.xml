@@ -10,7 +10,30 @@
         <result property="secondName" column="second_name"/>
         <result property="desc" column="desc"/>
         <result property="createdTime" column="created_time"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
+    <select id="getQueryList" parameterType="java.util.HashMap" resultMap="dictMap">
+        SELECT * FROM dict WHERE type_id = #{typeid} AND user_id = #{userid}
+    </select>
+    <select id="getByseconId" parameterType="java.lang.Integer" resultMap = "dictMap">
+        SELECT * FROM dict WHERE second_id = #{0}
+    </select>
+    <select id="updateBysencondId" parameterType="io.renren.modules.sys.entity.DictEntity">
+        UPDATE dict set second_name = #{secondName}, `desc` = #{desc} WHERE second_id = #{secondId}
+    </select>
+    <delete id="removeSecondIds" parameterType="java.util.List">
+        delete from dict where second_id in
+        <foreach collection="list" open="(" index="index" item="item" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
 
+    <insert id="saveDict" parameterType="io.renren.modules.sys.entity.DictEntity" useGeneratedKeys="true" keyProperty="secondId">
+      INSERT INTO dict(type_id, second_name, `desc`, `user_id`) VALUES (#{typeId}, #{secondName},
+      #{desc}, #{userId})
+    </insert>
 
+    <select id="quertByTypeId" parameterType="java.lang.Integer" resultMap="dictMap">
+        SELECT * FROM dict WHERE type_id = #{0}
+    </select>
 </mapper>

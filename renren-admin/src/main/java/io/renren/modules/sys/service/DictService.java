@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.DictEntity;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -16,5 +17,6 @@ import java.util.Map;
 public interface DictService extends IService<DictEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
 }
 
