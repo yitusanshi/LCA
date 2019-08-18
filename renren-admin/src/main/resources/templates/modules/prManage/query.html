@@ -10,8 +10,8 @@
         <div class="grid-btn">
             <div class="form-group col-sm-2">
                 <select id="select" v-model="q.id"  class="form-control">
-                    <option v-for = "item in options" :key="item" :lable="item" :value="item">
-                        {{item}}
+                    <option v-for = "item in options" :value="item.secondId">
+                        {{item.secondName}}
                     </option>
                 </select>
 

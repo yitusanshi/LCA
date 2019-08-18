@@ -36,6 +36,44 @@ $(function () {
     });
 });
 
+//选择一条记录
+function getSelectedDictRow() {
+    var grid = $("#jqGrid");
+    var rowKey = grid.getGridParam("selrow");
+    if(!rowKey){
+        alert("请选择一条记录");
+        return ;
+    }
+
+    var selectedIDs = grid.getGridParam("selarrrow");
+    if(selectedIDs.length > 1){
+        alert("只能选择一条记录");
+        return ;
+    }
+    console.log("data", selectedIDs[0]);
+    console.log("data", grid.getCell(selectedIDs[0], "secondId"));
+    var id = grid.getCell(selectedIDs[0], "secondId");
+    return id;
+}
+
+//选择多条记录
+function getSelectedDictRows() {
+    var grid = $("#jqGrid");
+    var rowKey = grid.getGridParam("selrow");
+    if(!rowKey){
+        alert("请选择一条记录");
+        return ;
+    }
+    var selectedIDs = grid.getGridParam("selarrrow");
+    var ids = new Array();
+    for (var i = 0; i < selectedIDs.length; i++) {
+        //选中行的时间
+        var secondId = grid.getCell(selectedIDs[i], "secondId");
+        ids[i] = secondId;
+    }
+    return ids;
+}
+
 var vm = new Vue({
     el: '#rrapp',
     data: {
@@ -44,9 +82,7 @@ var vm = new Vue({
         },
         showList: true,
         title: null,
-        dict: {
-            typeId: '1'
-        }
+        dict: {}
     },
     methods: {
         query: function () {
@@ -55,10 +91,12 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.dict = {};
+            vm.dict = {
+                typeId : 1
+            };
         },
         update: function (event) {
-            var id = getSelectedRow();
+            var id = getSelectedDictRow();
             if (id == null) {
                 return;
             }
@@ -69,7 +107,7 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             console.log("vm", vm.dict);
-            var url = vm.dict.id == null ? "sys/lcadict/save" : "sys/lcadict/update";
+            var url = vm.dict.typeId == null ? "sys/lcadict/save" : "sys/lcadict/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -87,7 +125,7 @@ var vm = new Vue({
             });
         },
         del: function (event) {
-            var ids = getSelectedRows();
+            var ids = getSelectedDictRows();
             if (ids == null) {
                 return;
             }

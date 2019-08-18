@@ -1,10 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>产品目标定义</title>
+    <title>目标产品定义</title>
     <#include "/header.html">
 </head>
 <body>
-产品目标定义
+<div id="rrapp" v-cloak>
+<div v-show="showList" class="panel panel-default">
+    <div class="panel-heading">目标产品定义</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">产品名称</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.prName" placeholder="产品名称"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">产品生产企业</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.companyName" placeholder="产品生产企业"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">规则型号(非必填)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.modelType" placeholder="规则型号"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">产品类别(非必填)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.productType" placeholder="产品类别"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">形状与形态(非必填)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.shape" placeholder="形状与形态"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">功能单位</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.functionUnit" placeholder="功能单位"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">评价数量</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.evalNum" placeholder="评价数量"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">系统边界</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.systemBoundary" placeholder="系统边界"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">评价年</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="productDefine.year" placeholder="评价年"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..." @click="saveOrUpdate" value="保存"/>
+        </div>
+    </form>
+</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/js/modules/prManage/productdefine.js?_${.now?long}"></script>
 </body>
 </html>

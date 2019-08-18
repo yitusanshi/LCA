@@ -38,4 +38,26 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
         return new PageUtils(page);
     }
 
+    public  DictEntity getByseconId(int secondid){
+        DictEntity dictEntity = dictDao.getByseconId(secondid);
+        return dictEntity;
+    }
+    public void updateBysencondId(DictEntity dictEntity){
+        dictDao.updateBysencondId(dictEntity);
+    }
+    public void removeSecondIds(List<Integer> ids){
+        dictDao.removeSecondIds(ids);
+    }
+
+    public Integer saveDict(DictEntity dictEntity){
+        SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        Long userid = userEntity.getUserId();
+        dictEntity.setUserId(userid);
+        dictDao.saveDict(dictEntity);
+        System.out.println("-------" + dictEntity.getSecondId());
+        return dictEntity.getSecondId();
+    }
+    public List<DictEntity> quertByTypeId(int typeId){
+        return dictDao.quertByTypeId(typeId);
+    }
 }

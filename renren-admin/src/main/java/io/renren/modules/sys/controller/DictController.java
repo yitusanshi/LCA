@@ -1,11 +1,15 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.impl.DictServiceImpl;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +23,8 @@ import io.renren.modules.sys.service.DictService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
+import javax.annotation.Resource;
+
 
 /**
  * 字段映射表  id和name的映射
@@ -30,14 +36,14 @@ import io.renren.common.utils.R;
 @RestController
 @RequestMapping("sys/lcadict")
 public class DictController {
-    @Autowired
-    private DictService dictService;
+    @Resource
+    private DictServiceImpl dictService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("sys:lcadict:list")
+    //@RequiresPermissions("sys:lcadict:list")
     public R list(@RequestParam Map<String, Object> params) {
         System.out.println(111111);
         PageUtils page = dictService.queryPage(params);
@@ -48,10 +54,10 @@ public class DictController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{typeId}")
+    @RequestMapping("/info/{secondId}")
     @RequiresPermissions("sys:lcadict:info")
-    public R info(@PathVariable("typeId") Integer typeId) {
-        DictEntity dict = dictService.getById(typeId);
+    public R info(@PathVariable("secondId") Integer secondId) {
+        DictEntity dict = dictService.getByseconId(secondId);
 
         return R.ok().put("dict", dict);
     }
@@ -63,6 +69,9 @@ public class DictController {
     @RequiresPermissions("sys:lcadict:save")
     public R save(@RequestBody DictEntity dict) {
         System.out.println(JSON.toJSONString(dict));
+        SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        Long userid = userEntity.getUserId();
+        dict.setUserId(userid);
         dictService.save(dict);
 
         return R.ok();
@@ -75,7 +84,7 @@ public class DictController {
     @RequiresPermissions("sys:lcadict:update")
     public R update(@RequestBody DictEntity dict) {
         ValidatorUtils.validateEntity(dict);
-        dictService.updateById(dict);
+        dictService.updateBysencondId(dict);
 
         return R.ok();
     }
@@ -86,9 +95,20 @@ public class DictController {
     @RequestMapping("/delete")
     @RequiresPermissions("sys:lcadict:delete")
     public R delete(@RequestBody Integer[] typeIds) {
-        dictService.removeByIds(Arrays.asList(typeIds));
+        dictService.removeSecondIds(Arrays.asList(typeIds));
 
         return R.ok();
+    }
+    /*
+    * 根据typeid查询
+    * */
+    @RequestMapping("/query/{typeId}")
+    @RequiresPermissions("sys:lcadict:info")
+    public R query(@PathVariable("typeId") Integer typeId) {
+        System.out.println("-----"+ typeId);
+        List<DictEntity> list = dictService.quertByTypeId(typeId);
+        //保持和前端同步
+        return R.ok().put("dictList", list);
     }
 
 }

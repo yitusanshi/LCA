@@ -2,9 +2,12 @@ package io.renren.modules.prManage.controller;
 
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.entity.DictEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysUserService;
+import io.renren.modules.sys.service.impl.DictServiceImpl;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import io.renren.modules.prManage.service.ProductDefineService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -35,6 +39,8 @@ public class ProductDefineController {
     private ProductDefineService productDefineService;
     @Autowired
     private SysUserService sysUserService;
+    @Resource
+    private DictServiceImpl dictService;
 
     /**
      * 列表
@@ -73,7 +79,7 @@ public class ProductDefineController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
+   /* @RequestMapping("/save")
     @RequiresPermissions("sys:productdefine:save")
     public R save(){
         //productDefineService.save(productDefine);
@@ -83,8 +89,22 @@ public class ProductDefineController {
         System.out.println("---------------------------");
         return R.ok().put("options", list);
         //return R.ok();
+    }*/
+    @RequestMapping("/save")
+    @RequiresPermissions("sys:productdefine:save")
+    public R save(@RequestBody ProductDefineEntity productDefine){
+        System.out.println(JSON.toJSON(productDefine).toString());
+        DictEntity dictEntity = new DictEntity();
+        dictEntity.setTypeId(2);
+        dictEntity.setSecondName(productDefine.getCompanyName());
+        int id = dictService.saveDict(dictEntity);
+        productDefine.setIndustryId(id);
+        SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        Long userid = userEntity.getUserId();
+        productDefine.setUserId(userid);
+        productDefineService.save(productDefine);
+        return R.ok();
     }
-
     /**
      * 修改
      */
