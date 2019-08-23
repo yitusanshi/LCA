@@ -19,5 +19,6 @@ public interface UsageStatisticsService extends IService<UsageStatisticsEntity> 
     PageUtils queryPage(Map<String, Object> params);
 
     List<UsageStatisticsEntity> getMaterialByBatch(Map<String, Object> map);
+
 }
 

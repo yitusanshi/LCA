@@ -21,7 +21,10 @@
     <select id="getMaterialByBatch" parameterType="java.util.Map" resultMap="usageStatisticsMap">
     SELECT * FROM
     usage_statistics
-    WHERE user_id=#{user_id} AND version=#{version} AND flag=#{flag}
+    WHERE user_id=#{user_id} AND version=#{version}
+    <if test="flag != null">
+        AND flag=#{flag}
+    </if>
     </select>
 
 
