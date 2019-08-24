@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div v-show="showList">
+    <div v-show="mainList">
         <div class="grid-btn">
             <shiro.hasPermission name="sys:batch:save">
                 <a class="btn btn-primary" @click="addBatchNo"><i class="fa fa-plus"></i>&nbsp;新增批次号</a>
@@ -35,76 +35,41 @@
 
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
-        <div class="panel-heading">{{title}}</div>
-        <form class="form-horizontal">
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.materialId" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.name" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.usage" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.unit" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.desc" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.parentId" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.flag" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.createdTime" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.version" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="usageStatistics.userId" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..."
-                       @click="saveOrUpdate" value="确定"/>
-                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-            </div>
-        </form>
+    <div v-show="showUsage" class="panel panel-default">
+        <div class="panel-heading">{{usage_title}}</div>
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <a class="btn btn-primary" @click="addConsume('10')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="rawMaterialTable"></table>
+        <div id="rawGridPager"></div>
+
+        <!-- 资源能源消耗-->
+        <div class="panel-heading">资源能源消耗</div>
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <a class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="reseTable"></table>
+        <div id="reseGridPager"></div>
+
+        <!--排放与废气-->
+        <div class="panel-heading">排放与废气</div>
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <a class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="gasTable"></table>
+        <div id="gasGridPager"></div>
+
+        <!--运输过程-->
+        <div class="panel-heading">运输过程</div>
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <a class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="transPortTable"></table>
+        <div id="transPortGridPager"></div>
     </div>
 
     <!-- 修改密码 -->
@@ -126,12 +91,30 @@
             </div>
         </form>
     </div>
+
+    <!-- 修改密码 -->
+    <div id="consume" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">批次号</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">创建人</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bName" placeholder="创建人"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
 </div>
 <script src="${request.contextPath}/statics/js/modules/cycle/material.js?_${.now?long}"></script>
-<!--<script type="text/html" id="barDemo">
-    <button type="button">增加</button>
-    <button type="button">编辑</button>
-    <button type="button">删除</button>
-</script>-->
+
+
 </body>
 </html>

@@ -1,13 +1,29 @@
 字典表中dict字段说明：
     typeid:10 原材料名称
 
-标识对应flag    原料0、生产1、销售2、使用3、回收4
+标识对应flag
+    原料阶段 flag=0
+    生产阶段 flag=1
+    销售阶段 flag=2
+    使用阶段 flag=3
+    回收阶段 flag=4
 
 
-11 资源能源下拉框
+
+typeid对应的是下拉框的概念为意思是为每一个下拉框给个身份Id
+10 原材料名称 其父类ID为0也就是Parent_id=0
+        钢帘线、炭黑、天然橡胶、合成橡胶、尼龙帘布、胎圈钢丝
+        钢帘线对应的是second_id=material_id
+
+11 上游原材料名称
+12 资源能源下拉框
+        电、煤、天然气，其父类id也就是parent_id为钢帘线的
+13 排放与废气
+14 运输过程
+15 包装过程
 
 当录入数据时，根据下拉框对应的typeid获取所有数据，然后保存数据时，将second_id保存到material_id,
-如果选择原料了，eg 钢帘线，炭黑，则将他们的second_id存入parent_id.
+如果选择原料了，eg 钢帘线，炭黑，则将他们的second_id存入parent_id.（钢帘线，炭黑默认有个产品的概念）
 
 
 
@@ -32,6 +48,17 @@ typeid 10 原材料名称比如钢帘线、炭黑等 用户可以新增
 
 
 15 包装过程
+
+
+rawMaterialTable 原料表
+resources and energy
+resE 资源能源
+
+
+0海， 1陆， 2空
+运输距离：默认是km
+运输重量：默认是t
+
 
 
 

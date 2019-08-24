@@ -111,4 +111,14 @@ public class DictController {
         return R.ok().put("dictList", list);
     }
 
+/*    *//*
+     * 根据typeid查询
+     * *//*
+    @RequestMapping("/listDict")
+    public R query(@RequestParam Map<String, Object> params) {
+
+        //保持和前端同步
+        return R.ok().put("dictList", "");
+    }*/
+
 }
