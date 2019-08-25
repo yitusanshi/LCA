@@ -9,14 +9,15 @@
     <div v-show="showList">
         <div class="grid-btn">
             <div class="form-group col-sm-2">
-                <select id="select" v-model="q.id"  class="form-control">
+                <select id="select" v-model="q.id"  class="form-control" >
+                    <option value="-1">选择行业</option>
                     <option v-for = "item in options" :value="item.secondId">
                         {{item.secondName}}
                     </option>
                 </select>
 
             </div>
-            <a class="btn btn-default">选择行业</a>
+           <!-- <a class="btn btn-default">选择行业</a>-->
             <input type="text" class="form-control col-sm-2" v-model="q.prName" @keyup.enter="query" placeholder="产品名称">
             <a class="btn btn-default" @click="query">查询</a>
 

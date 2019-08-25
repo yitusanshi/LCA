@@ -1,6 +1,8 @@
 package io.renren.modules.sys.service.impl;
 
 import io.renren.common.utils.Constant;
+import io.renren.modules.sys.dao.DictDao;
+import io.renren.modules.sys.entity.DictEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -25,6 +27,8 @@ import io.renren.modules.prManage.service.ProductDefineService;
 public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, ProductDefineEntity> implements ProductDefineService {
     @Autowired
     private ProductDefineDao productDefineDao;
+    @Autowired
+    private DictDao dictDao;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         Integer industryId = Integer.valueOf((String) params.get("id"));
@@ -52,8 +56,16 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
         map.put("prName", prName);
         map.put("industryId", industryId);
         List<ProductDefineEntity> list = productDefineDao.getQueryList(map);
+        for(ProductDefineEntity productDefineEntity : list){
+            int i = productDefineEntity.getSystemBoundary();
+            DictEntity dictEntity =  dictDao.getByseconId(i);
+            productDefineEntity.setSystemBoundaryName(dictEntity.getSecondName());
+        }
         page.setRecords(list);
         return new PageUtils(page);
+    }
+    public void delById(List<Integer> list){
+        productDefineDao.delById(list);
     }
 
 }

@@ -26,7 +26,12 @@
          <if test = '"userid" == NULL' >
          p.user_id = #{userid}
          </if>
-          industry_id = #{industryId} AND d.second_name LIKE "%"#{prName}"%"
+          industry_id = #{industryId} AND p.pr_name LIKE "%"#{prName}"%"
     </select>
-
+    <delete id="delById" parameterType="java.util.List">
+        delete from product_define where id in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>
