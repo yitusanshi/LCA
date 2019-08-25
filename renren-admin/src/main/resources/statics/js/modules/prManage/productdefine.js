@@ -7,17 +7,15 @@ $(function () {
             {label: '产品名称', name: 'prName', index: 'pr_name', width: 80},
             {label: '公司名称', name: 'companyName', index: 'company_name', width: 80},
             {label: '所属行业', name: 'industryName', index: 'second_name', width: 80},
-            {label: '系统边界', name: 'systemBoundary', index: 'system_boundary', width: 80},
+            {label: '系统边界', name: 'systemBoundaryName', index: 'system_boundary', width: 80},
             /*{ label: '规则型号', name: 'modelType', index: 'model_type', width: 80 }, */
             /*{ label: '产品类别', name: 'productType', index: 'product_type', width: 80 },
             { label: '形状与形态', name: 'shape', index: 'shape', width: 80 }, 	*/
-            {label: '功能单位', name: 'functionUnit', index: 'function_unit', width: 80},
-            {label: '评价数量', name: 'evalNum', index: 'eval_num', width: 80},
+            {label: '功能单位', name: 'functionUnit', index: 'function_unit', width: 40},
+            {label: '评价数量', name: 'evalNum', index: 'eval_num', width: 50},
 
-            {label: '创建时间', name: 'insertTime', index: 'insert_time', width: 80},
-
-            {label: '创建人', name: 'userName', index: 'username', width: 80},
-            {label: '创建时间', name: 'insertTime', index: 'insert_time', width: 80}
+            {label: '创建人', name: 'userName', index: 'username', width: 50},
+            {label: '创建时间', name: 'insertTime', index: 'insert_time', width: 100}
         ],
         viewrecords: true,
         height: 385,
@@ -46,12 +44,50 @@ $(function () {
     });
 
 });
+function getSelectedProductRow() {
+    var grid = $("#jqGrid");
+    var rowKey = grid.getGridParam("selrow");
+    if(!rowKey){
+        alert("请选择一条记录");
+        return ;
+    }
+
+    var selectedIDs = grid.getGridParam("selarrrow");
+    if(selectedIDs.length > 1){
+        alert("只能选择一条记录");
+        return ;
+    }
+    console.log("data", selectedIDs[0]);
+    console.log("data", grid.getCell(selectedIDs[0], "id"));
+    var id = grid.getCell(selectedIDs[0], "id");
+    return id;
+}
+
+//选择多条记录
+function getSelectedProductRows() {
+    var grid = $("#jqGrid");
+    var rowKey = grid.getGridParam("selrow");
+    if(!rowKey){
+        alert("请选择一条记录");
+        return ;
+    }
+    var selectedIDs = grid.getGridParam("selarrrow");
+    var ids = new Array();
+    for (var i = 0; i < selectedIDs.length; i++) {
+        //选中行的时间
+        var secondId = grid.getCell(selectedIDs[i], "id");
+        ids[i] = secondId;
+    }
+    return ids;
+}
+
 
 var vm = new Vue({
     el: '#rrapp',
     data: {
         q: {
-            prName: null
+            prName: null,
+            id: -1
         },
         showList: true,
         title: null,
@@ -113,7 +149,7 @@ var vm = new Vue({
             });
         },
         del: function (event) {
-            var ids = getSelectedRows();
+            var ids = getSelectedProductRows();
             if (ids == null) {
                 return;
             }
@@ -125,7 +161,7 @@ var vm = new Vue({
                     lock = true;
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "sys/lcadict/query/" + i,
+                        url: baseURL + "sys/productdefine/delete",
                         contentType: "application/json",
                         data: JSON.stringify(ids),
                         success: function (r) {
@@ -167,6 +203,7 @@ var vm = new Vue({
                 },
             });
         },
+
         /*send(i) {
 		    alert("b")
             $.ajax({
@@ -196,7 +233,6 @@ var vm = new Vue({
         },
         reload: function (event) {
             vm.showList = true;
-            alert("11");
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page,

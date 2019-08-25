@@ -30,8 +30,8 @@
     </delete>
 
     <insert id="saveDict" parameterType="io.renren.modules.sys.entity.DictEntity" useGeneratedKeys="true" keyProperty="secondId">
-      INSERT INTO dict(type_id, second_name, `desc`, `user_id`) VALUES (#{typeId}, #{secondName},
-      #{desc}, #{userId})
+      INSERT INTO dict(type_id, second_name, `desc`, `user_id`, unit) VALUES (#{typeId}, #{secondName},
+      #{desc}, #{userId}, #{unit})
     </insert>
 
     <select id="quertByTypeId" parameterType="java.lang.Integer" resultMap="dictMap">

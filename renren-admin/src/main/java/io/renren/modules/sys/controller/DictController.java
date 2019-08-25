@@ -72,7 +72,7 @@ public class DictController {
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
         dict.setUserId(userid);
-        dictService.save(dict);
+        dictService.saveDict(dict);
 
         return R.ok();
     }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.prManage.entity.ProductDefineEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,6 @@ import java.util.Map;
 public interface ProductDefineService extends IService<ProductDefineEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    void delById(List<Integer> list);
 }
 

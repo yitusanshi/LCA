@@ -35,9 +35,9 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("sys/productdefine")
 public class ProductDefineController {
-    @Autowired
+    @Resource
     private ProductDefineService productDefineService;
-    @Autowired
+    @Resource
     private SysUserService sysUserService;
     @Resource
     private DictServiceImpl dictService;
@@ -94,11 +94,11 @@ public class ProductDefineController {
     @RequiresPermissions("sys:productdefine:save")
     public R save(@RequestBody ProductDefineEntity productDefine){
         System.out.println(JSON.toJSON(productDefine).toString());
-        DictEntity dictEntity = new DictEntity();
+       /* DictEntity dictEntity = new DictEntity();
         dictEntity.setTypeId(2);
         dictEntity.setSecondName(productDefine.getCompanyName());
         int id = dictService.saveDict(dictEntity);
-        productDefine.setIndustryId(id);
+        productDefine.setIndustryId(id);*/
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
         productDefine.setUserId(userid);
@@ -123,7 +123,8 @@ public class ProductDefineController {
     @RequestMapping("/delete")
     @RequiresPermissions("sys:productdefine:delete")
     public R delete(@RequestBody Integer[] ids){
-        productDefineService.removeByIds(Arrays.asList(ids));
+        System.out.println(ids[0]);
+        productDefineService.delById(Arrays.asList(ids));
 
         return R.ok();
     }

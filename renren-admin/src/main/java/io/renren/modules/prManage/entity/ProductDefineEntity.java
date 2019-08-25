@@ -76,4 +76,5 @@ public class ProductDefineEntity implements Serializable {
 	//前端适配字段
 	private String userName;
 	private String industryName;
+	private String systemBoundaryName;
 }
