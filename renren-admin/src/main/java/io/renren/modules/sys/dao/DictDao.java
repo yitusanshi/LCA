@@ -9,17 +9,22 @@ import java.util.List;
 
 /**
  * 字段映射表  id和name的映射
- * 
+ *
  * @author Mark
  * @email sunlightcs@gmail.com
  * @date 2019-08-09 19:23:59
  */
 @Mapper
 public interface DictDao extends BaseMapper<DictEntity> {
-	List<DictEntity> getQueryList(HashMap<String, Object> map);
-	DictEntity getByseconId(int secondId);
-	public void updateBysencondId(DictEntity dictEntity);
-	void removeSecondIds(List<Integer> list);
-	Integer saveDict(DictEntity dictEntity);
-	List<DictEntity> quertByTypeId(int typeId);
+    List<DictEntity> getQueryList(HashMap<String, Object> map);
+
+    DictEntity getByseconId(int secondId);
+
+    public void updateBysencondId(DictEntity dictEntity);
+
+    void removeSecondIds(List<Integer> list);
+
+    Integer saveDict(DictEntity dictEntity);
+
+    List<DictEntity> quertByTypeId(int typeId);
 }

@@ -16,12 +16,13 @@
         <result property="createdTime" column="created_time"/>
         <result property="version" column="version"/>
         <result property="userId" column="user_id"/>
+        <result property="formId" column="form_id"/>
     </resultMap>
 
     <select id="getMaterialByBatch" parameterType="java.util.Map" resultMap="usageStatisticsMap">
     SELECT * FROM
-    usage_statistics u ,dict d
-    WHERE d.type_id=#{typeId} and u.material_id=d.second_id
+    usage_statistics u
+    WHERE u.form_id=#{formId}
     and u.user_id=#{userId} AND u.version=#{version} AND u.flag=#{flag} AND u.parent_id=#{parentId}
     </select>
 
