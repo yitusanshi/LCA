@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.CalculateFeatureDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.CalculateFeatureEntity" id="calculateFeatureMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="feature11SecondId" column="feature_11_second_id"/>
+        <result property="factor" column="factor"/>
+        <result property="unit" column="unit"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="excelOrder" column="excel_order"/>
+    </resultMap>
+
+    <select id="getById" parameterType="java.lang.Integer" resultMap="calculateFeatureMap">
+        SELECT * FROM calculate_feature WHERE feature_11_second_id = #{0}
+    </select>
+</mapper>
