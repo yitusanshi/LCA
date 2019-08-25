@@ -63,7 +63,7 @@ public class UsageStatisticsController extends AbstractController {
         map.put("userId", getUserId());
         map.put("flag", flag);
         map.put("parentId", parentId);
-        map.put("typeId", typeId);
+        map.put("formId", typeId);
         IPage<UsageStatisticsEntity> page = new Query<UsageStatisticsEntity>().getPage(params);
         List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
         page.setRecords(usageStatisticsEntityList);

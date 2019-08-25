@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * 使用量
- * 
+ *
  * @author Mark
  * @email sunlightcs@gmail.com
  * @date 2019-08-09 19:23:59
@@ -17,52 +17,57 @@ import java.util.Date;
 @Data
 @TableName("usage_statistics")
 public class UsageStatisticsEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	@TableId
-	private Integer id;
-	/**
-	 * 
-	 */
-	private Integer materialId;
-	/**
-	 * 
-	 */
-	private String name;
-	/**
-	 * 
-	 */
-	private Double usage;
-	/**
-	 * 
-	 */
-	private String unit;
-	/**
-	 * 
-	 */
-	private String desc;
-	/**
-	 * 
-	 */
-	private Integer parentId;
-	/**
-	 * 
-	 */
-	private Integer flag;
-	/**
-	 * 
-	 */
-	private Date createdTime;
-	/**
-	 * 
-	 */
-	private String version;
-	/**
-	 * 
-	 */
-	private long userId;
+    /**
+     *
+     */
+    @TableId
+    private Integer id;
+    /**
+     *
+     */
+    private Integer materialId;
+    /**
+     *
+     */
+    private String name;
+    /**
+     *
+     */
+    private Double usage;
+    /**
+     *
+     */
+    private String unit;
+    /**
+     *
+     */
+    private String desc;
+    /**
+     *
+     */
+    private Integer parentId;
+    /**
+     *
+     */
+    private Integer flag;
+    /**
+     *
+     */
+    private Date createdTime;
+    /**
+     *
+     */
+    private String version;
+    /**
+     *
+     */
+    private long userId;
+
+    /**
+     *
+     */
+    private String formId;
 
 }
