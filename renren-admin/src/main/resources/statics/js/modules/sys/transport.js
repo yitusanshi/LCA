@@ -4,13 +4,17 @@ $(function () {
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
-			{ label: '', name: 'materialId', index: 'material_id', width: 80 }, 			
-			{ label: '', name: 'source', index: 'source', width: 80 }, 			
+			{ label: '物质ID', name: 'materialId', index: 'material_id', width: 80 }, 			
+			{ label: '产地', name: 'source', index: 'source', width: 80 }, 			
 			{ label: '0海， 1陆， 2空', name: 'type', index: 'type', width: 80 }, 			
-			{ label: '', name: 'distance', index: 'distance', width: 80 }, 			
-			{ label: '', name: 'version', index: 'version', width: 80 }, 			
+			{ label: '运输距离（单位是km）', name: 'distance', index: 'distance', width: 80 }, 			
+			{ label: '批次号', name: 'version', index: 'version', width: 80 }, 			
 			{ label: '', name: 'userId', index: 'user_id', width: 80 }, 			
-			{ label: '', name: 'createdTime', index: 'created_time', width: 80 }			
+			{ label: '', name: 'createdTime', index: 'created_time', width: 80 }, 			
+			{ label: '' +
+                    '', name: 'weight', index: 'weight', width: 80 },
+			{ label: '运输物质名称', name: 'materialName', index: 'material_name', width: 80 }, 			
+			{ label: '属于的标识 0 原料 1 生产 2 销售 3 使用 4 回收', name: 'flag', index: 'flag', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,

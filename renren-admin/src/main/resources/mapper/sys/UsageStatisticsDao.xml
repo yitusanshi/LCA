@@ -20,11 +20,9 @@
 
     <select id="getMaterialByBatch" parameterType="java.util.Map" resultMap="usageStatisticsMap">
     SELECT * FROM
-    usage_statistics
-    WHERE user_id=#{user_id} AND version=#{version}
-    <if test="flag != null">
-        AND flag=#{flag}
-    </if>
+    usage_statistics u ,dict d
+    WHERE d.type_id=#{typeId} and u.material_id=d.second_id
+    and u.user_id=#{userId} AND u.version=#{version} AND u.flag=#{flag} AND u.parent_id=#{parentId}
     </select>
 
 

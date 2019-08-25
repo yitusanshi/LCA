@@ -1,8 +1,12 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.renren.common.utils.Query;
 import io.renren.common.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +22,14 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
 
-
 /**
- * 
- *
- * @author Mark
- * @email sunlightcs@gmail.com
- * @date 2019-08-09 19:23:59
+ * @author 九九
+ * @email 875253371@qq.com
+ * @date 2019-08-24 10:34:17
  */
 @RestController
 @RequestMapping("sys/transport")
-public class TransportController {
+public class TransportController extends AbstractController {
     @Autowired
     private TransportService transportService;
 
@@ -37,7 +38,7 @@ public class TransportController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:transport:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = transportService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -49,7 +50,7 @@ public class TransportController {
      */
     @RequestMapping("/info/{id}")
     @RequiresPermissions("sys:transport:info")
-    public R info(@PathVariable("id") Integer id){
+    public R info(@PathVariable("id") Integer id) {
         TransportEntity transport = transportService.getById(id);
 
         return R.ok().put("transport", transport);
@@ -60,7 +61,7 @@ public class TransportController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:transport:save")
-    public R save(@RequestBody TransportEntity transport){
+    public R save(@RequestBody TransportEntity transport) {
         transportService.save(transport);
 
         return R.ok();
@@ -71,10 +72,10 @@ public class TransportController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("sys:transport:update")
-    public R update(@RequestBody TransportEntity transport){
+    public R update(@RequestBody TransportEntity transport) {
         ValidatorUtils.validateEntity(transport);
         transportService.updateById(transport);
-        
+
         return R.ok();
     }
 
@@ -83,10 +84,34 @@ public class TransportController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("sys:transport:delete")
-    public R delete(@RequestBody Integer[] ids){
+    public R delete(@RequestBody Integer[] ids) {
         transportService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    //通过用户的的version和用户ID查询用户的信息
+    @RequestMapping("/listTransport")
+    public R listMaterial(@RequestParam Map<String, Object> params) {
+        System.out.println("运输查询开始。。。start");
+        String batchNo = (String) params.get("batchNo");
+        String parentId = (String) params.get("materialId");
+        String flag = (String) params.get("flag");
+        String typeId = (String) params.get("typeId");
+        System.out.println("batchNo【" + batchNo + "】parentId【" + parentId + "】" + "【" + flag + "】" + flag + "typeId【" + typeId + getUserId());
+        if (batchNo == "-1" || "-1".equals(batchNo)) {
+            return R.ok();
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("version", batchNo);
+        map.put("userId", getUserId());
+        map.put("flag", flag);
+        map.put("parentId", parentId);
+        map.put("typeId", typeId);
+        IPage<TransportEntity> page = new Query<TransportEntity>().getPage(params);
+        List<TransportEntity> usageStatisticsEntityList = transportService.getMaterialByBatch(map);
+        page.setRecords(usageStatisticsEntityList);
+        return R.ok().put("page", new PageUtils(page));
     }
 
 }

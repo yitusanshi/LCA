@@ -51,14 +51,19 @@ public class UsageStatisticsController extends AbstractController {
     public R listMaterial(@RequestParam Map<String, Object> params) {
         System.out.println("已经进来了。。。。。。。。。。。。。。。。。。");
         String batchNo = (String) params.get("batchNo");
-        System.out.println(batchNo + "=====-=============" + getUserId());
+        String parentId = (String) params.get("materialId");
+        String flag = (String) params.get("flag");
+        String typeId = (String) params.get("typeId");
+        System.out.println("batchNo【" + batchNo + "】parentId【" + parentId + "】" + "【" + flag + "】" + flag + "typeId【" + typeId + getUserId());
         if (batchNo == "-1" || "-1".equals(batchNo)) {
             return R.ok();
         }
         Map<String, Object> map = new HashMap<>();
         map.put("version", batchNo);
-        map.put("user_id", getUserId());
-        map.put("flag", 1);
+        map.put("userId", getUserId());
+        map.put("flag", flag);
+        map.put("parentId", parentId);
+        map.put("typeId", typeId);
         IPage<UsageStatisticsEntity> page = new Query<UsageStatisticsEntity>().getPage(params);
         List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
         page.setRecords(usageStatisticsEntityList);
