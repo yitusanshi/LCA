@@ -25,6 +25,8 @@ typeid对应的是下拉框的概念为意思是为每一个下拉框给个身�
 当录入数据时，根据下拉框对应的typeid获取所有数据，然后保存数据时，将second_id保存到material_id,
 如果选择原料了，eg 钢帘线，炭黑，则将他们的second_id存入parent_id.（钢帘线，炭黑默认有个产品的概念）
 
+
+
 当进行计算时，首先根据version查询当前所有版本的数据，然后根据不同的parentid去dict表获取不同的
 原料名称，比如钢帘线、炭黑等。再获取material_id，去calculate_feature获取所有的特征数据进行累加计算。
 
