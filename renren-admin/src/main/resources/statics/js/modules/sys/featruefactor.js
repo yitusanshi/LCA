@@ -4,13 +4,13 @@ $(function () {
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
-			{ label: '', name: 'zhName', index: 'zh_name', width: 80 }, 			
-			{ label: '', name: 'enName', index: 'en_name', width: 80 }, 			
-			{ label: '', name: 'abb', index: 'abb', width: 80 }, 			
-			{ label: '', name: 'unit', index: 'unit', width: 80 }, 			
-			{ label: '', name: 'source', index: 'source', width: 80 }, 			
-			{ label: '', name: 'createdTime', index: 'created_time', width: 80 }, 			
-			{ label: '', name: 'userName', index: 'user_name', width: 80 }			
+			{ label: '中文名称', name: 'zhName', index: 'zh_name', width: 80 },
+			{ label: '英文名称', name: 'enName', index: 'en_name', width: 80 },
+			{ label: '编写', name: 'abb', index: 'abb', width: 80 },
+			{ label: '单位', name: 'unit', index: 'unit', width: 80 },
+			{ label: '来源', name: 'source', index: 'source', width: 80 },
+			/*{ label: '', name: 'createdTime', index: 'created_time', width: 80 },
+			{ label: '', name: 'userName', index: 'user_name', width: 80 }	*/
         ],
 		viewrecords: true,
         height: 385,
