@@ -38,7 +38,7 @@
     <div v-show="showUsage" class="panel panel-default">
         <div class="panel-heading">{{usage_title}}</div>
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
-            <a class="btn btn-primary" @click="addConsume('10')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary" @click="addConsume('11')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
             <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="rawMaterialTable"></table>
@@ -47,7 +47,7 @@
         <!-- 资源能源消耗-->
         <div class="panel-heading">资源能源消耗</div>
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
-            <a class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary" @click="addConsume('12')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
             <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="reseTable"></table>
@@ -56,7 +56,7 @@
         <!--排放与废气-->
         <div class="panel-heading">排放与废气</div>
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
-            <a class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary" @click="addConsume('13')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
             <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="gasTable"></table>
@@ -65,14 +65,14 @@
         <!--运输过程-->
         <div class="panel-heading">运输过程</div>
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
-            <a class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary" @click="addConsume('14')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
             <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="transPortTable"></table>
         <div id="transPortGridPager"></div>
     </div>
 
-    <!-- 修改密码 -->
+    <!-- 增加批次号 -->
     <div id="batchNo" style="display: none;">
         <form class="form-horizontal">
             <div class="form-group">
@@ -92,24 +92,46 @@
         </form>
     </div>
 
-    <!-- 修改密码 -->
-    <div id="consume" style="display: none;">
-        <form class="form-horizontal">
-            <div class="form-group">
+    <!--    &lt;!&ndash; 新增物质名称&ndash;&gt;
+        <div id="consume" style="display: none;">
+            <form class="form-horizontal">
                 <div class="form-group">
-                    <div class="col-sm-2 control-label">批次号</div>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">{{add_title_name}}</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">{{useage_name}}</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bName" placeholder="创建人"/>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">创建人</div>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="bName" placeholder="创建人"/>
-                    </div>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>-->
+
+    <div class="layui-form-item" id="consume" style="display: none;">
+        <label class="layui-form-label">wa</label>
+        <div class="layui-input-block">
+            <select name="city" lay-verify="" lay-search>
+                <option value="021">form</option>
+                <option value="0571">layim</option>
+                <option value="021">form</option>
+                <option value="0571">layim</option>
+                <option value="021">form</option>
+                <option value="0571">layim</option>
+                <option value="021">form</option>
+                <option value="0571">layim</option>
+            </select>
+        </div>
     </div>
 
 </div>

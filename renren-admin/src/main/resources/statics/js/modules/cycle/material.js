@@ -295,20 +295,65 @@ function showMaterial(userId, materialId, name) {
 
 
 //添加消耗信息
-function addConsume(str) {
-    alert(str);
-    $.ajax({
-        type: "POST",
-        url: baseURL + "sys/lcadict/query/" + str,
-        dataType: "json",
-        success: function (result) {
-            if (result.code == 0) {
-                vm.consumes = result.dictList;
-            } else {
-                layer.alert(result.msg);
-            }
+function addConsume(typeId) {
+    var titles = "";
+    if (typeId == '11') {
+        titles = "添加上游原料";
+        vm.add_title_name = "上游原材料名称";
+        vm.useage_name = "消耗量";
+
+    } else if (typeId == '12') {
+        titles = '添加资源能源信息';
+        vm.add_title_name = "资源能源名称";
+        vm.useage_name = "消耗量";
+
+    } else {
+        titles = '添加排放信息';
+        vm.add_title_name = "排放名称";
+        vm.useage_name = "排放量";
+
+    }
+    ;
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: titles,
+        area: ['550px', '270px'],
+        shadeClose: false,
+        content: jQuery("#consume"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            /*         var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName;
+                     $.ajax({
+                         type: "POST",
+                         url: baseURL + "sys/batch/save",
+                         data: data,
+                         dataType: "json",
+                         success: function (result) {
+                             if (result.code == 0) {
+                                 layer.close(index);
+                                 layer.alert('保存成功', function (index) {
+                                     location.reload();
+                                 });
+                             } else {
+                                 layer.alert(result.msg);
+                             }
+                         }
+                     });*/
         }
     });
+    /*    $.ajax({
+            type: "POST",
+            url: baseURL + "sys/lcadict/query/" + str,
+            dataType: "json",
+            success: function (result) {
+                if (result.code == 0) {
+                    vm.consumes = result.dictList;
+                } else {
+                    layer.alert(result.msg);
+                }
+            }
+        });*/
 
 };
 
@@ -325,7 +370,9 @@ var vm = new Vue({
         usageStatistics: {},
         batchNos: [],
         batchSelect: "-1",
-        consumes: []
+        consumes: [],
+        add_title_name: '',
+        useage_name: ''
     },
     mounted() {
         this.getBatchNo();
