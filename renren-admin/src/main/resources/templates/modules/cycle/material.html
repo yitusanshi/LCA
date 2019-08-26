@@ -92,49 +92,54 @@
         </form>
     </div>
 
-    <!--    &lt;!&ndash; 新增物质名称&ndash;&gt;
-        <div id="consume" style="display: none;">
-            <form class="form-horizontal">
+    <!--新增物质名称-->
+    <div id="consume" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
                 <div class="form-group">
-                    <div class="form-group">
-                        <div class="col-sm-2 control-label">{{add_title_name}}</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-2 control-label">{{useage_name}}</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-2 control-label">创建人</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="bName" placeholder="创建人"/>
-                        </div>
+                    <div class="col-sm-2 control-label">{{add_title_name}}</div>
+                    <div class="col-sm-10 layui-form">
+                        <select name="modules" id="consume_id" class="form-control" lay-verify="required"
+                                lay-search></select>
+                        <!--  <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>-->
                     </div>
                 </div>
-            </form>
-        </div>-->
-
-    <div class="layui-form-item" id="consume" style="display: none;">
-        <label class="layui-form-label">wa</label>
-        <div class="layui-input-block">
-            <select name="city" lay-verify="" lay-search>
-                <option value="021">form</option>
-                <option value="0571">layim</option>
-                <option value="021">form</option>
-                <option value="0571">layim</option>
-                <option value="021">form</option>
-                <option value="0571">layim</option>
-                <option value="021">form</option>
-                <option value="0571">layim</option>
-            </select>
-        </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">{{useage_name}}</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">创建人</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bName" placeholder="创建人"/>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
+    <!-- <div id="consume" style="display: none;">
+         <label>尘世</label>
+         <div class="layui-form">
+             <select name="modules" lay-verify="required" lay-search>
+                 <option value="">直接选择或搜索选择</option>
+                 <option value="1">layer</option>
+                 <option value="2">form</option>
+                 <option value="3">layim</option>
+                 <option value="4">element</option>
+                 <option value="5">laytpl</option>
+             </select>
+         </div>
+     </div>-->
+
 </div>
+
+
+<script>
+
+</script>
 <script src="${request.contextPath}/statics/js/modules/cycle/material.js?_${.now?long}"></script>
 
 

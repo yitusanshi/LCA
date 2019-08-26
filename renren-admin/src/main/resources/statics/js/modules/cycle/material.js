@@ -1,3 +1,4 @@
+var formSelect;
 $(function () {
     $("#menuMaterialTable").jqGrid({
         url: baseURL + 'sys/usagestatistics/listMaterial',
@@ -293,7 +294,6 @@ function showMaterial(userId, materialId, name) {
     }).trigger("reloadGrid");
 };
 
-
 //添加消耗信息
 function addConsume(typeId) {
     var titles = "";
@@ -311,15 +311,15 @@ function addConsume(typeId) {
         titles = '添加排放信息';
         vm.add_title_name = "排放名称";
         vm.useage_name = "排放量";
-
     }
-    ;
+    LayuiSelect("#consume_id", baseURL + "sys/lcadict/query/" + typeId, null)
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
         title: titles,
-        area: ['550px', '270px'],
+        area: ['600px', '370px'],
         shadeClose: false,
+        scrollbar: false,
         content: jQuery("#consume"),
         btn: ['保存', '取消'],
         btn1: function (index) {
@@ -354,6 +354,32 @@ function addConsume(typeId) {
                 }
             }
         });*/
+
+};
+
+/*
+*
+* 下拉框时间绑定
+* */
+function LayuiSelect(selectId, url, value) {
+    $.post(url, function (data) {
+        if (selectId.indexOf('#') != 0) {
+            selectId = "#" + selectId;
+        }
+        $(selectId).empty();//清空该元素
+        $(selectId).append("<option value=''>请选择</option>");
+        for (var k in data.dictList) {
+            $(selectId).append("<option value='" + data.dictList[k].secondId + "'>" + data.dictList[k].secondName + "</option>")
+        }
+        layui.use(['form'], function () {
+            var formSelect = layui.form;
+            if (value != undefined && value != null && value != '') {
+                $(selectId).val(value);
+            }
+            form.render();
+        });
+
+    })
 
 };
 
