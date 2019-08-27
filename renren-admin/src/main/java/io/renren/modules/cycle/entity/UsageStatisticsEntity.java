@@ -31,11 +31,11 @@ public class UsageStatisticsEntity implements Serializable {
     /**
      *
      */
-    private String name;
+    private String materialName;
     /**
      *
      */
-    private Double usage;
+    private Double materialUsage;
     /**
      *
      */

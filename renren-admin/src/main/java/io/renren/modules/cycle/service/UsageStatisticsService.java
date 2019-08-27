@@ -20,5 +20,8 @@ public interface UsageStatisticsService extends IService<UsageStatisticsEntity> 
 
     List<UsageStatisticsEntity> getMaterialByBatch(Map<String, Object> map);
 
+    List<UsageStatisticsEntity> getUsage(UsageStatisticsEntity usageStatistics);
+
+
 }
 

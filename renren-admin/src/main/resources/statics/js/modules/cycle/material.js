@@ -5,14 +5,14 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
-            {label: '原材料名称', name: 'name', index: 'name', width: '80px'},
-            {label: '使用量', name: 'usage', index: 'usage', width: '80px'},
+            {label: '原材料名称', name: 'materialName', index: 'materialName', width: '80px'},
+            {label: '使用量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '用户id', name: 'userId', index: 'userId', hidden: true},
             {label: '原料id', name: 'materialId', index: 'materialId', hidden: true},
             {
                 label: '操作', name: 'perate', index: 'perate', formatter: function (value, rows, index) {
-                    return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.name + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
+                    return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
                 }
             }
         ],
@@ -54,8 +54,8 @@ $(function () {
         datatype: "local",
         colModel: [
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
-            {label: '上游原料名称', name: 'name', index: 'name', width: '120px'},
-            {label: '消耗量', name: 'usage', index: 'usage', width: '80px'},
+            {label: '上游原料名称', name: 'materialName', index: 'materialName', width: '120px'},
+            {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
@@ -100,8 +100,8 @@ $(function () {
         datatype: "local",
         colModel: [
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
-            {label: '资源能源名称', name: 'name', index: 'name', width: '120px'},
-            {label: '消耗量', name: 'usage', index: 'usage', width: '80px'},
+            {label: '资源能源名称', name: 'materialName', index: 'materialName', width: '120px'},
+            {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
@@ -146,8 +146,8 @@ $(function () {
         datatype: "local",
         colModel: [
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
-            {label: '排放名称', name: 'name', index: 'name', width: '120px'},
-            {label: '排放量', name: 'usage', index: 'usage', width: '80px'},
+            {label: '排放名称', name: 'materialName', index: 'materialName', width: '120px'},
+            {label: '排放量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
@@ -241,6 +241,7 @@ function showMaterial(userId, materialId, name) {
     //obj带的是参数rows.id
     vm.mainList = false;
     vm.showUsage = true;
+    vm.materialId = materialId;
     vm.usage_title = "原材料为：【" + name + "】,批次号为【" + vm.batchSelect + "】的录入数据！";
     var page = $("#rawMaterialTable").jqGrid('getGridParam', 'page');
     $("#rawMaterialTable").jqGrid('setGridParam', {
@@ -312,7 +313,7 @@ function addConsume(typeId) {
         vm.add_title_name = "排放名称";
         vm.useage_name = "排放量";
     }
-    LayuiSelect("#consume_id", baseURL + "sys/lcadict/query/" + typeId, null)
+    LayuiSelect("#consume_id", baseURL + "sys/lcadict/query/" + typeId, null);
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -323,38 +324,33 @@ function addConsume(typeId) {
         content: jQuery("#consume"),
         btn: ['保存', '取消'],
         btn1: function (index) {
-            /*         var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName;
-                     $.ajax({
-                         type: "POST",
-                         url: baseURL + "sys/batch/save",
-                         data: data,
-                         dataType: "json",
-                         success: function (result) {
-                             if (result.code == 0) {
-                                 layer.close(index);
-                                 layer.alert('保存成功', function (index) {
-                                     location.reload();
-                                 });
-                             } else {
-                                 layer.alert(result.msg);
-                             }
-                         }
-                     });*/
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/saveMaterial",
+                data: {
+                    "secondId": $("#consume_id").val().split("_")[0],
+                    "secondName": $("#consume_id").val().split("_")[1],
+                    "unit": $("#consume_id").val().split("_")[2],
+                    "formId": typeId,
+                    "flag": 0,
+                    "batchNo": vm.batchSelect,
+                    "materialId": vm.materialId,
+                    "usage": $("#usage_id").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            location.reload();
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
         }
     });
-    /*    $.ajax({
-            type: "POST",
-            url: baseURL + "sys/lcadict/query/" + str,
-            dataType: "json",
-            success: function (result) {
-                if (result.code == 0) {
-                    vm.consumes = result.dictList;
-                } else {
-                    layer.alert(result.msg);
-                }
-            }
-        });*/
-
 };
 
 /*
@@ -363,20 +359,22 @@ function addConsume(typeId) {
 * */
 function LayuiSelect(selectId, url, value) {
     $.post(url, function (data) {
+        var dictList = data.dictList;
         if (selectId.indexOf('#') != 0) {
             selectId = "#" + selectId;
         }
         $(selectId).empty();//清空该元素
         $(selectId).append("<option value=''>请选择</option>");
-        for (var k in data.dictList) {
-            $(selectId).append("<option value='" + data.dictList[k].secondId + "'>" + data.dictList[k].secondName + "</option>")
+        for (var k in dictList) {
+            console.log(k);
+            $(selectId).append("<option value='" + dictList[k].secondId + "_" + dictList[k].secondName + "_" + dictList[k].unit + "'>" + dictList[k].secondName + "</option>");
         }
         layui.use(['form'], function () {
             var formSelect = layui.form;
             if (value != undefined && value != null && value != '') {
                 $(selectId).val(value);
             }
-            form.render();
+            formSelect.render();
         });
 
     })
@@ -398,7 +396,8 @@ var vm = new Vue({
         batchSelect: "-1",
         consumes: [],
         add_title_name: '',
-        useage_name: ''
+        useage_name: '',
+        materialId: ''
     },
     mounted() {
         this.getBatchNo();
@@ -533,7 +532,6 @@ var vm = new Vue({
         reload: function (event) {
             vm.showList = true;
             var page = $("#menuMaterialTable").jqGrid('getGridParam', 'page');
-            console.log(page + "======");
             $("#menuMaterialTable").jqGrid('setGridParam', {
                 page: page,
                 postData: {

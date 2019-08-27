@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.renren.common.utils.Query;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.sys.controller.AbstractController;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +55,6 @@ public class UsageStatisticsController extends AbstractController {
         String parentId = (String) params.get("materialId");
         String flag = (String) params.get("flag");
         String typeId = (String) params.get("typeId");
-        System.out.println("batchNo【" + batchNo + "】parentId【" + parentId + "】" + "【" + flag + "】" + flag + "typeId【" + typeId + getUserId());
         if (batchNo == "-1" || "-1".equals(batchNo)) {
             return R.ok();
         }
@@ -111,6 +111,37 @@ public class UsageStatisticsController extends AbstractController {
     @RequiresPermissions("sys:usagestatistics:delete")
     public R delete(@RequestBody Integer[] ids) {
         usageStatisticsService.removeByIds(Arrays.asList(ids));
+        return R.ok();
+    }
+
+    @RequestMapping("/saveMaterial")
+    public R save(@RequestParam Map<String, Object> params) {
+        String secondId = (String) params.get("secondId");
+        if (!StringUtils.isNotBlank(secondId) || secondId == null) {
+            return R.error("请选择物质名称");
+        }
+        String version = (String) params.get("batchNo");
+        String parentId = (String) params.get("materialId");
+        String flag = (String) params.get("flag");
+        String formId = (String) params.get("formId");
+        String name = (String) params.get("secondName");
+        String unit = (String) params.get("unit");
+        String usage = (String) params.get("usage");
+        UsageStatisticsEntity usageStatistics = new UsageStatisticsEntity();
+        usageStatistics.setUserId(getUserId());
+        usageStatistics.setFlag(Integer.valueOf(flag));
+        usageStatistics.setFormId(formId);
+        usageStatistics.setMaterialId(Integer.valueOf(secondId));
+        usageStatistics.setMaterialName(name);
+        usageStatistics.setVersion(version);
+        usageStatistics.setParentId(Integer.valueOf(parentId));
+        usageStatistics.setUnit(unit);
+        usageStatistics.setMaterialUsage(Double.valueOf(usage));
+        List<UsageStatisticsEntity> usageList = usageStatisticsService.getUsage(usageStatistics);
+        if (usageList.size() > 0) {
+            return R.error("已经录入录入了【" + name + "】,不能重复录入！");
+        }
+        usageStatisticsService.save(usageStatistics);
         return R.ok();
     }
 

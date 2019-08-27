@@ -18,5 +18,6 @@ import java.util.Map;
 public interface UsageStatisticsDao extends BaseMapper<UsageStatisticsEntity> {
 
     List<UsageStatisticsEntity> getMaterialByBatch(Map<String, Object> map);
-	
+
+    List<UsageStatisticsEntity> getUage(UsageStatisticsEntity usageStatistics);
 }

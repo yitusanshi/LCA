@@ -7,8 +7,8 @@
     <resultMap type="io.renren.modules.cycle.entity.UsageStatisticsEntity" id="usageStatisticsMap">
         <result property="id" column="id"/>
         <result property="materialId" column="material_id"/>
-        <result property="name" column="name"/>
-        <result property="usage" column="usage"/>
+        <result property="materialName" column="material_name"/>
+        <result property="materialUsage" column="material_usage"/>
         <result property="unit" column="unit"/>
         <result property="desc" column="desc"/>
         <result property="parentId" column="parent_id"/>
@@ -25,6 +25,33 @@
     WHERE u.form_id=#{formId}
     and u.user_id=#{userId} AND u.version=#{version} AND u.flag=#{flag} AND u.parent_id=#{parentId}
     </select>
-
+    <select id="getUage" resultType="io.renren.modules.cycle.entity.UsageStatisticsEntity"
+            resultMap="usageStatisticsMap">
+        SELECT* FROM
+        usage_statistics
+        WHERE
+        1 = 1
+        <if test="materialId != null">
+            and material_id = #{materialId,jdbcType=INTEGER}
+        </if>
+        <if test="materialName != null">
+            and material_name = #{materialName,jdbcType=VARCHAR}
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId,jdbcType=INTEGER}
+        </if>
+        <if test="flag != null">
+            and flag = #{flag,jdbcType=INTEGER}
+        </if>
+        <if test="version != null">
+            and version = #{version,jdbcType=VARCHAR}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId,jdbcType=BIGINT}
+        </if>
+        <if test="formId != null">
+            and form_id = #{formId,jdbcType=INTEGER}
+        </if>
+    </select>
 
 </mapper>

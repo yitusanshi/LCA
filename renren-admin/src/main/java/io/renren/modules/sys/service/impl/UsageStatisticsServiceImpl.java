@@ -39,4 +39,10 @@ public class UsageStatisticsServiceImpl extends ServiceImpl<UsageStatisticsDao, 
         return usageStatisticsDao.getMaterialByBatch(map);
     }
 
+    @Override
+    public List<UsageStatisticsEntity> getUsage(UsageStatisticsEntity usageStatistics) {
+        return usageStatisticsDao.getUage(usageStatistics);
+    }
+
+
 }
