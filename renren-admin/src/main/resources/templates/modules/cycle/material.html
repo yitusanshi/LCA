@@ -36,16 +36,22 @@
     </div>
 
     <div v-show="showUsage" class="panel panel-default">
-        <div class="panel-heading">{{usage_title}}</div>
+        <div class="grid-btn">
+            <div class="form-group col-sm-8">
+                <label class="form-control">{{usage_title}}</label>
+            </div>
+            <a class="btn btn-primary ml-auto" @click="reloads"><i class="fa fa-mail-reply"></i>&nbsp;返回</a>
+        </div>
+
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
             <a class="btn btn-primary" @click="addConsume('11')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
             <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
-        <table id="rawMaterialTable"></table>
+        <table id="rawMaterialTable" width="95%"></table>
         <div id="rawGridPager"></div>
 
         <!-- 资源能源消耗-->
-        <div class="panel-heading">资源能源消耗</div>
+        <!-- <div class="panel-heading">资源能源消耗</div>-->
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
             <a class="btn btn-primary" @click="addConsume('12')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
             <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
@@ -54,18 +60,19 @@
         <div id="reseGridPager"></div>
 
         <!--排放与废气-->
-        <div class="panel-heading">排放与废气</div>
+        <!--<div class="panel-heading">排放与废气</div>-->
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
-            <a class="btn btn-primary" @click="addConsume('13')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <a class="btn btn-primary" @click="addConsume('13')"><i class="fa fa-plus"></i>&nbsp;添加排放信息</a>
             <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="gasTable"></table>
         <div id="gasGridPager"></div>
 
         <!--运输过程-->
-        <div class="panel-heading">运输过程</div>
+        <!-- <div class="panel-heading">运输过程</div>-->
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
-            <a class="btn btn-primary" @click="addConsume('14')"><i class="fa fa-plus"></i>&nbsp;添加消耗信息</a>
+            <!--<label>运输过程</label>-->
+            <a class="btn btn-primary" @click="addConsume('14')"><i class="fa fa-plus"></i>&nbsp;添加运输信息</a>
             <a class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="transPortTable"></table>
@@ -118,20 +125,6 @@
             </div>
         </form>
     </div>
-
-    <!-- <div id="consume" style="display: none;">
-         <label>尘世</label>
-         <div class="layui-form">
-             <select name="modules" lay-verify="required" lay-search>
-                 <option value="">直接选择或搜索选择</option>
-                 <option value="1">layer</option>
-                 <option value="2">form</option>
-                 <option value="3">layim</option>
-                 <option value="4">element</option>
-                 <option value="5">laytpl</option>
-             </select>
-         </div>
-     </div>-->
 
 </div>
 

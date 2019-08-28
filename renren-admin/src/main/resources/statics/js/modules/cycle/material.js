@@ -1,4 +1,3 @@
-var formSelect;
 $(function () {
     $("#menuMaterialTable").jqGrid({
         url: baseURL + 'sys/usagestatistics/listMaterial',
@@ -69,7 +68,7 @@ $(function () {
         viewrecords: true,
         height: 100,
         rowNum: 10,
-        rowList: [10, 30, 50],
+        rowList: [5, 10, 20],
         rownumbers: true,
         rownumWidth: 25,
         autowidth: true,
@@ -115,7 +114,7 @@ $(function () {
         viewrecords: true,
         height: 100,
         rowNum: 10,
-        rowList: [10, 30, 50],
+        rowList: [5, 10, 20],
         rownumbers: true,
         rownumWidth: 25,
         autowidth: true,
@@ -242,6 +241,7 @@ function showMaterial(userId, materialId, name) {
     vm.mainList = false;
     vm.showUsage = true;
     vm.materialId = materialId;
+    vm.material_name = name;
     vm.usage_title = "原材料为：【" + name + "】,批次号为【" + vm.batchSelect + "】的录入数据！";
     var page = $("#rawMaterialTable").jqGrid('getGridParam', 'page');
     $("#rawMaterialTable").jqGrid('setGridParam', {
@@ -295,6 +295,7 @@ function showMaterial(userId, materialId, name) {
     }).trigger("reloadGrid");
 };
 
+
 //添加消耗信息
 function addConsume(typeId) {
     var titles = "";
@@ -342,7 +343,9 @@ function addConsume(typeId) {
                     if (result.code == 0) {
                         layer.close(index);
                         layer.alert('保存成功', function (index) {
-                            location.reload();
+                            /*location.reload();*/
+                            layer.close(index);
+                            showMaterial("", vm.materialId, vm.material_name);
                         });
                     } else {
                         layer.alert(result.msg);
@@ -397,7 +400,8 @@ var vm = new Vue({
         consumes: [],
         add_title_name: '',
         useage_name: '',
-        materialId: ''
+        materialId: '',
+        material_name: ''
     },
     mounted() {
         this.getBatchNo();
@@ -412,6 +416,9 @@ var vm = new Vue({
             vm.showUsage = false;
             vm.title = "新增";
             vm.usageStatistics = {};
+        },
+        reloads: function () {
+            location.reload();
         },
         addBatchNo: function () {
             layer.open({
