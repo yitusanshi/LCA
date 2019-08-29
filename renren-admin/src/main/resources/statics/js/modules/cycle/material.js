@@ -314,7 +314,7 @@ function addConsume(typeId) {
         vm.add_title_name = "排放名称";
         vm.useage_name = "排放量";
     }
-    LayuiSelect("#consume_id", baseURL + "sys/lcadict/query/" + typeId, null);
+    LayuiSelect("#consume_id", baseURL + "sys/lcadict/query/" + typeId, "#unit_id");
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -360,29 +360,117 @@ function addConsume(typeId) {
 *
 * 下拉框时间绑定
 * */
-function LayuiSelect(selectId, url, value) {
+function LayuiSelect(selectId, url, unitId) {
     $.post(url, function (data) {
         var dictList = data.dictList;
         if (selectId.indexOf('#') != 0) {
             selectId = "#" + selectId;
         }
+        if (unitId.indexOf('#') != 0) {
+            unitId = "#" + unitId;
+        }
         $(selectId).empty();//清空该元素
         $(selectId).append("<option value=''>请选择</option>");
         for (var k in dictList) {
-            console.log(k);
             $(selectId).append("<option value='" + dictList[k].secondId + "_" + dictList[k].secondName + "_" + dictList[k].unit + "'>" + dictList[k].secondName + "</option>");
         }
         layui.use(['form'], function () {
             var formSelect = layui.form;
-            if (value != undefined && value != null && value != '') {
+            /*
+            联动引入
+            * */
+            formSelect.on('select(myselect)', function (data) {
+                var unit = data.value.split("_")[2];
+                $(unitId).val(unit);
+            });
+            /*if (value != undefined && value != null && value != '') {
                 $(selectId).val(value);
-            }
+            }*/
             formSelect.render();
         });
 
     })
 
 };
+
+//添加原材料消耗量
+function addMaterial() {
+    if (vm.batchSelect == "-1") {
+        alert("请选择合适的批次号");
+        return;
+    }
+    LayuiSelect("#raw_material_name", baseURL + "sys/lcadict/query/10", "#raw_material_unit");
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "新增原材料数据",
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#raw_material_id"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/saveMaterial",
+                data: {
+                    "secondId": $("#raw_material_name").val().split("_")[0],
+                    "secondName": $("#raw_material_name").val().split("_")[1],
+                    "unit": $("#raw_material_name").val().split("_")[2],
+                    "formId": "10",
+                    "flag": 0,
+                    "batchNo": vm.batchSelect,
+                    "materialId": "0",
+                    "usage": $("#raw_material_usage").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            /*location.reload();*/
+                            layer.close(index);
+                            vm.reload();
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
+};
+
+
+function delMaterial(jqId) {
+    var ids = getSelectedRowNums(jqId);
+    if (ids == null) {
+        return;
+    }
+    var lock = false;
+    layer.confirm('确定要删除选中的记录？', {
+        btn: ['确定', '取消'] //按钮
+    }, function () {
+        if (!lock) {
+            lock = true;
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/delete",
+                contentType: "application/json",
+                data: JSON.stringify(ids),
+                success: function (r) {
+                    if (r.code == 0) {
+                        layer.msg("操作成功", {icon: 1});
+                        $("#menuMaterialTable").trigger("reloadGrid");
+                    } else {
+                        layer.alert(r.msg);
+                    }
+                }
+            });
+        }
+    }, function () {
+    });
+}
 
 var vm = new Vue({
     el: '#rrapp',
@@ -500,35 +588,6 @@ var vm = new Vue({
                         }
                     }
                 });
-            });
-        },
-        del: function (event) {
-            var ids = getSelectedRows();
-            if (ids == null) {
-                return;
-            }
-            var lock = false;
-            layer.confirm('确定要删除选中的记录？', {
-                btn: ['确定', '取消'] //按钮
-            }, function () {
-                if (!lock) {
-                    lock = true;
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + "sys/usagestatistics/delete",
-                        contentType: "application/json",
-                        data: JSON.stringify(ids),
-                        success: function (r) {
-                            if (r.code == 0) {
-                                layer.msg("操作成功", {icon: 1});
-                                $("#menuMaterialTable").trigger("reloadGrid");
-                            } else {
-                                layer.alert(r.msg);
-                            }
-                        }
-                    });
-                }
-            }, function () {
             });
         },
         getInfo: function (id) {
