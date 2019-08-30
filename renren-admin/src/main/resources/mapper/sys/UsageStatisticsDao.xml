@@ -18,6 +18,26 @@
         <result property="userId" column="user_id"/>
         <result property="formId" column="form_id"/>
     </resultMap>
+    <update id="updateMaterialById" parameterType="java.util.Map">
+        update usage_statistics set material_usage=#{materialUsage},
+        created_time=now()
+        where id=#{id}
+    </update>
+    <delete id="deleteMaterial" parameterType="java.util.Map">
+        delete from usage_statistics where user_id=#{userId,jdbcType=BIGINT} and
+        version=#{version,jdbcType=VARCHAR}
+        and flag=#{flag,jdbcType=INTEGER}
+        and material_id in
+        <foreach collection="materialIds" item="materialId" separator="," open="(" close=")">
+            #{materialId,jdbcType=INTEGER}
+        </foreach>
+        or parent_id in
+        <foreach collection="materialIds" item="materialId" separator="," open="(" close=")">
+            #{materialId,jdbcType=INTEGER}
+        </foreach>
+
+
+    </delete>
 
     <select id="getMaterialByBatch" parameterType="java.util.Map" resultMap="usageStatisticsMap">
     SELECT * FROM

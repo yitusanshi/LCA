@@ -75,40 +75,6 @@ function getSelectedRows() {
     return grid.getGridParam("selarrrow");
 }
 
-//选择多条记录
-function getSelectedRowNums(jqGridSelect) {
-    if (jqGridSelect.indexOf('#') != 0) {
-        jqGridSelect = "#" + jqGridSelect;
-    }
-    var grid = $(jqGridSelect);
-    var rowKey = grid.getGridParam("selrow");
-    if (!rowKey) {
-        alert("请选择一条记录");
-        return;
-    }
-    return grid.getGridParam("selarrrow");
-}
-
-//选择一条记录
-function getSelectedRowNum(jqGridSelect) {
-    if (jqGridSelect.indexOf('#') != 0) {
-        jqGridSelect = "#" + jqGridSelect;
-    }
-    var grid = $(jqGridSelect);
-    var rowKey = grid.getGridParam("selrow");
-    if (!rowKey) {
-        alert("请选择一条记录");
-        return;
-    }
-
-    var selectedIDs = grid.getGridParam("selarrrow");
-    if (selectedIDs.length > 1) {
-        alert("只能选择一条记录");
-        return;
-    }
-    return selectedIDs[0];
-}
-
 //判断是否为空
 function isBlank(value) {
     return !value || !/\S/.test(value)

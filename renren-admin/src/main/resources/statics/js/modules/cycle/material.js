@@ -9,6 +9,7 @@ $(function () {
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '用户id', name: 'userId', index: 'userId', hidden: true},
             {label: '原料id', name: 'materialId', index: 'materialId', hidden: true},
+            {label: 'id', name: 'id', index: 'id', hidden: true},
             {
                 label: '操作', name: 'perate', index: 'perate', formatter: function (value, rows, index) {
                     return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
@@ -343,7 +344,8 @@ function addConsume(typeId) {
                     if (result.code == 0) {
                         layer.close(index);
                         layer.alert('保存成功', function (index) {
-                            /*location.reload();*/
+                            $("#usage_id").val("");
+                            $("#unit_id").val("");
                             layer.close(index);
                             showMaterial("", vm.materialId, vm.material_name);
                         });
@@ -356,42 +358,54 @@ function addConsume(typeId) {
     });
 };
 
-/*
-*
-* 下拉框时间绑定
-* */
-function LayuiSelect(selectId, url, unitId) {
-    $.post(url, function (data) {
-        var dictList = data.dictList;
-        if (selectId.indexOf('#') != 0) {
-            selectId = "#" + selectId;
-        }
-        if (unitId.indexOf('#') != 0) {
-            unitId = "#" + unitId;
-        }
-        $(selectId).empty();//清空该元素
-        $(selectId).append("<option value=''>请选择</option>");
-        for (var k in dictList) {
-            $(selectId).append("<option value='" + dictList[k].secondId + "_" + dictList[k].secondName + "_" + dictList[k].unit + "'>" + dictList[k].secondName + "</option>");
-        }
-        layui.use(['form'], function () {
-            var formSelect = layui.form;
-            /*
-            联动引入
-            * */
-            formSelect.on('select(myselect)', function (data) {
-                var unit = data.value.split("_")[2];
-                $(unitId).val(unit);
+//添加运输过程
+function addTransPort(typeId) {
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "添加运输数据",
+        area: ['600px', '470px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#trans_port_id"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/transport/saveTransport",
+                data: {
+                    "trans_port_name": $("#trans_port_name").val(),
+                    "trans_port_source": $("#trans_port_source").val(),
+                    "trans_port_type": $("#trans_port_type").val(),
+                    "trans_port_distance": $("#trans_port_distance").val(),
+                    "trans_port_weight": $("#trans_port_weight").val(),
+                    "flag": 0,
+                    "batchNo": vm.batchSelect,
+                    "materialId": vm.materialId
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#trans_port_name").val("");
+                            $("#trans_port_source").val("");
+                            $("#trans_port_distance").val("");
+                            $("#trans_port_weight").val("");
+                            layer.close(index);
+                            showMaterial("", vm.materialId, vm.material_name);
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
             });
-            /*if (value != undefined && value != null && value != '') {
-                $(selectId).val(value);
-            }*/
-            formSelect.render();
-        });
+        }
+    });
 
-    })
 
-};
+}
+
 
 //添加原材料消耗量
 function addMaterial() {
@@ -428,7 +442,8 @@ function addMaterial() {
                     if (result.code == 0) {
                         layer.close(index);
                         layer.alert('保存成功', function (index) {
-                            /*location.reload();*/
+                            $("#raw_material_usage").val("");
+                            $("#raw_material_unit").val("");
                             layer.close(index);
                             vm.reload();
                         });
@@ -441,10 +456,13 @@ function addMaterial() {
     });
 };
 
-
+/*
+* 删除原材料。默认是多选
+* */
 function delMaterial(jqId) {
-    var ids = getSelectedRowNums(jqId);
-    if (ids == null) {
+    var materialIds = getSelectedRowNums(jqId);
+    console.log(materialIds);
+    if (isBlank(materialIds)) {
         return;
     }
     var lock = false;
@@ -455,9 +473,13 @@ function delMaterial(jqId) {
             lock = true;
             $.ajax({
                 type: "POST",
-                url: baseURL + "sys/usagestatistics/delete",
-                contentType: "application/json",
-                data: JSON.stringify(ids),
+                url: baseURL + "sys/usagestatistics/deleteMaterial",
+                /* contentType: "application/json",*/
+                data: {
+                    "materialIds": materialIds,
+                    "batchNo": vm.batchSelect,
+                    "flag": '0'
+                },
                 success: function (r) {
                     if (r.code == 0) {
                         layer.msg("操作成功", {icon: 1});
@@ -468,9 +490,105 @@ function delMaterial(jqId) {
                 }
             });
         }
-    }, function () {
     });
 }
+
+
+/*
+* 删除资源消耗，运输。排放等
+* */
+function delConsume(typeId) {
+    var tableId;
+    var url = baseURL + "sys/usagestatistics/delete";
+    if (typeId == "11") {
+        tableId = "#rawMaterialTable";
+    } else if (typeId == "12") {
+        tableId = "#reseTable"
+    } else if (typeId == "13") {
+        tableId = "#gasTable";
+    } else {
+        tableId = "#transPortTable";
+        url = baseURL + "sys/transport/delete";
+    }
+    var rowKey = $(tableId).getGridParam("selrow");
+    if (!rowKey) {
+        alert("请选择一条记录");
+        return;
+    }
+    var ids = $(tableId).getGridParam("selarrrow");
+    if (ids == null) {
+        return;
+    }
+    confirm('确定要删除选中的记录？', function () {
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/json",
+            data: JSON.stringify(ids),
+            success: function (r) {
+                if (r.code == 0) {
+                    alert('操作成功', function (index) {
+                        $(tableId).trigger("reloadGrid");
+                    });
+                } else {
+                    alert(r.msg);
+                }
+            }
+        });
+    });
+
+
+}
+
+
+/*
+* 修改原材料消耗量
+* updateMaterial
+* */
+
+function updateMaterial(jqId) {
+    var material = getSelectedRowNum(jqId);
+    console.log(material);
+    if (isBlank(material)) {
+        return;
+    }
+    $("#raw_material_unit_update").val(material.unit);
+    $("#raw_material_name_update").val(material.materialName);
+    $("#raw_material_usage_update").val(material.materialUsage);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "修改原材料数据",
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#raw_material_id_update"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/updateMaterialById",
+                data: {
+                    "id": material.id,
+                    "usage": $("#raw_material_usage_update").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            layer.close(index);
+                            vm.reload();
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
+}
+
 
 var vm = new Vue({
     el: '#rrapp',
@@ -538,16 +656,6 @@ var vm = new Vue({
                 }
             });
         },
-        update: function (event) {
-            var id = getSelectedRow();
-            if (id == null) {
-                return;
-            }
-            vm.showList = false;
-            vm.title = "修改";
-
-            vm.getInfo(id)
-        },
         getBatchNo: function () {
             $.ajax({
                 method: 'post',
@@ -567,34 +675,6 @@ var vm = new Vue({
             this.batchSelect = vm.batchSelect;
             vm.reload();
         },
-        saveOrUpdate: function (event) {
-            $('#btnSaveOrUpdate').button('loading').delay(1000).queue(function () {
-                var url = vm.usageStatistics.id == null ? "sys/usagestatistics/save" : "sys/usagestatistics/update";
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + url,
-                    contentType: "application/json",
-                    data: JSON.stringify(vm.usageStatistics),
-                    success: function (r) {
-                        if (r.code === 0) {
-                            layer.msg("操作成功", {icon: 1});
-                            vm.reload();
-                            $('#btnSaveOrUpdate').button('reset');
-                            $('#btnSaveOrUpdate').dequeue();
-                        } else {
-                            layer.alert(r.msg);
-                            $('#btnSaveOrUpdate').button('reset');
-                            $('#btnSaveOrUpdate').dequeue();
-                        }
-                    }
-                });
-            });
-        },
-        getInfo: function (id) {
-            $.get(baseURL + "sys/usagestatistics/info/" + id, function (r) {
-                vm.usageStatistics = r.usageStatistics;
-            });
-        },
         reload: function (event) {
             vm.showList = true;
             var page = $("#menuMaterialTable").jqGrid('getGridParam', 'page');
@@ -609,3 +689,96 @@ var vm = new Vue({
         }
     }
 });
+
+
+/*
+* 工具类
+*
+* */
+
+//选择多条记录
+function getSelectedRowNums(jqGridSelect) {
+    if (jqGridSelect.indexOf('#') != 0) {
+        jqGridSelect = "#" + jqGridSelect;
+    }
+    var grid = $(jqGridSelect);
+    var rowKey = grid.getGridParam("selrow");
+    if (!rowKey) {
+        alert("请选择一条记录");
+        return;
+    }
+    /*var rowIds = grid.getDataIDs();*/
+    var rowIds = grid.getGridParam("selarrrow");
+    var arrayData = "";
+    if (rowIds.length > 0) {
+        for (var i = 0; i < rowIds.length; i++) {
+            arrayData = arrayData + grid.getRowData(rowIds[i]).materialId + ";";
+        }
+    }
+    return arrayData;
+};
+
+//选择一条记录
+function getSelectedRowNum(jqGridSelect) {
+    if (jqGridSelect.indexOf('#') != 0) {
+        jqGridSelect = "#" + jqGridSelect;
+    }
+    var grid = $(jqGridSelect);
+    var rowKey = grid.getGridParam("selrow");
+    if (!rowKey) {
+        alert("请选择一条记录");
+        return;
+    }
+
+    var selectedIDs = grid.getGridParam("selarrrow");
+    if (selectedIDs.length > 1) {
+        alert("只能选择一条记录");
+        return;
+    }
+    var material = "";
+    material = grid.getRowData(selectedIDs[0]);
+    return material;
+};
+
+//选择多条记录
+function getSelectedRows() {
+
+    return grid.getGridParam("selarrrow");
+}
+
+/*
+*
+* 下拉框时间绑定
+* */
+function LayuiSelect(selectId, url, unitId) {
+    $.post(url, function (data) {
+        var dictList = data.dictList;
+        if (selectId.indexOf('#') != 0) {
+            selectId = "#" + selectId;
+        }
+        if (unitId.indexOf('#') != 0) {
+            unitId = "#" + unitId;
+        }
+        $(selectId).empty();//清空该元素
+        $(selectId).append("<option value=''>请选择</option>");
+        for (var k in dictList) {
+            $(selectId).append("<option value='" + dictList[k].secondId + "_" + dictList[k].secondName + "_" + dictList[k].unit + "'>" + dictList[k].secondName + "</option>");
+        }
+        layui.use(['form'], function () {
+            var formSelect = layui.form;
+            /*
+            联动引入
+            * */
+            formSelect.on('select(myselect)', function (data) {
+                var unit = data.value.split("_")[2];
+                $(unitId).val(unit);
+            });
+            /*if (value != undefined && value != null && value != '') {
+                $(selectId).val(value);
+            }*/
+            formSelect.render();
+        });
+
+    })
+
+};

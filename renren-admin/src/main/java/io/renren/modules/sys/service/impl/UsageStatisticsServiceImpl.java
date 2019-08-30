@@ -44,5 +44,15 @@ public class UsageStatisticsServiceImpl extends ServiceImpl<UsageStatisticsDao, 
         return usageStatisticsDao.getUage(usageStatistics);
     }
 
+    @Override
+    public void deleteMaterial(Map<String, Object> map) {
+        usageStatisticsDao.deleteMaterial(map);
+    }
+
+    @Override
+    public void updateMaterialById(Map<String, Object> map) {
+        usageStatisticsDao.updateMaterialById(map);
+    }
+
 
 }

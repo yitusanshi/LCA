@@ -8,6 +8,8 @@ import java.util.Map;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.renren.common.utils.Query;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.cycle.entity.UsageStatisticsEntity;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,7 +85,6 @@ public class TransportController extends AbstractController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("sys:transport:delete")
     public R delete(@RequestBody Integer[] ids) {
         transportService.removeByIds(Arrays.asList(ids));
 
@@ -113,5 +114,30 @@ public class TransportController extends AbstractController {
         page.setRecords(usageStatisticsEntityList);
         return R.ok().put("page", new PageUtils(page));
     }
+
+    @RequestMapping("/saveTransport")
+    public R save(@RequestParam Map<String, Object> params) {
+        String version = (String) params.get("batchNo");
+        String parentId = (String) params.get("materialId");
+        String flag = (String) params.get("flag");
+        String materialName = (String) params.get("trans_port_name");
+        String source = (String) params.get("trans_port_source");
+        String type = (String) params.get("trans_port_type");
+        String distance = (String) params.get("trans_port_distance");
+        String weight = (String) params.get("trans_port_weight");
+        TransportEntity transportEntity = new TransportEntity();
+        transportEntity.setVersion(version);
+        transportEntity.setUserId(getUserId());
+        transportEntity.setParentId(Integer.valueOf(parentId));
+        transportEntity.setFlag(Integer.valueOf(flag));
+        transportEntity.setMaterialName(materialName);
+        transportEntity.setSource(source);
+        transportEntity.setType(Integer.valueOf(type));
+        transportEntity.setDistance(Double.valueOf(distance));
+        transportEntity.setWeight(Double.valueOf(weight));
+        transportService.save(transportEntity);
+        return R.ok();
+    }
+
 
 }

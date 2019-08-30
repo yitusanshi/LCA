@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.renren.common.utils.Query;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.sys.controller.AbstractController;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,11 +109,40 @@ public class UsageStatisticsController extends AbstractController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("sys:usagestatistics:delete")
     public R delete(@RequestBody Integer[] ids) {
         usageStatisticsService.removeByIds(Arrays.asList(ids));
         return R.ok();
     }
+
+    @RequestMapping("/deleteMaterial")
+    public R deleteMaterial(@RequestParam Map<String, Object> params) {
+        String version = (String) params.get("batchNo");
+        String flag = (String) params.get("flag");
+        String materialIds = (String) params.get("materialIds");
+        Map<String, Object> map = new HashMap<>();
+        map.put("version", version);
+        map.put("flag", Integer.valueOf(flag));
+        map.put("userId", getUserId());
+        map.put("materialIds", Arrays.asList(materialIds.split(";")));
+        usageStatisticsService.deleteMaterial(map);
+        return R.ok();
+    }
+
+
+    @RequestMapping("/updateMaterialById")
+    public R updateMaterialById(@RequestParam Map<String, Object> params) {
+        String id = (String) params.get("id");
+        String materialUsage = (String) params.get("usage");
+        if (StringUtils.isBlank(materialUsage)) {
+            return R.error("消耗量不能为空！");
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", Integer.valueOf(id));
+        map.put("materialUsage", Double.valueOf(materialUsage));
+        usageStatisticsService.updateMaterialById(map);
+        return R.ok();
+    }
+
 
     @RequestMapping("/saveMaterial")
     public R save(@RequestParam Map<String, Object> params) {

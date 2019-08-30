@@ -20,4 +20,8 @@ public interface UsageStatisticsDao extends BaseMapper<UsageStatisticsEntity> {
     List<UsageStatisticsEntity> getMaterialByBatch(Map<String, Object> map);
 
     List<UsageStatisticsEntity> getUage(UsageStatisticsEntity usageStatistics);
+
+    void deleteMaterial(Map<String, Object> map);
+
+    void updateMaterialById(Map<String, Object> map);
 }

@@ -16,12 +16,13 @@
         <result property="weight" column="weight"/>
         <result property="materialName" column="material_name"/>
         <result property="flag" column="flag"/>
+        <result property="parentId" column="parent_id"/>
     </resultMap>
     <select id="getMaterialByBatch" parameterType="java.util.Map" resultMap="transportMap">
     SELECT * FROM
-    transport u
+    transport
     WHERE 1=1
-    and u.user_id=#{userId} AND u.version=#{version} AND u.flag=#{flag}
+    and user_id=#{userId} AND version=#{version} AND flag=#{flag} AND parent_id=#{parentId}
     </select>
 
 
