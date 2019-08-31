@@ -51,7 +51,6 @@ public class UsageStatisticsController extends AbstractController {
     //通过用户的的version和用户ID查询用户的信息
     @RequestMapping("/listMaterial")
     public R listMaterial(@RequestParam Map<String, Object> params) {
-        System.out.println("已经进来了。。。。。。。。。。。。。。。。。。");
         String batchNo = (String) params.get("batchNo");
         String parentId = (String) params.get("materialId");
         String flag = (String) params.get("flag");
@@ -65,13 +64,16 @@ public class UsageStatisticsController extends AbstractController {
         map.put("flag", flag);
         map.put("parentId", parentId);
         map.put("formId", typeId);
-        IPage<UsageStatisticsEntity> page = new Query<UsageStatisticsEntity>().getPage(params);
+        map.put("limit", params.get("limit"));
+        map.put("page", params.get("page"));
+        IPage<UsageStatisticsEntity> page = new Query<UsageStatisticsEntity>().getPage(map);
         List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
         page.setRecords(usageStatisticsEntityList);
         return R.ok().put("page", new PageUtils(page));
     }
 
     /**
+     * -
      * 信息
      */
     @RequestMapping("/info/{id}")

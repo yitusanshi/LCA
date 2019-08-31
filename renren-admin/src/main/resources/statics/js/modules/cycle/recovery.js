@@ -1,11 +1,60 @@
 $(function () {
-    //原辅料消耗
+    $("#menuMaterialTable").jqGrid({
+        url: baseURL + 'sys/usagestatistics/listMaterial',
+        datatype: "json",
+        colModel: [
+            {label: '批次号', name: 'version', index: 'version', width: '80px'},
+            {label: '原辅料名称', name: 'materialName', index: 'materialName', width: '80px'},
+            {label: '使用量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
+            {label: '单位', name: 'unit', index: 'unit', width: '80px'},
+            {label: '用户id', name: 'userId', index: 'userId', hidden: true},
+            {label: '原料id', name: 'materialId', index: 'materialId', hidden: true},
+            {label: 'id', name: 'id', index: 'id', hidden: true},
+            {
+                label: '操作', name: 'perate', index: 'perate', formatter: function (value, rows, index) {
+                    return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
+                }
+            }
+        ],
+        postData: {
+            'batchNo': vm.batchSelect,
+            'flag': 4,
+            'materialId': 0,
+            'typeId': 10
+        },
+        viewrecords: true,
+        height: 385,
+        rowNum: 10,
+        rowList: [10, 30, 50],
+        rownumbers: true,
+        rownumWidth: 25,
+        autowidth: true,
+        multiselect: true,
+        pager: "#jqGridPager",
+        jsonReader: {
+            root: "page.list",
+            page: "page.currPage",
+            total: "page.totalPage",
+            records: "page.totalCount"
+        },
+        prmNames: {
+            page: "page",
+            rows: "limit",
+            order: "order"
+        },
+        gridComplete: function () {
+            //隐藏grid底部滚动条
+            $("#menuMaterialTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+        }
+    });
+
+    //上游原辅料消耗
     $("#rawMaterialTable").jqGrid({
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
         colModel: [
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
-            {label: '原辅料名称', name: 'materialName', index: 'materialName', width: '120px'},
+            {label: '上游原辅料名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
@@ -13,9 +62,8 @@ $(function () {
         ],
         postData: {
             'batchNo': "",
-            'flag': 1,
-            'materialId': 0,
-            'typeId': 10
+            'flag': 4,
+            'typeId': 11
         },
         viewrecords: true,
         height: "25%",
@@ -24,10 +72,9 @@ $(function () {
         rownumbers: true,
         rownumWidth: 25,
         // autowidth: true,
-        // width: "100%",
         multiselect: true,
         pager: "#rawGridPager",
-        caption: "原辅料消耗",
+        caption: "上游原辅料消耗",
         jsonReader: {
             root: "page.list",
             page: "page.currPage",
@@ -60,8 +107,7 @@ $(function () {
         ],
         postData: {
             'batchNo': "",
-            'flag': 1,
-            'materialId': 0,
+            'flag': 4,
             'typeId': 12
         },
         viewrecords: true,
@@ -105,8 +151,7 @@ $(function () {
         ],
         postData: {
             'batchNo': "",
-            'flag': 1,
-            'materialId': 0,
+            'flag': 4,
             'typeId': 13
         },
         viewrecords: true,
@@ -116,7 +161,6 @@ $(function () {
         rownumbers: true,
         rownumWidth: 25,
         // autowidth: true,
-        // width: "100%",
         multiselect: true,
         pager: "#gasGridPager",
         caption: "排放与废气",
@@ -138,51 +182,6 @@ $(function () {
 
     });
 
-    //包装过程
-    $("#packTable").jqGrid({
-        url: baseURL + 'sys/usagestatistics/listMaterial',
-        datatype: "local",
-        colModel: [
-            {label: '批次号', name: 'version', index: 'version', width: '80px'},
-            {label: '包装材料', name: 'materialName', index: 'materialName', width: '120px'},
-            {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
-            {label: '单位', name: 'unit', index: 'unit', width: '80px'},
-            {label: '备注', name: 'desc', index: 'desc', width: '80px'},
-            {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
-        ],
-        postData: {
-            'batchNo': "",
-            'flag': 1,
-            'materialId': 0,
-            'typeId': 15
-        },
-        viewrecords: true,
-        height: "25%",
-        rowNum: 10,
-        rowList: [10, 30, 50],
-        rownumbers: true,
-        rownumWidth: 25,
-        multiselect: true,
-        pager: "#packGridPager",
-        caption: "包装过程",
-        jsonReader: {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
-        },
-        prmNames: {
-            page: "page",
-            rows: "limit",
-            order: "order"
-        },
-        gridComplete: function () {
-            //隐藏grid底部滚动条
-            $("#packTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
-        }
-
-    });
-
     //运输过程
     $("#transPortTable").jqGrid({
         url: baseURL + 'sys/transport/listTransport',
@@ -199,8 +198,7 @@ $(function () {
         ],
         postData: {
             'batchNo': "",
-            'flag': 1,
-            'materialId': 0,
+            'flag': 4,
             'typeId': 14
         },
         viewrecords: true,
@@ -210,7 +208,6 @@ $(function () {
         rownumbers: true,
         rownumWidth: 25,
         // autowidth: true,
-        // width: "100%",
         multiselect: true,
         pager: "#transPortGridPager",
         caption: "运输过程",
@@ -234,16 +231,23 @@ $(function () {
 
 });
 
-//显示生产阶段的物质消耗情况
-function reloadPro() {
+//显示原料的基础数据 上游原料消耗/资源能源消耗/排放与废气/运输过程userId, materialId, name
+function showMaterial(userId, materialId, name) {
+    //obj带的是参数rows.id
+    vm.mainList = false;
+    vm.showUsage = true;
+    vm.materialId = materialId;
+    vm.material_name = name;
+    vm.usage_title = "原辅料为：【" + name + "】,批次号为【" + vm.batchSelect + "】的录入数据！";
     var page = $("#rawMaterialTable").jqGrid('getGridParam', 'page');
     $("#rawMaterialTable").jqGrid('setGridParam', {
         datatype: 'json',
         page: page,
         postData: {
             'batchNo': vm.batchSelect,
-            'flag': 1,
-            'materialId': 0
+            'userId': userId,
+            'flag': 4,
+            'materialId': materialId
         }
     }).trigger("reloadGrid");
 
@@ -254,8 +258,9 @@ function reloadPro() {
         page: resepage,
         postData: {
             'batchNo': vm.batchSelect,
-            'flag': 1,
-            'materialId': 0
+            'userId': userId,
+            'flag': 4,
+            'materialId': materialId
         }
     }).trigger("reloadGrid");
 
@@ -266,20 +271,9 @@ function reloadPro() {
         page: gaspage,
         postData: {
             'batchNo': vm.batchSelect,
-            'flag': 1,
-            'materialId': 0
-        }
-    }).trigger("reloadGrid");
-
-    /*包装材料*/
-    var gaspage = $("#gasTable").jqGrid('getGridParam', 'page');
-    $("#packTable").jqGrid('setGridParam', {
-        datatype: 'json',
-        page: gaspage,
-        postData: {
-            'batchNo': vm.batchSelect,
-            'flag': 1,
-            'materialId': 0
+            'userId': userId,
+            'flag': 4,
+            'materialId': materialId
         }
     }).trigger("reloadGrid");
 
@@ -290,8 +284,9 @@ function reloadPro() {
         page: transpage,
         postData: {
             'batchNo': vm.batchSelect,
-            'flag': 1,
-            'materialId': 0
+            'userId': userId,
+            'flag': 4,
+            'materialId': materialId
         }
     }).trigger("reloadGrid");
 };
@@ -299,30 +294,21 @@ function reloadPro() {
 
 //添加消耗信息
 function addConsume(typeId) {
-    if (vm.batchSelect == "-1") {
-        alert("请选择合适的批次号");
-        return;
-    }
     var titles = "";
-    if (typeId == '10') {
-        titles = "添加原辅料消耗";
-        vm.add_title_name = "原辅料名称";
+    if (typeId == '11') {
+        titles = "添加上游原料";
+        vm.add_title_name = "上游原材料名称";
         vm.useage_name = "消耗量";
 
     } else if (typeId == '12') {
-        titles = '添加资源能源消耗';
+        titles = '添加资源能源信息';
         vm.add_title_name = "资源能源名称";
         vm.useage_name = "消耗量";
 
-    } else if (typeId == '13') {
+    } else {
         titles = '添加排放信息';
         vm.add_title_name = "排放名称";
         vm.useage_name = "排放量";
-    } else {
-        titles = '添加包装信息';
-        vm.add_title_name = "包装材料";
-        vm.useage_name = "消耗量";
-
     }
     LayuiSelect("#consume_id", baseURL + "sys/lcadict/query/" + typeId, "#unit_id");
     layer.open({
@@ -343,9 +329,9 @@ function addConsume(typeId) {
                     "secondName": $("#consume_id").val().split("_")[1],
                     "unit": $("#consume_id").val().split("_")[2],
                     "formId": typeId,
-                    "flag": 1,
+                    "flag": 4,
                     "batchNo": vm.batchSelect,
-                    "materialId": 0,
+                    "materialId": vm.materialId,
                     "usage": $("#usage_id").val()
                 },
                 dataType: "json",
@@ -356,7 +342,7 @@ function addConsume(typeId) {
                             $("#usage_id").val("");
                             $("#unit_id").val("");
                             layer.close(index);
-                            reloadPro();
+                            showMaterial("", vm.materialId, vm.material_name);
                         });
                     } else {
                         layer.alert(result.msg);
@@ -392,9 +378,9 @@ function addTransPort(typeId) {
                     "trans_port_type": $("#trans_port_type").val(),
                     "trans_port_distance": $("#trans_port_distance").val(),
                     "trans_port_weight": $("#trans_port_weight").val(),
-                    "flag": 1,
+                    "flag": 4,
                     "batchNo": vm.batchSelect,
-                    "materialId": 0
+                    "materialId": vm.materialId
                 },
                 dataType: "json",
                 success: function (result) {
@@ -406,7 +392,7 @@ function addTransPort(typeId) {
                             $("#trans_port_distance").val("");
                             $("#trans_port_weight").val("");
                             layer.close(index);
-                            reloadPro();
+                            showMaterial("", vm.materialId, vm.material_name);
                         });
                     } else {
                         layer.alert(result.msg);
@@ -419,20 +405,105 @@ function addTransPort(typeId) {
 
 }
 
+
+//添加原材料消耗量
+function addMaterial() {
+    if (vm.batchSelect == "-1") {
+        alert("请选择合适的批次号");
+        return;
+    }
+    LayuiSelect("#raw_material_name", baseURL + "sys/lcadict/query/10", "#raw_material_unit");
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "新增原材料数据",
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#raw_material_id"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/saveMaterial",
+                data: {
+                    "secondId": $("#raw_material_name").val().split("_")[0],
+                    "secondName": $("#raw_material_name").val().split("_")[1],
+                    "unit": $("#raw_material_name").val().split("_")[2],
+                    "formId": "10",
+                    "flag": 4,
+                    "batchNo": vm.batchSelect,
+                    "materialId": "0",
+                    "usage": $("#raw_material_usage").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#raw_material_usage").val("");
+                            $("#raw_material_unit").val("");
+                            layer.close(index);
+                            vm.reload();
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
+};
+
+/*
+* 删除原材料。默认是多选
+* */
+function delMaterial(jqId) {
+    var materialIds = getSelectedRowNums(jqId);
+    if (isBlank(materialIds)) {
+        return;
+    }
+    var lock = false;
+    layer.confirm('确定要删除选中的记录？', {
+        btn: ['确定', '取消'] //按钮
+    }, function () {
+        if (!lock) {
+            lock = true;
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/deleteMaterial",
+                /* contentType: "application/json",*/
+                data: {
+                    "materialIds": materialIds,
+                    "batchNo": vm.batchSelect,
+                    "flag": 4
+                },
+                success: function (r) {
+                    if (r.code == 0) {
+                        layer.msg("操作成功", {icon: 1});
+                        $("#menuMaterialTable").trigger("reloadGrid");
+                    } else {
+                        layer.alert(r.msg);
+                    }
+                }
+            });
+        }
+    });
+}
+
+
 /*
 * 删除资源消耗，运输。排放等
 * */
 function delConsume(typeId) {
     var tableId;
     var url = baseURL + "sys/usagestatistics/delete";
-    if (typeId == "10") {
+    if (typeId == "11") {
         tableId = "#rawMaterialTable";
     } else if (typeId == "12") {
         tableId = "#reseTable"
     } else if (typeId == "13") {
         tableId = "#gasTable";
-    } else if (typeId == "15") {
-        tableId = "#packTable";
     } else {
         tableId = "#transPortTable";
         url = baseURL + "sys/transport/delete";
@@ -463,16 +534,73 @@ function delConsume(typeId) {
             }
         });
     });
+
+
 }
+
+
+/*
+* 修改原材料消耗量
+* updateMaterial
+* */
+
+function updateMaterial(jqId) {
+    var material = getSelectedRowNum(jqId);
+    if (isBlank(material)) {
+        return;
+    }
+    $("#raw_material_unit_update").val(material.unit);
+    $("#raw_material_name_update").val(material.materialName);
+    $("#raw_material_usage_update").val(material.materialUsage);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "修改原材料数据",
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#raw_material_id_update"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/updateMaterialById",
+                data: {
+                    "id": material.id,
+                    "usage": $("#raw_material_usage_update").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            layer.close(index);
+                            vm.reload();
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
+}
+
 
 var vm = new Vue({
     el: '#rrapp',
     data: {
-        showUsage: true,
+        mainList: true,
+        newAdd: false,
+        showUsage: false,
         title: null,
         usage_title: null,
+        bNo: "",
+        bName: "",
+        usageStatistics: {},
         batchNos: [],
         batchSelect: "-1",
+        consumes: [],
         add_title_name: '',
         useage_name: '',
         materialId: '',
@@ -482,6 +610,49 @@ var vm = new Vue({
         this.getBatchNo();
     },
     methods: {
+        query: function () {
+            vm.reload();
+        },
+        add: function () {
+            vm.newAdd = true;
+            vm.mainList = false;
+            vm.showUsage = false;
+            vm.title = "新增";
+            vm.usageStatistics = {};
+        },
+        reloads: function () {
+            location.reload();
+        },
+        addBatchNo: function () {
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-molv',
+                title: "新增批次号",
+                area: ['550px', '270px'],
+                shadeClose: false,
+                content: jQuery("#batchNo"),
+                btn: ['保存', '取消'],
+                btn1: function (index) {
+                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName;
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + "sys/batch/save",
+                        data: data,
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.code == 0) {
+                                layer.close(index);
+                                layer.alert('保存成功', function (index) {
+                                    location.reload();
+                                });
+                            } else {
+                                layer.alert(result.msg);
+                            }
+                        }
+                    });
+                }
+            });
+        },
         getBatchNo: function () {
             $.ajax({
                 method: 'post',
@@ -496,9 +667,27 @@ var vm = new Vue({
                     }
                 },
             });
+        },
+        selectBatchAndUserId: function (e) {
+            this.batchSelect = vm.batchSelect;
+            vm.reload();
+        },
+        reload: function (event) {
+            vm.showList = true;
+            var page = $("#menuMaterialTable").jqGrid('getGridParam', 'page');
+            $("#menuMaterialTable").jqGrid('setGridParam', {
+                page: page,
+                postData: {
+                    'batchNo': vm.batchSelect,
+                    'flag': 4,
+                    'materialId': 0
+                }
+            }).trigger("reloadGrid");
         }
     }
 });
+
+
 /*
 * 工具类
 *
@@ -575,6 +764,9 @@ function LayuiSelect(selectId, url, unitId) {
                 var unit = data.value.split("_")[2];
                 $(unitId).val(unit);
             });
+            /*if (value != undefined && value != null && value != '') {
+                $(selectId).val(value);
+            }*/
             formSelect.render();
         });
 

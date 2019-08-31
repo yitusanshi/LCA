@@ -5,6 +5,247 @@
     <#include "/header.html">
 </head>
 <body>
-回收阶段
+<div id="rrapp" v-cloak>
+    <div v-show="mainList">
+        <div class="grid-btn">
+            <div class="form-group col-sm-2">
+                <select id="select" class="form-control" v-model="batchSelect"
+                        @change="selectBatchAndUserId($event)">
+                    <option value="-1" selected="selected">请选择批次号</option>
+                    <option v-for="item in batchNos" :value="item.batchNo">
+                        {{item.batchNo}}
+                    </option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <a class="btn btn-primary" @click="addMaterial()"><i class="fa fa-plus"></i>&nbsp;新增原材料</a>
+            <a class="btn btn-primary" @click="updateMaterial('menuMaterialTable')"><i
+                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            <a class="btn btn-primary" @click="delMaterial('menuMaterialTable')"><i
+                    class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="menuMaterialTable"></table>
+        <div id="jqGridPager"></div>
+
+    </div>
+
+    <div v-show="showUsage" class="panel panel-default">
+        <div class="grid-btn">
+            <div class="form-group">
+                <label class="btn form-control">{{usage_title}}</label>
+                <button class="btn btn-primary" style="float:right" @click="reloads"><i
+                        class="fa fa-mail-reply"></i>&nbsp;返回
+                </button>
+            </div>
+
+        </div>
+        <br>
+        <br>
+
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <a class="btn btn-primary" @click="addConsume('11')"><i class="fa fa-plus"></i>&nbsp;添加原材料消耗</a>
+            <a class="btn btn-primary" @click="delConsume('11')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="rawMaterialTable" width="95%"></table>
+        <div id="rawGridPager"></div>
+
+        <!-- 资源能源消耗-->
+        <!-- <div class="panel-heading">资源能源消耗</div>-->
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <a class="btn btn-primary" @click="addConsume('12')"><i class="fa fa-plus"></i>&nbsp;添加资源能源消耗</a>
+            <a class="btn btn-primary" @click="delConsume('12')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="reseTable"></table>
+        <div id="reseGridPager"></div>
+
+        <!--排放与废气-->
+        <!--<div class="panel-heading">排放与废气</div>-->
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <a class="btn btn-primary" @click="addConsume('13')"><i class="fa fa-plus"></i>&nbsp;添加排放信息</a>
+            <a class="btn btn-primary" @click="delConsume('13')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="gasTable"></table>
+        <div id="gasGridPager"></div>
+
+        <!--运输过程-->
+        <!-- <div class="panel-heading">运输过程</div>-->
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <!--<label>运输过程</label>-->
+            <a class="btn btn-primary" @click="addTransPort('14')"><i class="fa fa-plus"></i>&nbsp;添加运输信息</a>
+            <a class="btn btn-primary" @click="delConsume('14')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="transPortTable"></table>
+        <div id="transPortGridPager"></div>
+    </div>
+
+    <!-- 增加批次号 -->
+    <div id="batchNo" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">批次号</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">创建人</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bName" placeholder="创建人"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--新增物质名称-->
+    <div id="consume" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">{{add_title_name}}</div>
+                    <div class="col-sm-10 layui-form">
+                        <select name="modules" id="consume_id" class="form-control" lay-verify="required"
+                                lay-filter="myselect" lay-search></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">{{useage_name}}</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="usage_id" placeholder="消耗量"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">单位</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly id="unit_id" placeholder="单位"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--新增原材料使用量-->
+    <div id="raw_material_id" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">数据来源</div>
+                    <div class="col-sm-10">
+                        <select name="modules" id="raw_material_source" class="form-control">
+                            <option value="0" selected>上游数据</option>
+                            <option value="1">背景数据</option>
+                            <option value="2">暂无数据来源</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">原材料名称</div>
+                    <div class="col-sm-10 layui-form">
+                        <select name="modules" id="raw_material_name" class="form-control" lay-verify="required"
+                                lay-filter="myselect" lay-search></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">原材料数量</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="raw_material_usage" placeholder="原材料数量"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">单位</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly id="raw_material_unit" placeholder="单位"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--更新原材料使用量-->
+    <div id="raw_material_id_update" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">数据来源</div>
+                    <div class="col-sm-10">
+                        <select name="modules" id="raw_material_source_update" class="form-control">
+                            <option value="0" selected>上游数据</option>
+                            <option value="1">背景数据</option>
+                            <option value="2">暂无数据来源</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">原材料名称</div>
+                    <div class="col-sm-10 layui-form">
+                        <input type="text" class="form-control" readonly id="raw_material_name_update"
+                               placeholder="原材料名称"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">原材料数量</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="raw_material_usage_update" placeholder="原材料数量"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">单位</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly id="raw_material_unit_update"
+                               placeholder="单位"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--新增运输信息-->
+    <div id="trans_port_id" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输物质</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_name" placeholder="请输入运输物质名称"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">产地</div>
+                    <div class="col-sm-10 layui-form">
+                        <input type="text" class="form-control" id="trans_port_source" placeholder="请输入产地"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输方式</div>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="trans_port_type">
+                            <option value="139" selected>箱式货车运输</option>
+                            <option value="149">大卡车运输</option>
+                            <option value="150">小卡车运输</option>
+                            <option value="151">挂车运输</option>
+                            <option value="152">货运飞机</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输距离(单位:km)</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_distance" placeholder="运输距离"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输重量(单位:t)</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_weight" placeholder="运输重量"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script src="${request.contextPath}/statics/js/modules/cycle/recovery.js?_${.now?long}"></script>
 </body>
 </html>

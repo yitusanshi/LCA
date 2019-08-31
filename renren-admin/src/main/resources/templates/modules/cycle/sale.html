@@ -5,6 +5,76 @@
     <#include "/header.html">
 </head>
 <body>
-销售阶段
+<div id="rrapp" v-cloak>
+    <div v-show="showUsage" class="panel panel-default">
+        <div class="form-group col-sm-2">
+            <select id="select" class="form-control" v-model="batchSelect"
+                    @change="reloadPro()">
+                <option value="-1" selected="selected">请选择批次号</option>
+                <option v-for="item in batchNos" :value="item.batchNo">
+                    {{item.batchNo}}
+                </option>
+            </select>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <!--运输过程-->
+        <!-- <div class="panel-heading">运输过程</div>-->
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <!--<label>运输过程</label>-->
+            <a class="btn btn-primary" @click="addTransPort('14')"><i class="fa fa-plus"></i>&nbsp;添加运输信息</a>
+            <a class="btn btn-primary" @click="delConsume('14')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="transPortTable"></table>
+        <div id="transPortGridPager"></div>
+    </div>
+    <!--新增运输信息-->
+    <div id="trans_port_id" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输物质</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_name" placeholder="请输入运输物质名称"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">产地</div>
+                    <div class="col-sm-10 layui-form">
+                        <input type="text" class="form-control" id="trans_port_source" placeholder="请输入产地"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输方式</div>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="trans_port_type">
+                            <option value="139" selected>箱式货车运输</option>
+                            <option value="149">大卡车运输</option>
+                            <option value="150">小卡车运输</option>
+                            <option value="151">挂车运输</option>
+                            <option value="152">货运飞机</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输距离(单位:km)</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_distance" placeholder="运输距离"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输重量(单位:t)</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_weight" placeholder="运输重量"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script src="${request.contextPath}/statics/js/modules/cycle/sale.js?_${.now?long}"></script>
 </body>
 </html>

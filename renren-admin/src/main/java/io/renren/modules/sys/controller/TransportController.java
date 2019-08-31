@@ -94,12 +94,10 @@ public class TransportController extends AbstractController {
     //通过用户的的version和用户ID查询用户的信息
     @RequestMapping("/listTransport")
     public R listMaterial(@RequestParam Map<String, Object> params) {
-        System.out.println("运输查询开始。。。start");
         String batchNo = (String) params.get("batchNo");
         String parentId = (String) params.get("materialId");
         String flag = (String) params.get("flag");
         String typeId = (String) params.get("typeId");
-        System.out.println("batchNo【" + batchNo + "】parentId【" + parentId + "】" + "【" + flag + "】" + flag + "typeId【" + typeId + getUserId());
         if (batchNo == "-1" || "-1".equals(batchNo)) {
             return R.ok();
         }
@@ -109,7 +107,9 @@ public class TransportController extends AbstractController {
         map.put("flag", flag);
         map.put("parentId", parentId);
         map.put("typeId", typeId);
-        IPage<TransportEntity> page = new Query<TransportEntity>().getPage(params);
+        map.put("limit", params.get("limit"));
+        map.put("page", params.get("page"));
+        IPage<TransportEntity> page = new Query<TransportEntity>().getPage(map);
         List<TransportEntity> usageStatisticsEntityList = transportService.getMaterialByBatch(map);
         page.setRecords(usageStatisticsEntityList);
         return R.ok().put("page", new PageUtils(page));

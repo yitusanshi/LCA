@@ -1,4 +1,7 @@
 $(function () {
+    /* $(window).resize(function () {
+         $("#rawMaterialTable").setGridWidth($(window).width());
+     });*/
     $("#menuMaterialTable").jqGrid({
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "json",
@@ -67,12 +70,12 @@ $(function () {
             'typeId': 11
         },
         viewrecords: true,
-        height: 100,
+        height: "25%",
         rowNum: 10,
         rowList: [5, 10, 20],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#rawGridPager",
         caption: "上游原材料消耗",
@@ -113,12 +116,12 @@ $(function () {
             'typeId': 12
         },
         viewrecords: true,
-        height: 100,
+        height: "25%",
         rowNum: 10,
         rowList: [5, 10, 20],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#reseGridPager",
         caption: "资源与能源消耗",
@@ -159,12 +162,12 @@ $(function () {
             'typeId': 13
         },
         viewrecords: true,
-        height: 100,
+        height: "25%",
         rowNum: 10,
         rowList: [10, 30, 50],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#gasGridPager",
         caption: "排放与废气",
@@ -207,12 +210,12 @@ $(function () {
             'typeId': 14
         },
         viewrecords: true,
-        height: 100,
+        height: "25%",
         rowNum: 10,
         rowList: [10, 30, 50],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#transPortGridPager",
         caption: "运输过程",
@@ -360,6 +363,10 @@ function addConsume(typeId) {
 
 //添加运输过程
 function addTransPort(typeId) {
+    if (vm.batchSelect == "-1") {
+        alert("请选择合适的批次号");
+        return;
+    }
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -461,7 +468,6 @@ function addMaterial() {
 * */
 function delMaterial(jqId) {
     var materialIds = getSelectedRowNums(jqId);
-    console.log(materialIds);
     if (isBlank(materialIds)) {
         return;
     }
@@ -548,7 +554,6 @@ function delConsume(typeId) {
 
 function updateMaterial(jqId) {
     var material = getSelectedRowNum(jqId);
-    console.log(material);
     if (isBlank(material)) {
         return;
     }
@@ -739,12 +744,6 @@ function getSelectedRowNum(jqGridSelect) {
     material = grid.getRowData(selectedIDs[0]);
     return material;
 };
-
-//选择多条记录
-function getSelectedRows() {
-
-    return grid.getGridParam("selarrrow");
-}
 
 /*
 *
