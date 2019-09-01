@@ -620,8 +620,8 @@ var vm = new Vue({
         usageStatistics: {},
         batchNos: [],
         prList: [],
-        batchSelect: "-1",
         prSelect: "-1",
+        batchSelect: "-1",
         consumes: [],
         add_title_name: '',
         useage_name: '',
@@ -630,19 +630,8 @@ var vm = new Vue({
     },
     mounted() {
         this.getPr();
-        // this.getBatchNo();
     },
     methods: {
-        query: function () {
-            vm.reload();
-        },
-        add: function () {
-            vm.newAdd = true;
-            vm.mainList = false;
-            vm.showUsage = false;
-            vm.title = "新增";
-            vm.usageStatistics = {};
-        },
         reloads: function () {
             location.reload();
         },
@@ -691,21 +680,6 @@ var vm = new Vue({
                 },
             });
         },
-        getBatchNo: function () {
-            $.ajax({
-                method: 'post',
-                url: baseURL + "sys/batch/getBatch",
-                contentType: "application/json",
-                datatype: "json",
-                success: function (r) {
-                    if (r.code == 0) {
-                        vm.batchNos = r.batchNos;
-                    } else {
-                        alert(r.msg);
-                    }
-                },
-            });
-        },
         selectPrId: function (e) {
             vm.batchSelect = "-1";
             vm.batchNos = [];
@@ -721,15 +695,11 @@ var vm = new Vue({
                     } else {
                         alert(r.msg);
                     }
-                }
-
-                ,
-            })
-            ;
+                },
+            });
 
         },
         selectBatchAndUserId: function (e) {
-            this.batchSelect = vm.batchSelect;
             vm.reload();
         },
         reload: function (event) {

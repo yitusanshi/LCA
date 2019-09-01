@@ -3,6 +3,7 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "json",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '原辅料名称', name: 'materialName', index: 'materialName', width: '80px'},
             {label: '使用量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
@@ -18,6 +19,7 @@ $(function () {
         ],
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'flag': 3,
             'materialId': 0,
             'typeId': 10
@@ -53,6 +55,7 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '上游原辅料名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
@@ -98,6 +101,7 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '资源能源名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
@@ -143,6 +147,7 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '排放名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '排放量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
@@ -199,6 +204,7 @@ function showMaterial(userId, materialId, name) {
         page: page,
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'userId': userId,
             'flag': 3,
             'materialId': materialId
@@ -212,6 +218,7 @@ function showMaterial(userId, materialId, name) {
         page: resepage,
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'userId': userId,
             'flag': 3,
             'materialId': materialId
@@ -225,6 +232,7 @@ function showMaterial(userId, materialId, name) {
         page: gaspage,
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'userId': userId,
             'flag': 3,
             'materialId': materialId
@@ -273,6 +281,7 @@ function addConsume(typeId) {
                     "flag": 3,
                     "batchNo": vm.batchSelect,
                     "materialId": vm.materialId,
+                    'prId': vm.prSelect,
                     "usage": $("#usage_id").val()
                 },
                 dataType: "json",
@@ -322,6 +331,7 @@ function addMaterial() {
                     "flag": 3,
                     "batchNo": vm.batchSelect,
                     "materialId": "0",
+                    'prId': vm.prSelect,
                     "usage": $("#raw_material_usage").val()
                 },
                 dataType: "json",
@@ -364,6 +374,7 @@ function delMaterial(jqId) {
                 data: {
                     "materialIds": materialIds,
                     "batchNo": vm.batchSelect,
+                    'prId': vm.prSelect,
                     "flag": 3
                 },
                 success: function (r) {
@@ -489,22 +500,14 @@ var vm = new Vue({
         add_title_name: '',
         useage_name: '',
         materialId: '',
+        prList: [],
+        prSelect: "-1",
         material_name: ''
     },
     mounted() {
-        this.getBatchNo();
+        this.getPr();
     },
     methods: {
-        query: function () {
-            vm.reload();
-        },
-        add: function () {
-            vm.newAdd = true;
-            vm.mainList = false;
-            vm.showUsage = false;
-            vm.title = "新增";
-            vm.usageStatistics = {};
-        },
         reloads: function () {
             location.reload();
         },
@@ -518,7 +521,7 @@ var vm = new Vue({
                 content: jQuery("#batchNo"),
                 btn: ['保存', '取消'],
                 btn1: function (index) {
-                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName;
+                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName + "&prId=" + $("#selectPr1").val();
                     $.ajax({
                         type: "POST",
                         url: baseURL + "sys/batch/save",
@@ -538,11 +541,29 @@ var vm = new Vue({
                 }
             });
         },
-        getBatchNo: function () {
+        getPr: function () {
             $.ajax({
                 method: 'post',
-                url: baseURL + "sys/batch/getBatch",
+                url: baseURL + "sys/productdefine/getPrByUserId",
                 contentType: "application/json",
+                datatype: "json",
+                success: function (r) {
+                    if (r.code == 0) {
+                        vm.prList = r.prList;
+                    } else {
+                        alert(r.msg);
+                    }
+                },
+            });
+        },
+        selectPrId: function (e) {
+            vm.batchSelect = "-1";
+            vm.batchNos = [];
+            this.prSelect = vm.prSelect;
+            $.ajax({
+                method: 'post',
+                url: baseURL + "sys/batch/getBatchByPrId",
+                data: {"prId": vm.prSelect},
                 datatype: "json",
                 success: function (r) {
                     if (r.code == 0) {
@@ -552,6 +573,7 @@ var vm = new Vue({
                     }
                 },
             });
+
         },
         selectBatchAndUserId: function (e) {
             this.batchSelect = vm.batchSelect;
@@ -564,6 +586,7 @@ var vm = new Vue({
                 page: page,
                 postData: {
                     'batchNo': vm.batchSelect,
+                    'prId': vm.prSelect,
                     'flag': 3,
                     'materialId': 0
                 }

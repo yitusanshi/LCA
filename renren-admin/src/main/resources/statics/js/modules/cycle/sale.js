@@ -4,6 +4,7 @@ $(function () {
         url: baseURL + 'sys/transport/listTransport',
         datatype: "local",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '运输物质名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '运输方式', name: 'type', index: 'type', width: '80px'},
@@ -25,8 +26,6 @@ $(function () {
         rowList: [10, 30, 50],
         rownumbers: true,
         rownumWidth: 25,
-        // autowidth: true,
-        // width: "100%",
         multiselect: true,
         pager: "#transPortGridPager",
         caption: "运输过程",
@@ -57,6 +56,7 @@ function reloadPro() {
         page: transpage,
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'flag': 2,
             'materialId': 0
         }
@@ -90,6 +90,7 @@ function addTransPort(typeId) {
                     "trans_port_weight": $("#trans_port_weight").val(),
                     "flag": 2,
                     "batchNo": vm.batchSelect,
+                    'prId': vm.prSelect,
                     "materialId": 0
                 },
                 dataType: "json",
@@ -169,20 +170,40 @@ var vm = new Vue({
         usage_title: null,
         batchNos: [],
         batchSelect: "-1",
+        prList: [],
+        prSelect: "-1",
         add_title_name: '',
         useage_name: '',
         materialId: '',
         material_name: ''
     },
     mounted() {
-        this.getBatchNo();
+        this.getPr();
     },
     methods: {
-        getBatchNo: function () {
+        getPr: function () {
             $.ajax({
                 method: 'post',
-                url: baseURL + "sys/batch/getBatch",
+                url: baseURL + "sys/productdefine/getPrByUserId",
                 contentType: "application/json",
+                datatype: "json",
+                success: function (r) {
+                    if (r.code == 0) {
+                        vm.prList = r.prList;
+                    } else {
+                        alert(r.msg);
+                    }
+                },
+            });
+        },
+        selectPrId: function (e) {
+            vm.batchSelect = "-1";
+            vm.batchNos = [];
+            this.prSelect = vm.prSelect;
+            $.ajax({
+                method: 'post',
+                url: baseURL + "sys/batch/getBatchByPrId",
+                data: {"prId": vm.prSelect},
                 datatype: "json",
                 success: function (r) {
                     if (r.code == 0) {
@@ -192,7 +213,8 @@ var vm = new Vue({
                     }
                 },
             });
-        }
+
+        },
     }
 });
 /*

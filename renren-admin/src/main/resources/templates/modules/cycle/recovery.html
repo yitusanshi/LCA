@@ -9,6 +9,15 @@
     <div v-show="mainList">
         <div class="grid-btn">
             <div class="form-group col-sm-2">
+                <select id="selectPr" class="form-control" v-model="prSelect"
+                        @change="selectPrId($event)">
+                    <option value="-1" selected="selected">请选择产品</option>
+                    <option v-for="item in prList" :value="item.id">
+                        {{item.prName}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-sm-2">
                 <select id="select" class="form-control" v-model="batchSelect"
                         @change="selectBatchAndUserId($event)">
                     <option value="-1" selected="selected">请选择批次号</option>
@@ -17,6 +26,8 @@
                     </option>
                 </select>
             </div>
+            <br>
+            <br>
             <br>
             <br>
             <a class="btn btn-primary" @click="addMaterial()"><i class="fa fa-plus"></i>&nbsp;新增原材料</a>

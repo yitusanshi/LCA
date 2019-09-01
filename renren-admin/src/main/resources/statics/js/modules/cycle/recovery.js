@@ -3,6 +3,7 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "json",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '原辅料名称', name: 'materialName', index: 'materialName', width: '80px'},
             {label: '使用量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
@@ -53,6 +54,7 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '上游原辅料名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
@@ -98,6 +100,7 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '资源能源名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
@@ -142,6 +145,7 @@ $(function () {
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '排放名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '排放量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
@@ -187,6 +191,7 @@ $(function () {
         url: baseURL + 'sys/transport/listTransport',
         datatype: "local",
         colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '运输物质名称', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '运输方式', name: 'type', index: 'type', width: '80px'},
@@ -245,6 +250,7 @@ function showMaterial(userId, materialId, name) {
         page: page,
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'userId': userId,
             'flag': 4,
             'materialId': materialId
@@ -258,6 +264,7 @@ function showMaterial(userId, materialId, name) {
         page: resepage,
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'userId': userId,
             'flag': 4,
             'materialId': materialId
@@ -271,6 +278,7 @@ function showMaterial(userId, materialId, name) {
         page: gaspage,
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'userId': userId,
             'flag': 4,
             'materialId': materialId
@@ -284,6 +292,7 @@ function showMaterial(userId, materialId, name) {
         page: transpage,
         postData: {
             'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
             'userId': userId,
             'flag': 4,
             'materialId': materialId
@@ -331,6 +340,7 @@ function addConsume(typeId) {
                     "formId": typeId,
                     "flag": 4,
                     "batchNo": vm.batchSelect,
+                    'prId': vm.prSelect,
                     "materialId": vm.materialId,
                     "usage": $("#usage_id").val()
                 },
@@ -380,6 +390,7 @@ function addTransPort(typeId) {
                     "trans_port_weight": $("#trans_port_weight").val(),
                     "flag": 4,
                     "batchNo": vm.batchSelect,
+                    'prId': vm.prSelect,
                     "materialId": vm.materialId
                 },
                 dataType: "json",
@@ -433,6 +444,7 @@ function addMaterial() {
                     "formId": "10",
                     "flag": 4,
                     "batchNo": vm.batchSelect,
+                    'prId': vm.prSelect,
                     "materialId": "0",
                     "usage": $("#raw_material_usage").val()
                 },
@@ -600,6 +612,8 @@ var vm = new Vue({
         usageStatistics: {},
         batchNos: [],
         batchSelect: "-1",
+        prList: [],
+        prSelect: "-1",
         consumes: [],
         add_title_name: '',
         useage_name: '',
@@ -607,57 +621,35 @@ var vm = new Vue({
         material_name: ''
     },
     mounted() {
-        this.getBatchNo();
+        this.getPr();
     },
     methods: {
-        query: function () {
-            vm.reload();
-        },
-        add: function () {
-            vm.newAdd = true;
-            vm.mainList = false;
-            vm.showUsage = false;
-            vm.title = "新增";
-            vm.usageStatistics = {};
-        },
         reloads: function () {
             location.reload();
         },
-        addBatchNo: function () {
-            layer.open({
-                type: 1,
-                skin: 'layui-layer-molv',
-                title: "新增批次号",
-                area: ['550px', '270px'],
-                shadeClose: false,
-                content: jQuery("#batchNo"),
-                btn: ['保存', '取消'],
-                btn1: function (index) {
-                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName;
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + "sys/batch/save",
-                        data: data,
-                        dataType: "json",
-                        success: function (result) {
-                            if (result.code == 0) {
-                                layer.close(index);
-                                layer.alert('保存成功', function (index) {
-                                    location.reload();
-                                });
-                            } else {
-                                layer.alert(result.msg);
-                            }
-                        }
-                    });
-                }
-            });
-        },
-        getBatchNo: function () {
+        getPr: function () {
             $.ajax({
                 method: 'post',
-                url: baseURL + "sys/batch/getBatch",
+                url: baseURL + "sys/productdefine/getPrByUserId",
                 contentType: "application/json",
+                datatype: "json",
+                success: function (r) {
+                    if (r.code == 0) {
+                        vm.prList = r.prList;
+                    } else {
+                        alert(r.msg);
+                    }
+                },
+            });
+        },
+        selectPrId: function (e) {
+            vm.batchSelect = "-1";
+            vm.batchNos = [];
+            this.prSelect = vm.prSelect;
+            $.ajax({
+                method: 'post',
+                url: baseURL + "sys/batch/getBatchByPrId",
+                data: {"prId": vm.prSelect},
                 datatype: "json",
                 success: function (r) {
                     if (r.code == 0) {
@@ -667,9 +659,9 @@ var vm = new Vue({
                     }
                 },
             });
+
         },
         selectBatchAndUserId: function (e) {
-            this.batchSelect = vm.batchSelect;
             vm.reload();
         },
         reload: function (event) {
@@ -679,6 +671,7 @@ var vm = new Vue({
                 page: page,
                 postData: {
                     'batchNo': vm.batchSelect,
+                    'prId': vm.prSelect,
                     'flag': 4,
                     'materialId': 0
                 }

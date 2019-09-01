@@ -2,7 +2,8 @@ $(function () {
     $("#jqGrid").jqGrid({
         url: baseURL + 'sys/lifecycle/list',
         datatype: "json",
-        colModel: [			
+        colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
 			{ label: '原材料名名称', name: 'materialId', index: 'material_id', width: 50, key: true },
 			{ label: '上游原材料名称', name: 'parentId', index: 'parent_id', width: 80 },
 			{ label: '消耗量', name: 'name', index: 'name', width: 80 },

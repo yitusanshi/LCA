@@ -17,15 +17,17 @@
         <result property="materialName" column="material_name"/>
         <result property="flag" column="flag"/>
         <result property="parentId" column="parent_id"/>
+        <result property="prId" column="pr_id"/>
+        <result property="prName" column="pr_name"/>
     </resultMap>
     <select id="getMaterialByBatch" parameterType="java.util.Map" resultMap="transportMap">
-    SELECT * FROM
-    transport
-    WHERE 1=1
-    and user_id=#{userId} AND version=#{version} AND flag=#{flag}
-     <if test="parentId != null">
-         parent_id=#{parentId}
-     </if>
+        SELECT * FROM
+        transport
+        WHERE 1=1
+        and user_id=#{userId} AND version=#{version} AND flag=#{flag} AND pr_id=#{prId}
+        <if test="parentId != null">
+            AND parent_id=#{parentId}
+        </if>
 
     </select>
 

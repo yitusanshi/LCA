@@ -61,11 +61,18 @@ public class TransportEntity implements Serializable {
     /**
      * 属于的标识 0 原料 1 生产 2 销售 3 使用 4 回收
      */
-    private Integer flag;
+    private int flag;
 
     /*
      * 父类ID
      * */
-    private Integer parentId;
+    private int parentId;
 
+    /*
+     * 产品ID
+     * */
+
+    private int prId;
+
+    private String prName;
 }

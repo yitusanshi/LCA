@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.renren.common.utils.Query;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.cycle.entity.UsageStatisticsEntity;
+import io.renren.modules.prManage.entity.ProductDefineEntity;
+import io.renren.modules.prManage.service.impl.ProductDefineServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import io.renren.modules.sys.service.TransportService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
+import javax.annotation.Resource;
+
 
 /**
  * @author 九九
@@ -34,6 +38,9 @@ import io.renren.common.utils.R;
 public class TransportController extends AbstractController {
     @Autowired
     private TransportService transportService;
+
+    @Resource
+    private ProductDefineServiceImpl defineService;
 
     /**
      * 列表
@@ -98,6 +105,7 @@ public class TransportController extends AbstractController {
         String parentId = (String) params.get("materialId");
         String flag = (String) params.get("flag");
         String typeId = (String) params.get("typeId");
+        String prId = (String) params.get("prId");
         if (batchNo == "-1" || "-1".equals(batchNo)) {
             return R.ok();
         }
@@ -107,6 +115,7 @@ public class TransportController extends AbstractController {
         map.put("flag", flag);
         map.put("parentId", parentId);
         map.put("typeId", typeId);
+        map.put("prId", prId);
         map.put("limit", params.get("limit"));
         map.put("page", params.get("page"));
         IPage<TransportEntity> page = new Query<TransportEntity>().getPage(map);
@@ -125,8 +134,12 @@ public class TransportController extends AbstractController {
         String type = (String) params.get("trans_port_type");
         String distance = (String) params.get("trans_port_distance");
         String weight = (String) params.get("trans_port_weight");
+        int prId = Integer.valueOf((String) params.get("prId"));
+        ProductDefineEntity defineEntity = defineService.getById(prId);
+        String prName = defineEntity.getPrName();
         TransportEntity transportEntity = new TransportEntity();
         transportEntity.setVersion(version);
+        transportEntity.setPrName(prName);
         transportEntity.setUserId(getUserId());
         transportEntity.setParentId(Integer.valueOf(parentId));
         transportEntity.setFlag(Integer.valueOf(flag));
@@ -135,6 +148,7 @@ public class TransportController extends AbstractController {
         transportEntity.setType(Integer.valueOf(type));
         transportEntity.setDistance(Double.valueOf(distance));
         transportEntity.setWeight(Double.valueOf(weight));
+        transportEntity.setPrId(prId);
         transportService.save(transportEntity);
         return R.ok();
     }
