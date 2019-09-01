@@ -22,7 +22,11 @@
     SELECT * FROM
     transport
     WHERE 1=1
-    and user_id=#{userId} AND version=#{version} AND flag=#{flag} AND parent_id=#{parentId}
+    and user_id=#{userId} AND version=#{version} AND flag=#{flag}
+     <if test="parentId != null">
+         parent_id=#{parentId}
+     </if>
+
     </select>
 
 

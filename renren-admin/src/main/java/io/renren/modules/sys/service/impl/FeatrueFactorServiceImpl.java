@@ -12,10 +12,13 @@ import io.renren.modules.sys.dao.FeatrueFactorDao;
 import io.renren.modules.sys.entity.FeatrueFactorEntity;
 import io.renren.modules.sys.service.FeatrueFactorService;
 
+import javax.annotation.Resource;
+
 
 @Service("featrueFactorService")
 public class FeatrueFactorServiceImpl extends ServiceImpl<FeatrueFactorDao, FeatrueFactorEntity> implements FeatrueFactorService {
-
+    @Resource
+    private FeatrueFactorDao featrueFactorDao;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<FeatrueFactorEntity> page = this.page(
@@ -24,6 +27,11 @@ public class FeatrueFactorServiceImpl extends ServiceImpl<FeatrueFactorDao, Feat
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public String getUnitById(int id) {
+        return featrueFactorDao.getUnitById(id);
     }
 
 }

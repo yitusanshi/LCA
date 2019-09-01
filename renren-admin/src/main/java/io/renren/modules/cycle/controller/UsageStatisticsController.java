@@ -63,6 +63,7 @@ public class UsageStatisticsController extends AbstractController {
         String parentId = (String) params.get("materialId");
         String flag = (String) params.get("flag");
         String typeId = (String) params.get("typeId");
+        int prId = Integer.valueOf((String) params.get("prId"));
         if (batchNo == "-1" || "-1".equals(batchNo)) {
             return R.ok();
         }
@@ -74,6 +75,7 @@ public class UsageStatisticsController extends AbstractController {
         map.put("formId", typeId);
         map.put("limit", params.get("limit"));
         map.put("page", params.get("page"));
+        map.put("prId", prId);
         IPage<UsageStatisticsEntity> page = new Query<UsageStatisticsEntity>().getPage(map);
         List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
         page.setRecords(usageStatisticsEntityList);
@@ -161,16 +163,19 @@ public class UsageStatisticsController extends AbstractController {
             return R.error("请选择物质名称");
         }
         String version = (String) params.get("batchNo");
-        int parentId = (Integer) params.get("materialId");
+        int parentId = Integer.valueOf((String) params.get("materialId"));
         String flag = (String) params.get("flag");
         String formId = (String) params.get("formId");
         String name = (String) params.get("secondName");
         String unit = (String) params.get("unit");
         String usage = (String) params.get("usage");
-        int prId = (Integer) params.get("prId");
-
+        int prId = Integer.valueOf((String) params.get("prId"));
+        ProductDefineEntity defineEntity = defineService.getById(prId);
+        String prName = defineEntity.getPrName();
 
         UsageStatisticsEntity usageStatistics = new UsageStatisticsEntity();
+        usageStatistics.setPrName(prName);
+        usageStatistics.setPrId(prId);
         usageStatistics.setUserId(getUserId());
         usageStatistics.setFlag(Integer.valueOf(flag));
         usageStatistics.setFormId(formId);

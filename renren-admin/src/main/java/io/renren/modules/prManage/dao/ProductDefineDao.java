@@ -21,4 +21,5 @@ public interface ProductDefineDao extends BaseMapper<ProductDefineEntity> {
 	void delById(List<Integer> list);
 
 	List<ProductDefineEntity> getPrByUserId(Long userId);
+	ProductDefineEntity getById(int id);
 }

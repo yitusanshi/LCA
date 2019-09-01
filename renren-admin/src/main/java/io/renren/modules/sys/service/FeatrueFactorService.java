@@ -16,5 +16,6 @@ import java.util.Map;
 public interface FeatrueFactorService extends IService<FeatrueFactorEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    String getUnitById(int id);
 }
 

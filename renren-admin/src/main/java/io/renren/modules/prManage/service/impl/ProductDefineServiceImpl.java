@@ -3,6 +3,7 @@ package io.renren.modules.prManage.service.impl;
 import io.renren.modules.sys.dao.DictDao;
 import io.renren.modules.sys.entity.DictEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.common.utils.PageUtils;
@@ -60,6 +61,11 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
     @Override
     public List<ProductDefineEntity> getPrByUserId(Long userId) {
         return productDefineDao.getPrByUserId(userId);
+    }
+
+    @Override
+    public ProductDefineEntity getById(int id) {
+        return productDefineDao.getById(id);
     }
 
 }

@@ -20,5 +20,6 @@ public interface ProductDefineService extends IService<ProductDefineEntity> {
     void delById(List<Integer> list);
 
     List<ProductDefineEntity> getPrByUserId(Long userId);
+    ProductDefineEntity getById(int id);
 }
 

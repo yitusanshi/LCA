@@ -15,5 +15,7 @@
         <result property="userName" column="user_name"/>
     </resultMap>
 
-
+    <select id="getUnitById" parameterType="java.lang.Integer" resultType="java.lang.String">
+        SELECT unit FROM featrue_factor WHERE `id` = #{0}
+    </select>
 </mapper>
