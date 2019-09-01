@@ -70,4 +70,9 @@ public class UsageStatisticsEntity implements Serializable {
      */
     private String formId;
 
+
+    private int prId;
+
+    private String prName;
+
 }

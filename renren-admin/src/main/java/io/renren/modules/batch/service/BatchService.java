@@ -20,5 +20,7 @@ public interface BatchService extends IService<BatchEntity> {
     List<BatchEntity> getBatchByUserId(long userId);
 
     List<BatchEntity> getBatchByBatchVo(BatchVo batchVo);
+
+    List<BatchEntity> getBatchByPrId(Long userId, int prId);
 }
 

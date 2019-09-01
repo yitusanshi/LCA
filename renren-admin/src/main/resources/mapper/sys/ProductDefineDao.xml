@@ -3,7 +3,7 @@
 
 <mapper namespace="io.renren.modules.prManage.dao.ProductDefineDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="io.renren.modules.prManage.entity.ProductDefineEntity" id="productDefineMap">
         <result property="id" column="id"/>
         <result property="prName" column="pr_name"/>
@@ -22,11 +22,17 @@
         <result property="industryName" column="second_name"/>
     </resultMap>
     <select id="getQueryList" parameterType="java.util.HashMap" resultMap="productDefineMap">
-        SELECT * FROM product_define p LEFT JOIN sys_user u on p.user_id = u.user_id LEFT JOIN dict d on p.industry_id = d.second_id WHERE
-         <if test = '"userid" == NULL' >
-         p.user_id = #{userid}
-         </if>
-          industry_id = #{industryId} AND p.pr_name LIKE "%"#{prName}"%"
+        SELECT * FROM product_define p LEFT JOIN sys_user u on p.user_id = u.user_id LEFT JOIN dict d on p.industry_id =
+        d.second_id WHERE
+        <if test='"userid" == NULL'>
+            p.user_id = #{userid}
+        </if>
+        industry_id = #{industryId} AND p.pr_name LIKE "%"#{prName}"%"
+    </select>
+    <select id="getPrByUserId" resultType="io.renren.modules.prManage.entity.ProductDefineEntity"
+            parameterType="java.lang.Long">
+        SELECT * FROM product_define
+        where user_id=#{userId}
     </select>
     <delete id="delById" parameterType="java.util.List">
         delete from product_define where id in

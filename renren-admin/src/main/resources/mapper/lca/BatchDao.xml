@@ -4,19 +4,20 @@
 <mapper namespace="io.renren.modules.batch.dao.BatchDao">
     <resultMap id="BaseResultMap" type="io.renren.modules.batch.entity.BatchEntity">
         <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pr_id" property="prId" jdbcType="INTEGER"/>
         <result column="batch_no" property="batchNo" jdbcType="VARCHAR"/>
         <result column="batch_name" property="batchName" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-    user_id, batch_no, batch_name, create_time
+    user_id, pr_id,batch_no, batch_name, create_time
     </sql>
 
     <select id="getBatchByUserId" parameterType="java.lang.Long"
             resultType="io.renren.modules.batch.entity.BatchEntity">
         select
-        user_id,batch_no,batch_name,create_time
+        user_id,pr_id,batch_no,batch_name,create_time
         from batch
         WHERE  user_id=#{userId,jdbcType=BIGINT}
     </select>
@@ -24,11 +25,14 @@
 
     <select id="getBatchByBatchVo" parameterType="io.renren.modules.batch.vo.BatchVo" resultMap="BaseResultMap">
         select
-        user_id,batch_no,batch_name,create_time
+        user_id,pr_id,batch_no,batch_name,create_time
         from batch
         WHERE 1=1
         <if test="userId != null">
             and user_id = #{userId,jdbcType=BIGINT}
+        </if>
+        <if test="prId != 0">
+            and pr_id = #{prId,jdbcType=INTEGER}
         </if>
         <if test="batchNo != null">
             and batch_no = #{batchNo,jdbcType=VARCHAR}
@@ -36,5 +40,12 @@
         <if test="batchName != null">
             and batch_name = #{batchName,jdbcType=VARCHAR}
         </if>
+    </select>
+    <select id="getBatchByPrId" resultType="io.renren.modules.batch.entity.BatchEntity">
+        select
+        user_id,pr_id,batch_no,batch_name,create_time
+        from batch
+        WHERE  user_id=#{userId} and  pr_id = #{prId}
+
     </select>
 </mapper>

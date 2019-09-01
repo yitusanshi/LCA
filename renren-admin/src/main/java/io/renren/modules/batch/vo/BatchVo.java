@@ -29,4 +29,6 @@ public class BatchVo implements Serializable {
      */
     private Date createTime;
 
+    private int prId;
+
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.renren.modules.batch.entity.BatchEntity;
 import io.renren.modules.batch.vo.BatchVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +20,5 @@ public interface BatchDao extends BaseMapper<BatchEntity> {
 
     List<BatchEntity> getBatchByBatchVo(BatchVo batchVo);
 
+    List<BatchEntity> getBatchByPrId(@Param("userId") Long userId, @Param("prId") int prId);
 }

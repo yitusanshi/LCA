@@ -11,6 +11,7 @@ import io.renren.modules.batch.service.BatchService;
 import io.renren.modules.batch.vo.BatchVo;
 import io.renren.modules.sys.controller.AbstractController;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,27 +62,27 @@ public class BatchController extends AbstractController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:batch:save")
-    public R save(String batchNo, String batchName) {
-        System.out.println(batchNo + "===" + batchName);
+    public R save(String batchNo, String batchName, String prId) {
+        System.out.println(batchNo + "===" + batchName + prId);
         if (!StringUtils.isNotBlank(batchNo) || batchNo == null) {
             return R.error("批次号为空！");
         }
-
+        if (StringUtils.isBlank(prId) || prId == null) {
+            return R.error("请选择产品,产品不能为空!");
+        }
         BatchVo batchVo = new BatchVo();
+        batchVo.setPrId(Integer.valueOf(prId));
         batchVo.setBatchNo(batchNo);
         batchVo.setUserId(getUserId());
-
-
         List<BatchEntity> list = batchService.getBatchByBatchVo(batchVo);
         if (list.size() > 0) {
-            return R.error("该用户下已经存在此批次号：" + batchNo);
+            return R.error("该用户的该产品已经存在此批次号：" + batchNo);
         }
         BatchEntity batch = new BatchEntity();
         batch.setBatchName(batchName);
         batch.setBatchNo(batchNo);
         batch.setUserId(getUserId());
-
-
+        batch.setPrId(Integer.valueOf(prId));
         batchService.save(batch);
         return R.ok();
     }
@@ -111,6 +112,14 @@ public class BatchController extends AbstractController {
     @RequestMapping("/getBatch")
     public R getBatch() {
         List<BatchEntity> listBatch = batchService.getBatchByUserId(getUserId());
+        return R.ok().put("batchNos", listBatch);
+    }
+
+    @RequestMapping("/getBatchByPrId")
+    public R getBatchByPrId(@Param("prId") String prId) {
+
+        int prIds = Integer.valueOf(prId);
+        List<BatchEntity> listBatch = batchService.getBatchByPrId(getUserId(), prIds);
         return R.ok().put("batchNos", listBatch);
     }
 

@@ -29,6 +29,11 @@ public class BatchEntity implements Serializable {
      * 创建人
      */
     private String batchName;
+
+    /*
+     * 产品ID
+     * */
+    private int prId;
     /**
      *
      */

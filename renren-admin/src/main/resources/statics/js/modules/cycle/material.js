@@ -605,9 +605,12 @@ var vm = new Vue({
         usage_title: null,
         bNo: "",
         bName: "",
+        bPr: "",
         usageStatistics: {},
         batchNos: [],
+        prList: [],
         batchSelect: "-1",
+        prSelect: "-1",
         consumes: [],
         add_title_name: '',
         useage_name: '',
@@ -615,7 +618,8 @@ var vm = new Vue({
         material_name: ''
     },
     mounted() {
-        this.getBatchNo();
+        this.getPr();
+        // this.getBatchNo();
     },
     methods: {
         query: function () {
@@ -636,12 +640,12 @@ var vm = new Vue({
                 type: 1,
                 skin: 'layui-layer-molv',
                 title: "新增批次号",
-                area: ['550px', '270px'],
+                area: ['550px', '400px'],
                 shadeClose: false,
                 content: jQuery("#batchNo"),
                 btn: ['保存', '取消'],
                 btn1: function (index) {
-                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName;
+                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName + "&prId=" + $("#selectPr1").val();
                     $.ajax({
                         type: "POST",
                         url: baseURL + "sys/batch/save",
@@ -661,6 +665,21 @@ var vm = new Vue({
                 }
             });
         },
+        getPr: function () {
+            $.ajax({
+                method: 'post',
+                url: baseURL + "sys/productdefine/getPrByUserId",
+                contentType: "application/json",
+                datatype: "json",
+                success: function (r) {
+                    if (r.code == 0) {
+                        vm.prList = r.prList;
+                    } else {
+                        alert(r.msg);
+                    }
+                },
+            });
+        },
         getBatchNo: function () {
             $.ajax({
                 method: 'post',
@@ -676,6 +695,28 @@ var vm = new Vue({
                 },
             });
         },
+        selectPrId: function (e) {
+            vm.batchSelect = "-1";
+            vm.batchNos = [];
+            this.prSelect = vm.prSelect;
+            $.ajax({
+                method: 'post',
+                url: baseURL + "sys/batch/getBatchByPrId",
+                data: {"prId": vm.prSelect},
+                datatype: "json",
+                success: function (r) {
+                    if (r.code == 0) {
+                        vm.batchNos = r.batchNos;
+                    } else {
+                        alert(r.msg);
+                    }
+                }
+
+                ,
+            })
+            ;
+
+        },
         selectBatchAndUserId: function (e) {
             this.batchSelect = vm.batchSelect;
             vm.reload();
@@ -687,6 +728,7 @@ var vm = new Vue({
                 page: page,
                 postData: {
                     'batchNo': vm.batchSelect,
+                    'prId': vm.prSelect,
                     'flag': 0,
                     'materialId': 0
                 }

@@ -12,6 +12,15 @@
                 <a class="btn btn-primary" @click="addBatchNo"><i class="fa fa-plus"></i>&nbsp;新增批次号</a>
             </shiro.hasPermission>
             <div class="form-group col-sm-2">
+                <select id="selectPr" class="form-control" v-model="prSelect"
+                        @change="selectPrId($event)">
+                    <option value="-1" selected="selected">请选择产品</option>
+                    <option v-for="item in prList" :value="item.id">
+                        {{item.prName}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-sm-2">
                 <select id="select" class="form-control" v-model="batchSelect"
                         @change="selectBatchAndUserId($event)">
                     <option value="-1" selected="selected">请选择批次号</option>
@@ -86,6 +95,17 @@
     <div id="batchNo" style="display: none;">
         <form class="form-horizontal">
             <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">产品名称</div>
+                    <div class="col-sm-10">
+                        <select id="selectPr1" class="form-control">
+                            <option value="-1" selected="selected">请选择产品</option>
+                            <option v-for="item in prList" :value="item.id">
+                                {{item.prName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="col-sm-2 control-label">批次号</div>
                     <div class="col-sm-10">
