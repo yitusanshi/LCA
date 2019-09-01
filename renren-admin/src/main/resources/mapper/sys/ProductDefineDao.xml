@@ -34,4 +34,7 @@
             #{item}
         </foreach>
     </delete>
+    <select id="getById" parameterType="java.lang.Integer" resultMap="productDefineMap">
+      SELECT * FROM product_define WHERE id = #{0}
+    </select>
 </mapper>

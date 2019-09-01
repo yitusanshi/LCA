@@ -18,5 +18,6 @@ public interface ProductDefineService extends IService<ProductDefineEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
     void delById(List<Integer> list);
+    ProductDefineEntity getById(int id);
 }
 

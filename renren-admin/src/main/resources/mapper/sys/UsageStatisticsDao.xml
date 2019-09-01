@@ -42,8 +42,16 @@
     <select id="getMaterialByBatch" parameterType="java.util.Map" resultMap="usageStatisticsMap">
     SELECT * FROM
     usage_statistics u
-    WHERE u.form_id=#{formId}
-    and u.user_id=#{userId} AND u.version=#{version} AND u.flag=#{flag} AND u.parent_id=#{parentId}
+    WHERE u.user_id=#{userId} AND u.version=#{version} AND u.flag=#{flag}
+    <if test="formId != null">
+        u.form_id=#{formId}
+    </if>
+    <if test="parentId != null">
+        u.parent_id=#{parentId}
+    </if>
+    <if test="prId != null">
+        u.pr_id = #{prId}
+    </if>
     </select>
     <select id="getUage" resultType="io.renren.modules.cycle.entity.UsageStatisticsEntity"
             resultMap="usageStatisticsMap">

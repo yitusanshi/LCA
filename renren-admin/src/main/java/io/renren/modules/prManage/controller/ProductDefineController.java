@@ -4,7 +4,9 @@ import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.controller.CalculateController;
 import io.renren.modules.sys.entity.DictEntity;
+import io.renren.modules.sys.entity.ResultEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysUserService;
 import io.renren.modules.sys.service.impl.DictServiceImpl;
@@ -41,6 +43,8 @@ public class ProductDefineController {
     private SysUserService sysUserService;
     @Resource
     private DictServiceImpl dictService;
+    @Resource
+    private CalculateController calculateController;
 
     /**
      * 列表
@@ -55,8 +59,12 @@ public class ProductDefineController {
         }
         System.out.println(params.get("id"));
         System.out.println(111);
-
+        List<ResultEntity> list = calculateController.calculate("222", 3);
+        for (ResultEntity resultEntity : list){
+            System.out.println(resultEntity.toString());
+        }
         PageUtils page = productDefineService.queryPage(params);
+        ;
 
         return R.ok().put("page", page);
     }

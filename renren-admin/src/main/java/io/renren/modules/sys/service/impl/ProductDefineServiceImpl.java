@@ -68,4 +68,9 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
         productDefineDao.delById(list);
     }
 
+    @Override
+    public ProductDefineEntity getById(int id) {
+        return productDefineDao.getById(id);
+    }
+
 }
