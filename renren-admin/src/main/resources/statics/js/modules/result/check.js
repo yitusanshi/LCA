@@ -70,12 +70,12 @@ $(function () {
             'typeId': 11
         },
         viewrecords: true,
-        height: 100,
+        height: "25%",
         rowNum: 10,
         rowList: [5, 10, 20],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#rawGridPager",
         caption: "上游原材料消耗",
@@ -117,12 +117,12 @@ $(function () {
             'typeId': 12
         },
         viewrecords: true,
-        height: 100,
+        height: "25%",
         rowNum: 10,
         rowList: [5, 10, 20],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#reseGridPager",
         caption: "资源与能源消耗",
@@ -164,12 +164,12 @@ $(function () {
             'typeId': 13
         },
         viewrecords: true,
-        height: 100,
+        height: "25%",
         rowNum: 10,
         rowList: [10, 30, 50],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#gasGridPager",
         caption: "排放与废气",
@@ -213,12 +213,12 @@ $(function () {
             'typeId': 14
         },
         viewrecords: true,
-        height: 100,
+        height: "25%",
         rowNum: 10,
         rowList: [10, 30, 50],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#transPortGridPager",
         caption: "运输过程",
@@ -371,6 +371,10 @@ function addConsume(typeId) {
 
 //添加运输过程
 function addTransPort(typeId) {
+    if (vm.batchSelect == "-1") {
+        alert("请选择合适的批次号");
+        return;
+    }
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -474,7 +478,6 @@ function addMaterial() {
 * */
 function delMaterial(jqId) {
     var materialIds = getSelectedRowNums(jqId);
-    console.log(materialIds);
     if (isBlank(materialIds)) {
         return;
     }
@@ -562,7 +565,6 @@ function delConsume(typeId) {
 
 function updateMaterial(jqId) {
     var material = getSelectedRowNum(jqId);
-    console.log(material);
     if (isBlank(material)) {
         return;
     }
@@ -614,9 +616,12 @@ var vm = new Vue({
         usage_title: null,
         bNo: "",
         bName: "",
+        bPr: "",
         usageStatistics: {},
         batchNos: [],
+        prList: [],
         batchSelect: "-1",
+        prSelect: "-1",
         consumes: [],
         add_title_name: '',
         useage_name: '',
@@ -624,7 +629,8 @@ var vm = new Vue({
         material_name: ''
     },
     mounted() {
-        this.getBatchNo();
+        this.getPr();
+        // this.getBatchNo();
     },
     methods: {
         query: function () {
@@ -645,12 +651,12 @@ var vm = new Vue({
                 type: 1,
                 skin: 'layui-layer-molv',
                 title: "新增批次号",
-                area: ['550px', '270px'],
+                area: ['550px', '400px'],
                 shadeClose: false,
                 content: jQuery("#batchNo"),
                 btn: ['保存', '取消'],
                 btn1: function (index) {
-                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName;
+                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName + "&prId=" + $("#selectPr1").val();
                     $.ajax({
                         type: "POST",
                         url: baseURL + "sys/batch/save",
@@ -670,6 +676,21 @@ var vm = new Vue({
                 }
             });
         },
+        getPr: function () {
+            $.ajax({
+                method: 'post',
+                url: baseURL + "sys/productdefine/getPrByUserId",
+                contentType: "application/json",
+                datatype: "json",
+                success: function (r) {
+                    if (r.code == 0) {
+                        vm.prList = r.prList;
+                    } else {
+                        alert(r.msg);
+                    }
+                },
+            });
+        },
         getBatchNo: function () {
             $.ajax({
                 method: 'post',
@@ -685,6 +706,28 @@ var vm = new Vue({
                 },
             });
         },
+        selectPrId: function (e) {
+            vm.batchSelect = "-1";
+            vm.batchNos = [];
+            this.prSelect = vm.prSelect;
+            $.ajax({
+                method: 'post',
+                url: baseURL + "sys/batch/getBatchByPrId",
+                data: {"prId": vm.prSelect},
+                datatype: "json",
+                success: function (r) {
+                    if (r.code == 0) {
+                        vm.batchNos = r.batchNos;
+                    } else {
+                        alert(r.msg);
+                    }
+                }
+
+                ,
+            })
+            ;
+
+        },
         selectBatchAndUserId: function (e) {
             this.batchSelect = vm.batchSelect;
             vm.reload();
@@ -696,6 +739,7 @@ var vm = new Vue({
                 page: page,
                 postData: {
                     'batchNo': vm.batchSelect,
+                    'prId': vm.prSelect,
                     'flag': 0,
                     'materialId': 0
                 }
@@ -753,12 +797,6 @@ function getSelectedRowNum(jqGridSelect) {
     material = grid.getRowData(selectedIDs[0]);
     return material;
 };
-
-//选择多条记录
-function getSelectedRows() {
-
-    return grid.getGridParam("selarrrow");
-}
 
 /*
 *

@@ -1,10 +1,8 @@
-package io.renren.modules.sys.service.impl;
+package io.renren.modules.prManage.service.impl;
 
-import io.renren.common.utils.Constant;
 import io.renren.modules.sys.dao.DictDao;
 import io.renren.modules.sys.entity.DictEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.common.utils.PageUtils;
@@ -29,6 +27,7 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
     private ProductDefineDao productDefineDao;
     @Autowired
     private DictDao dictDao;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         Integer industryId = Integer.valueOf((String) params.get("id"));
@@ -36,36 +35,31 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
         IPage<ProductDefineEntity> page = new Query<ProductDefineEntity>().getPage(params);
-        /*if (userid == 1){
-            page = this.page(
-                    new Query<ProductDefineEntity>().getPage(params)
-            );
-        }else {
-            page = this.page(
-                    new Query<ProductDefineEntity>().getPage(params),
-                    new QueryWrapper<ProductDefineEntity>().eq("industry_id", industryId)
-                            .eq("user_id", userid).eq("pr_name", prName)
-            );
-        }*/
         HashMap<String, Object> map = new HashMap<>();
-        if (userid == 1){
+        if (userid == 1) {
             map.put("userid", null);
-        }else {
+        } else {
             map.put("userid", userid);
         }
         map.put("prName", prName);
         map.put("industryId", industryId);
         List<ProductDefineEntity> list = productDefineDao.getQueryList(map);
-        for(ProductDefineEntity productDefineEntity : list){
+        for (ProductDefineEntity productDefineEntity : list) {
             int i = productDefineEntity.getSystemBoundary();
-            DictEntity dictEntity =  dictDao.getByseconId(i);
+            DictEntity dictEntity = dictDao.getByseconId(i);
             productDefineEntity.setSystemBoundaryName(dictEntity.getSecondName());
         }
         page.setRecords(list);
         return new PageUtils(page);
     }
-    public void delById(List<Integer> list){
+
+    public void delById(List<Integer> list) {
         productDefineDao.delById(list);
+    }
+
+    @Override
+    public List<ProductDefineEntity> getPrByUserId(Long userId) {
+        return productDefineDao.getPrByUserId(userId);
     }
 
     @Override

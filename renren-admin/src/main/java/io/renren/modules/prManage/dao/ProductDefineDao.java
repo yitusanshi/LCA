@@ -19,5 +19,7 @@ import java.util.List;
 public interface ProductDefineDao extends BaseMapper<ProductDefineEntity> {
 	List<ProductDefineEntity> getQueryList(HashMap<String, Object> map);
 	void delById(List<Integer> list);
+
+	List<ProductDefineEntity> getPrByUserId(Long userId);
 	ProductDefineEntity getById(int id);
 }

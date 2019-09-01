@@ -8,6 +8,9 @@ import java.util.Map;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.renren.common.utils.Query;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.prManage.entity.ProductDefineEntity;
+import io.renren.modules.prManage.service.ProductDefineService;
+import io.renren.modules.prManage.service.impl.ProductDefineServiceImpl;
 import io.renren.modules.sys.controller.AbstractController;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -24,6 +27,8 @@ import io.renren.modules.cycle.service.UsageStatisticsService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
+import javax.annotation.Resource;
+
 
 /**
  * 使用量
@@ -38,6 +43,9 @@ public class UsageStatisticsController extends AbstractController {
     @Autowired
     private UsageStatisticsService usageStatisticsService;
 
+    @Resource
+    private ProductDefineServiceImpl defineService;
+
     /**
      * 列表
      */
@@ -51,11 +59,11 @@ public class UsageStatisticsController extends AbstractController {
     //通过用户的的version和用户ID查询用户的信息
     @RequestMapping("/listMaterial")
     public R listMaterial(@RequestParam Map<String, Object> params) {
-        System.out.println("已经进来了。。。。。。。。。。。。。。。。。。");
         String batchNo = (String) params.get("batchNo");
         String parentId = (String) params.get("materialId");
         String flag = (String) params.get("flag");
         String typeId = (String) params.get("typeId");
+        int prId = Integer.valueOf((String) params.get("prId"));
         if (batchNo == "-1" || "-1".equals(batchNo)) {
             return R.ok();
         }
@@ -65,13 +73,17 @@ public class UsageStatisticsController extends AbstractController {
         map.put("flag", flag);
         map.put("parentId", parentId);
         map.put("formId", typeId);
-        IPage<UsageStatisticsEntity> page = new Query<UsageStatisticsEntity>().getPage(params);
+        map.put("limit", params.get("limit"));
+        map.put("page", params.get("page"));
+        map.put("prId", prId);
+        IPage<UsageStatisticsEntity> page = new Query<UsageStatisticsEntity>().getPage(map);
         List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
         page.setRecords(usageStatisticsEntityList);
         return R.ok().put("page", new PageUtils(page));
     }
 
     /**
+     * -
      * 信息
      */
     @RequestMapping("/info/{id}")
@@ -151,20 +163,26 @@ public class UsageStatisticsController extends AbstractController {
             return R.error("请选择物质名称");
         }
         String version = (String) params.get("batchNo");
-        String parentId = (String) params.get("materialId");
+        int parentId = Integer.valueOf((String) params.get("materialId"));
         String flag = (String) params.get("flag");
         String formId = (String) params.get("formId");
         String name = (String) params.get("secondName");
         String unit = (String) params.get("unit");
         String usage = (String) params.get("usage");
+        int prId = Integer.valueOf((String) params.get("prId"));
+        ProductDefineEntity defineEntity = defineService.getById(prId);
+        String prName = defineEntity.getPrName();
+
         UsageStatisticsEntity usageStatistics = new UsageStatisticsEntity();
+        usageStatistics.setPrName(prName);
+        usageStatistics.setPrId(prId);
         usageStatistics.setUserId(getUserId());
         usageStatistics.setFlag(Integer.valueOf(flag));
         usageStatistics.setFormId(formId);
         usageStatistics.setMaterialId(Integer.valueOf(secondId));
         usageStatistics.setMaterialName(name);
         usageStatistics.setVersion(version);
-        usageStatistics.setParentId(Integer.valueOf(parentId));
+        usageStatistics.setParentId(parentId);
         usageStatistics.setUnit(unit);
         usageStatistics.setMaterialUsage(Double.valueOf(usage));
         List<UsageStatisticsEntity> usageList = usageStatisticsService.getUsage(usageStatistics);

@@ -17,6 +17,7 @@
         <result property="version" column="version"/>
         <result property="userId" column="user_id"/>
         <result property="formId" column="form_id"/>
+        <result property="prId" column="pr_id"/>
     </resultMap>
     <update id="updateMaterialById" parameterType="java.util.Map">
         update usage_statistics set material_usage=#{materialUsage},
@@ -35,23 +36,22 @@
         <foreach collection="materialIds" item="materialId" separator="," open="(" close=")">
             #{materialId,jdbcType=INTEGER}
         </foreach>
-
-
     </delete>
 
     <select id="getMaterialByBatch" parameterType="java.util.Map" resultMap="usageStatisticsMap">
-    SELECT * FROM
-    usage_statistics u
-    WHERE u.user_id=#{userId} AND u.version=#{version} AND u.flag=#{flag}
-    <if test="formId != null">
-        u.form_id=#{formId}
-    </if>
-    <if test="parentId != null">
-        u.parent_id=#{parentId}
-    </if>
-    <if test="prId != null">
-        u.pr_id = #{prId}
-    </if>
+        SELECT * FROM
+        usage_statistics u
+        WHERE 1=1
+        and u.user_id=#{userId} AND u.version=#{version} AND u.flag=#{flag}
+        <if test="formId != null">
+            and u.form_id=#{formId}
+        </if>
+        <if test="parentId != null">
+            and u.parent_id=#{parentId}
+        </if>
+        <if test="prId != null">
+            and u.pr_id = #{prId}
+        </if>
     </select>
     <select id="getUage" resultType="io.renren.modules.cycle.entity.UsageStatisticsEntity"
             resultMap="usageStatisticsMap">
@@ -77,8 +77,11 @@
         <if test="userId != null">
             and user_id = #{userId,jdbcType=BIGINT}
         </if>
-        <if test="formId != null">
+        <if test="formId != 0">
             and form_id = #{formId,jdbcType=INTEGER}
+        </if>
+        <if test="prId != 0">
+            and pr_id = #{prId,jdbcType=INTEGER}
         </if>
     </select>
 

@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.controller.CalculateController;
 import io.renren.modules.sys.entity.DictEntity;
 import io.renren.modules.sys.entity.ResultEntity;
@@ -36,7 +37,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("sys/productdefine")
-public class ProductDefineController {
+public class ProductDefineController extends AbstractController {
     @Resource
     private ProductDefineService productDefineService;
     @Resource
@@ -51,20 +52,16 @@ public class ProductDefineController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:productdefine:list")
-    public R list(@RequestParam Map<String, Object> params){
-        Set<Map.Entry<String, Object>> s=params.entrySet();
-        Set<String> r=params.keySet();
-        for(Map.Entry<String, Object> en:s){
-            System.out.println(en.getKey()+","+en.getValue());
+    public R list(@RequestParam Map<String, Object> params) {
+        Set<Map.Entry<String, Object>> s = params.entrySet();
+        Set<String> r = params.keySet();
+        for (Map.Entry<String, Object> en : s) {
+            System.out.println(en.getKey() + "," + en.getValue());
         }
         System.out.println(params.get("id"));
         System.out.println(111);
-        List<ResultEntity> list = calculateController.calculate("222", 3);
-        for (ResultEntity resultEntity : list){
-            System.out.println(resultEntity.toString());
-        }
+
         PageUtils page = productDefineService.queryPage(params);
-        ;
 
         return R.ok().put("page", page);
     }
@@ -75,7 +72,7 @@ public class ProductDefineController {
      */
     @RequestMapping("/info/{id}")
     @RequiresPermissions("sys:productdefine:info")
-    public R info(@PathVariable("id") Integer id){
+    public R info(@PathVariable("id") Integer id) {
         //ProductDefineEntity productDefine = productDefineService.getById(id);
         List<String> list = new ArrayList<>();
         list.add("a");
@@ -100,7 +97,7 @@ public class ProductDefineController {
     }*/
     @RequestMapping("/save")
     @RequiresPermissions("sys:productdefine:save")
-    public R save(@RequestBody ProductDefineEntity productDefine){
+    public R save(@RequestBody ProductDefineEntity productDefine) {
         System.out.println(JSON.toJSON(productDefine).toString());
        /* DictEntity dictEntity = new DictEntity();
         dictEntity.setTypeId(2);
@@ -113,15 +110,16 @@ public class ProductDefineController {
         productDefineService.save(productDefine);
         return R.ok();
     }
+
     /**
      * 修改
      */
     @RequestMapping("/update")
     @RequiresPermissions("sys:productdefine:update")
-    public R update(@RequestBody ProductDefineEntity productDefine){
+    public R update(@RequestBody ProductDefineEntity productDefine) {
         ValidatorUtils.validateEntity(productDefine);
         productDefineService.updateById(productDefine);
-        
+
         return R.ok();
     }
 
@@ -130,11 +128,22 @@ public class ProductDefineController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("sys:productdefine:delete")
-    public R delete(@RequestBody Integer[] ids){
+    public R delete(@RequestBody Integer[] ids) {
         System.out.println(ids[0]);
         productDefineService.delById(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+
+    /*
+    *
+    * 获取用户下的产品
+    * */
+    @RequestMapping("/getPrByUserId")
+    public R getPrByUserId() {
+        List<ProductDefineEntity> prList = productDefineService.getPrByUserId(getUserId());
+        return R.ok().put("prList", prList);
     }
 
 }
