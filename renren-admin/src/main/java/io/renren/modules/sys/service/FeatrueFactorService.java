@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.FeatrueFactorEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,6 +17,9 @@ import java.util.Map;
 public interface FeatrueFactorService extends IService<FeatrueFactorEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
     String getUnitById(int id);
+
+    List<FeatrueFactorEntity> getFeatrueFactorByStr(Map<String, Object> params);
 }
 

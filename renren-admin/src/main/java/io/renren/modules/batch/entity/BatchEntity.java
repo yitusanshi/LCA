@@ -39,4 +39,10 @@ public class BatchEntity implements Serializable {
      */
     private Date createTime;
 
+    //产品使用量
+    private double prUsage;
+
+    //产品单位
+    private String prUnit;
+
 }

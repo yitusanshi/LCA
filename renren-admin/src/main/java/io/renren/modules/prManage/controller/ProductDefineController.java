@@ -56,9 +56,6 @@ public class ProductDefineController extends AbstractController {
         for (Map.Entry<String, Object> en : s) {
             System.out.println(en.getKey() + "," + en.getValue());
         }
-        System.out.println(params.get("id"));
-        System.out.println(111);
-
         PageUtils page = productDefineService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -135,9 +132,9 @@ public class ProductDefineController extends AbstractController {
 
 
     /*
-    *
-    * 获取用户下的产品
-    * */
+     *
+     * 获取用户下的产品
+     * */
     @RequestMapping("/getPrByUserId")
     public R getPrByUserId() {
         List<ProductDefineEntity> prList = productDefineService.getPrByUserId(getUserId());

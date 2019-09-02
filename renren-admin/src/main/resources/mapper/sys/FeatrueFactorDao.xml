@@ -3,7 +3,7 @@
 
 <mapper namespace="io.renren.modules.sys.dao.FeatrueFactorDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="io.renren.modules.sys.entity.FeatrueFactorEntity" id="featrueFactorMap">
         <result property="id" column="id"/>
         <result property="zhName" column="zh_name"/>
@@ -17,5 +17,12 @@
 
     <select id="getUnitById" parameterType="java.lang.Integer" resultType="java.lang.String">
         SELECT unit FROM featrue_factor WHERE `id` = #{0}
+    </select>
+    <select id="getFeatrueFactorByStr" resultType="io.renren.modules.sys.entity.FeatrueFactorEntity"
+            parameterType="java.util.Map">
+        SELECT * FROM featrue_factor WHERE 1=1
+        <if test="selectParam != null and selectParam !=''">
+            and zh_name LIKE "%"#{selectParam}"%" or en_name LIKE "%"#{selectParam}"%" or abb LIKE "%"#{selectParam}"%"
+        </if>
     </select>
 </mapper>

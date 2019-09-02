@@ -62,13 +62,22 @@ public class BatchController extends AbstractController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:batch:save")
-    public R save(String batchNo, String batchName, String prId) {
+    public R save(@RequestParam Map<String, Object> params) {
+        String batchNo = (String) params.get("batchNo");
+        String batchName = (String) params.get("batchName");
+        String prId = (String) params.get("prId");
+        String prUsage = (String) params.get("prUsage");
+        String prUnit = (String) params.get("prUnit");
+
         System.out.println(batchNo + "===" + batchName + prId);
         if (!StringUtils.isNotBlank(batchNo) || batchNo == null) {
             return R.error("批次号为空！");
         }
         if (StringUtils.isBlank(prId) || prId == null) {
             return R.error("请选择产品,产品不能为空!");
+        }
+        if (StringUtils.isBlank(prUsage) || prUsage == null) {
+            return R.error("产品使用量不能为空!");
         }
         BatchVo batchVo = new BatchVo();
         batchVo.setPrId(Integer.valueOf(prId));
@@ -83,6 +92,8 @@ public class BatchController extends AbstractController {
         batch.setBatchNo(batchNo);
         batch.setUserId(getUserId());
         batch.setPrId(Integer.valueOf(prId));
+        batch.setPrUsage(Double.valueOf(prUsage));
+        batch.setPrUnit(prUnit);
         batchService.save(batch);
         return R.ok();
     }

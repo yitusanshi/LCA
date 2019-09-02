@@ -26,8 +26,6 @@ function queryResylt() {
         dataType: "json",
         success: function (result) {
             if (result.code == 0) {
-                console.log(result.resultCal);
-
                 var resultCal = result.resultCal;
                 var tr = "";
                 for (var i = 0; i < resultCal.length; i++) {

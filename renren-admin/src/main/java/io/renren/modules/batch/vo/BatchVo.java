@@ -24,11 +24,20 @@ public class BatchVo implements Serializable {
      * 创建人
      */
     private String batchName;
+
+    /*
+     * 产品ID
+     * */
+    private int prId;
     /**
      *
      */
     private Date createTime;
 
-    private int prId;
+    //产品使用量
+    private double prUsage;
+
+    //产品单位
+    private String prUnit;
 
 }

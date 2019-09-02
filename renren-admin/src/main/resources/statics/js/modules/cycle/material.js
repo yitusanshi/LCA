@@ -617,6 +617,8 @@ var vm = new Vue({
         bNo: "",
         bName: "",
         bPr: "",
+        bUnit: "t",
+        bUsage: "",
         usageStatistics: {},
         batchNos: [],
         prList: [],
@@ -645,7 +647,14 @@ var vm = new Vue({
                 content: jQuery("#batchNo"),
                 btn: ['保存', '取消'],
                 btn1: function (index) {
-                    var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName + "&prId=" + $("#selectPr1").val();
+                    /*   var data = "batchNo=" + vm.bNo + "&batchName=" + vm.bName + "&prId=" + $("#selectPr1").val() + "$prUage=" +;*/
+                    var data = {
+                        "batchNo": vm.bNo,
+                        "batchName": vm.bName,
+                        "prId": $("#selectPr1").val(),
+                        "prUsage": vm.bUsage,
+                        "prUnit": vm.bUnit
+                    };
                     $.ajax({
                         type: "POST",
                         url: baseURL + "sys/batch/save",

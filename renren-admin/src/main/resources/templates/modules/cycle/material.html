@@ -100,7 +100,7 @@
                     <div class="col-sm-10">
                         <select id="selectPr1" class="form-control">
                             <option value="-1" selected="selected">请选择产品</option>
-                            <option v-for="item in prList" :value="item.id">
+                            <option v-for="item in prList" :value='item.id'>
                                 {{item.prName}}
                             </option>
                         </select>
@@ -110,6 +110,18 @@
                     <div class="col-sm-2 control-label">批次号</div>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" v-model="bNo" placeholder="批次号"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">使用量</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bUsage" placeholder="使用量"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">单位</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly v-model="bUnit" placeholder="单位"/>
                     </div>
                 </div>
                 <div class="form-group">

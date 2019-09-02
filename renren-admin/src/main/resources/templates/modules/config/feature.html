@@ -7,17 +7,12 @@
 <body>
 <div id="rrapp" v-cloak>
     <div v-show="showList">
-       <!-- <div class="grid-btn">
-            <#if shiro.hasPermission("sys:featruefactor:save")>
-                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-            </#if>
-            <#if shiro.hasPermission("sys:featruefactor:update")>
-                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            </#if>
-            <#if shiro.hasPermission("sys:featruefactor:delete")>
-                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-            </#if>
-        </div>-->
+        <div class=" grid-btn">
+            <a class="btn btn-primary" @click="queryFeature()"><i class="fa fa-plus"></i>&nbsp;查询</a>
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" id="queryFeas" placeholder="请输入中文或者英文简称...">
+            </div>
+        </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
     </div>
@@ -69,12 +64,47 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..." @click="saveOrUpdate" value="确定"/>
+                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..."
+                       @click="saveOrUpdate" value="确定"/>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
             </div>
         </form>
     </div>
 </div>
+
+
+<div id="detailsId" style="display: none">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th colspan="2">指标基本信息</th>
+        </tr>
+        <thead>
+        <tbody>
+        <tr>
+            <td>中文名称：</td>
+            <td id="fe_znName"></td>
+        </tr>
+        <tr>
+            <td>英文名称：</td>
+            <td id="fe_enName"></td>
+        </tr>
+        <tr>
+            <td>缩写：</td>
+            <td id="fe_abb"></td>
+        </tr>
+        <tr>
+            <td>单位：</td>
+            <td id="fe_unit"></td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <table class="layui-table" id="factor_id">
+    </table>
+</div>
+
 
 <script src="${request.contextPath}/statics/js/modules/sys/featruefactor.js?_${.now?long}"></script>
 </body>

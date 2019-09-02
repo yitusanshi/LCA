@@ -3,7 +3,7 @@
 
 <mapper namespace="io.renren.modules.sys.dao.FactorTableDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="io.renren.modules.sys.entity.FactorTableEntity" id="factorTableMap">
         <result property="id" column="id"/>
         <result property="featureId" column="feature_id"/>
@@ -14,6 +14,10 @@
         <result property="stdError" column="std_error"/>
         <result property="createdTime" column="created_time"/>
     </resultMap>
+    <select id="getFactorTableById" resultType="io.renren.modules.sys.entity.FactorTableEntity"
+            parameterType="java.util.Map">
+        SELECT * FROM factor_table WHERE feature_id=#{featureId}
+    </select>
 
 
 </mapper>
