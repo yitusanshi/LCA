@@ -70,23 +70,37 @@ public class CalculateController {
         HashMap<String, Object> map = new HashMap<>();
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
+        int systemBoundry = dictService.querySystemBoundry(prId);
+        int limit = 5;
+        if (systemBoundry == 1){
+            limit = 3;
+        }else if (systemBoundry == 2){
+            limit = 5;
+        }
         JSONObject jsonObject = new JSONObject();
         //获取不同阶段的填写信息
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < limit; i++) {
             map.put("userId", userid);
             map.put("version", version);
             map.put("flag", i);
             map.put("prId", prId);
             List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
-            jsonObject.put(i + "", usageStatisticsEntityList);
+            if (usageStatisticsEntityList != null || usageStatisticsEntityList.size() > 0){
+                jsonObject.put(i + "", usageStatisticsEntityList);
+            }
+
         }
         System.out.println(jsonObject.toJSONString());
         //初始化14个对象
         List<ResultEntity> list = initList(prId);
         //不同阶段进行计算
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < limit; i++) {
             JSONObject json = new JSONObject();
             List<UsageStatisticsEntity> usageStatisticsEntityList = (List<UsageStatisticsEntity>) jsonObject.get(i + "");
+            System.out.println("usageStatisticsEntityList size is " + usageStatisticsEntityList.size());
+            if (usageStatisticsEntityList == null || usageStatisticsEntityList.size() ==0){
+                continue;
+            }
             //按照不同的对象id分别存入结果
             mulity(usageStatisticsEntityList, json);
             //分别从横向维度进行组装，分别组装十四个对象的原料阶段、生产阶段、销售阶段等等
@@ -97,7 +111,7 @@ public class CalculateController {
             }
         }
         //计算运输（运输是单独一张表，单独计算）
-        calculateTransport(list, version);
+        calculateTransport(list, version, prId, limit);
 
         return R.ok().put("resultCal", list);
     }
@@ -134,27 +148,29 @@ public class CalculateController {
     }
 
     //计算运输
-    public List<ResultEntity> calculateTransport(List<ResultEntity> list, String version) {
+    public List<ResultEntity> calculateTransport(List<ResultEntity> list, String version, int prId, int limit) {
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
         JSONObject jsonObject = new JSONObject();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < limit; i++) {
             Map<String, Object> map = new HashMap<>();
             map.put("userId", userid);
             map.put("version", version);
             map.put("flag", i);
+            map.put("prId", prId);
             List<TransportEntity> transportEntities = transportService.getMaterialByBatch(map);
             jsonObject.put(i + "", transportEntities);
         }
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < limit; i++) {
             JSONObject json = new JSONObject();
             List<TransportEntity> transportEntities = (List<TransportEntity>) jsonObject.get(i + "");
             for (TransportEntity transportEntity : transportEntities) {
                 BigDecimal distance = new BigDecimal(transportEntity.getDistance() + "");
-                BigDecimal weight = new BigDecimal(transportEntity.getWeight() / 1000 + "");
+                BigDecimal weight = new BigDecimal(transportEntity.getWeight() + "");
                 BigDecimal dw = distance.multiply(weight);
-                int materialId = transportEntity.getMaterialId();
-                List<CalculateFeatureEntity> factors = calculateFeatureService.getById(materialId);
+                //运输的type对应usage_statistics表的materialid
+                int type = transportEntity.getType();
+                List<CalculateFeatureEntity> factors = calculateFeatureService.getById(type);
                 for (CalculateFeatureEntity calculateFeatureEntity : factors) {
                     BigDecimal factor = calculateFeatureEntity.getFactor();
                     int order = calculateFeatureEntity.getExcelOrder();
@@ -172,8 +188,9 @@ public class CalculateController {
         String key = order + "";
         if (json.containsKey(key)) {
             BigDecimal value = (BigDecimal) json.get(key);
-            value.add(decimal);
-            json.put(key, value);
+            BigDecimal result = value.add(decimal);
+            System.out.println("value ====== :" + result.toString());
+            json.put(key, result);
         } else {
             json.put(key, decimal);
         }
@@ -191,6 +208,7 @@ public class CalculateController {
                 BigDecimal factor = calculateFeatureEntity.getFactor();
                 int order = calculateFeatureEntity.getExcelOrder();
                 BigDecimal decimal = usage.multiply(factor);
+                System.out.println("usage is " + usage + " , decimal is " + decimal.toString());
                 //有则累加，没有新增
                 sum(json, order, decimal);
             }

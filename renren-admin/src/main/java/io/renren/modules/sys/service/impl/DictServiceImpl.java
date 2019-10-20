@@ -60,4 +60,8 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
     public List<DictEntity> quertByTypeId(int typeId){
         return dictDao.quertByTypeId(typeId);
     }
+
+    public int querySystemBoundry(int prid){
+        return dictDao.querySystemBoundry(prid);
+    }
 }

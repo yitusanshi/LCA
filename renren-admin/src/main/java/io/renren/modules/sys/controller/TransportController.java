@@ -71,6 +71,7 @@ public class TransportController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:transport:save")
     public R save(@RequestBody TransportEntity transport) {
+        logger.info("");
         transportService.save(transport);
 
         return R.ok();

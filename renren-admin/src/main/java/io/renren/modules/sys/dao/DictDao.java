@@ -27,4 +27,5 @@ public interface DictDao extends BaseMapper<DictEntity> {
     Integer saveDict(DictEntity dictEntity);
 
     List<DictEntity> quertByTypeId(int typeId);
+    int querySystemBoundry(int prid);
 }
