@@ -227,7 +227,7 @@ public class CalculateController   {
             for (String key : jsonObject.keySet()){
                 for (ResultEntity resultEntity : list){
                     if (resultEntity.getId().equals(key)){
-                        resultEntity.setMaterialStage(jsonObject.getString(key));
+                        resultEntity.setMaterialStage(((BigDecimal)(jsonObject.get(key))).stripTrailingZeros().toString());
                     }
                 }
             }
