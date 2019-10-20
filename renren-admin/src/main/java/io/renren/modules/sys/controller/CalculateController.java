@@ -15,6 +15,7 @@ import io.renren.modules.sys.service.FeatrueFactorService;
 import io.renren.modules.sys.service.TransportService;
 import io.renren.modules.sys.service.impl.DictServiceImpl;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -124,10 +125,15 @@ public class CalculateController {
         return R.ok().put("resultCal", list);
     }
     public void devide(ResultEntity resultEntity, BigDecimal bigDecimal){
+        if (Strings.isNotEmpty(resultEntity.getMaterialStage()))
         resultEntity.setMaterialStage(toEngineering(new BigDecimal(resultEntity.getMaterialStage()).divide(bigDecimal)));
+        if (Strings.isNotEmpty(resultEntity.getProductStage()))
         resultEntity.setProductStage(toEngineering(new BigDecimal(resultEntity.getProductStage()).divide(bigDecimal)));
+        if (Strings.isNotEmpty(resultEntity.getUseStage()))
         resultEntity.setUseStage(toEngineering(new BigDecimal(resultEntity.getUseStage()).divide(bigDecimal)));
+        if (Strings.isNotEmpty(resultEntity.getSellStage()))
         resultEntity.setSellStage(toEngineering(new BigDecimal(resultEntity.getSellStage()).divide(bigDecimal)));
+        if (Strings.isNotEmpty(resultEntity.getRecoveryStage()))
         resultEntity.setRecoveryStage(toEngineering(new BigDecimal(resultEntity.getRecoveryStage()).divide(bigDecimal)));
     }
     public void calculateMaterial(int i, List<ResultEntity> list, List<UsageStatisticsEntity> usageStatisticsEntityList) {
