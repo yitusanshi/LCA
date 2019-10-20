@@ -21,4 +21,6 @@ public interface BatchDao extends BaseMapper<BatchEntity> {
     List<BatchEntity> getBatchByBatchVo(BatchVo batchVo);
 
     List<BatchEntity> getBatchByPrId(@Param("userId") Long userId, @Param("prId") int prId);
+
+    double getusageByVersion(@Param("version") String version, @Param("prId") int prId);
 }

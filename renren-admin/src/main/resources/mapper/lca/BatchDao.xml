@@ -49,4 +49,7 @@
         from batch
         WHERE  user_id=#{userId} and  pr_id = #{prId}
     </select>
+    <select id="getusageByVersion" parameterType="java.lang.String" resultType="java.lang.Double">
+        SELECT pr_usage FROM batch WHERE batch_no = #{version} and pr_id = #{prId}
+    </select>
 </mapper>
