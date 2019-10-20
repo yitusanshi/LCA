@@ -93,7 +93,7 @@ $(function () {
 
     });
 
-    //排放与废气
+    //排放与废弃
     $("#gasTable").jqGrid({
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
@@ -122,7 +122,7 @@ $(function () {
         // width: "100%",
         multiselect: true,
         pager: "#gasGridPager",
-        caption: "排放与废气",
+        caption: "排放与废弃",
         jsonReader: {
             root: "page.list",
             page: "page.currPage",

@@ -140,7 +140,7 @@ $(function () {
 
     });
 
-    //排放与废气
+    //排放与废弃
     $("#gasTable").jqGrid({
         url: baseURL + 'sys/usagestatistics/listMaterial',
         datatype: "local",
@@ -167,7 +167,7 @@ $(function () {
         // autowidth: true,
         multiselect: true,
         pager: "#gasGridPager",
-        caption: "排放与废气",
+        caption: "排放与废弃",
         jsonReader: {
             root: "page.list",
             page: "page.currPage",
@@ -236,7 +236,7 @@ $(function () {
 
 });
 
-//显示原料的基础数据 上游原料消耗/资源能源消耗/排放与废气/运输过程userId, materialId, name
+//显示原料的基础数据 上游原料消耗/资源能源消耗/排放与废弃/运输过程userId, materialId, name
 function showMaterial(userId, materialId, name) {
     //obj带的是参数rows.id
     vm.mainList = false;
