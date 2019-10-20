@@ -2,6 +2,7 @@ package io.renren.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.utils.R;
+import io.renren.modules.batch.service.BatchService;
 import io.renren.modules.cycle.entity.UsageStatisticsEntity;
 import io.renren.modules.cycle.service.UsageStatisticsService;
 import io.renren.modules.prManage.entity.ProductDefineEntity;
@@ -48,6 +49,8 @@ public class CalculateController {
     private ProductDefineService defineService;
     @Resource
     private DictServiceImpl dictService;
+    @Resource
+    private BatchService batchService;
     public static Map<String, String> map = new HashMap() {{
         put("1", "初级能源消耗(PED)");
         put("2", "非生物资源消耗(ADP elements)");
@@ -113,10 +116,20 @@ public class CalculateController {
         }
         //再分别每个阶段的运输（运输是单独一张表，单独计算）
         calculateTransport(list, version, prId, limit);
-
+        double d = batchService.getusageByVersion(version, prId);
+        BigDecimal bigDecimal = new BigDecimal(d);
+        for (ResultEntity resultEntity : list){
+            devide(resultEntity, bigDecimal);
+        }
         return R.ok().put("resultCal", list);
     }
-
+    public void devide(ResultEntity resultEntity, BigDecimal bigDecimal){
+        resultEntity.setMaterialStage(toEngineering(new BigDecimal(resultEntity.getMaterialStage()).divide(bigDecimal)));
+        resultEntity.setProductStage(toEngineering(new BigDecimal(resultEntity.getProductStage()).divide(bigDecimal)));
+        resultEntity.setUseStage(toEngineering(new BigDecimal(resultEntity.getUseStage()).divide(bigDecimal)));
+        resultEntity.setSellStage(toEngineering(new BigDecimal(resultEntity.getSellStage()).divide(bigDecimal)));
+        resultEntity.setRecoveryStage(toEngineering(new BigDecimal(resultEntity.getRecoveryStage()).divide(bigDecimal)));
+    }
     public void calculateMaterial(int i, List<ResultEntity> list, List<UsageStatisticsEntity> usageStatisticsEntityList) {
         Map<String, List<UsageStatisticsEntity>> map = new HashMap<>();
         //根据不同的parentid进行归类

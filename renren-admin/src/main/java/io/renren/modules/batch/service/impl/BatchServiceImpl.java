@@ -48,5 +48,10 @@ public class BatchServiceImpl extends ServiceImpl<BatchDao, BatchEntity> impleme
         return batchDao.getBatchByPrId(userId, prId);
     }
 
+    @Override
+    public double getusageByVersion(String version, int prId) {
+        return batchDao.getusageByVersion(version, prId);
+    }
+
 
 }
