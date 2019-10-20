@@ -76,8 +76,11 @@ public class BatchController extends AbstractController {
         if (StringUtils.isBlank(prId) || prId == null) {
             return R.error("请选择产品,产品不能为空!");
         }
-        if (StringUtils.isBlank(prUsage) || prUsage == null) {
+        if (StringUtils.isBlank(prUsage) || prUsage == null || "".equals(prUsage)) {
             return R.error("产品使用量不能为空!");
+        }
+        if (Double.valueOf(prUsage) <= 0) {
+            return R.error("产品使用量不能为0!");
         }
         BatchVo batchVo = new BatchVo();
         batchVo.setPrId(Integer.valueOf(prId));

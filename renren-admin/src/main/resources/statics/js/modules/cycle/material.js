@@ -617,7 +617,7 @@ var vm = new Vue({
         bNo: "",
         bName: "",
         bPr: "",
-        bUnit: "t",
+        bUnit: "kg",
         bUsage: "",
         usageStatistics: {},
         batchNos: [],

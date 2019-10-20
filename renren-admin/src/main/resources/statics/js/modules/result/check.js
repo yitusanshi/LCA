@@ -46,7 +46,6 @@ function queryResylt() {
             }
         }
     });
-    alert("出发了查询");
 }
 
 var vm = new Vue({
