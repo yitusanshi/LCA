@@ -18,6 +18,8 @@ public class ResultEntity {
     private String productName;
     private String materialStage;
     private List<Map<String, String>> materialPropertyStage;
+    private List<Map<String, String>> sellPropertyStage;
+    private List<Map<String, String>> recoveryPropertyStage;
     private String productStage;
     private String sellStage;
     private String useStage;

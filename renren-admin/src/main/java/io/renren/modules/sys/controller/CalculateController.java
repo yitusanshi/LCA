@@ -75,6 +75,7 @@ public class CalculateController {
         HashMap<String, Object> map = new HashMap<>();
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
+        //系统边界
         int systemBoundry = dictService.querySystemBoundry(prId);
         int limit = 5;
         if (systemBoundry == 1){
@@ -161,9 +162,9 @@ public class CalculateController {
             //原料阶段
             assemblePropertyList(0, json, list, dict);
             //使用阶段
-            // assemblePropertyList(3, json, list);
+            // assemblePropertyList(3, json, list, dict);
             //回收阶段
-            // assemblePropertyList(4, json, list);
+             //assemblePropertyList(4, json, list, dict);
         }
     }
 
@@ -261,6 +262,38 @@ public class CalculateController {
                         if (list1 == null) {
                             list1 = new ArrayList<>();
                             resultEntity.setMaterialPropertyStage(list1);
+                        }
+                        Map<String, String> map = new HashMap<>();
+                        map.put(dictEntity.getSecondName(), json.getString(key));
+                        list1.add(map);
+                    }
+                }
+            }
+        }
+        if (i == 3) {
+            for (String key : json.keySet()) {
+                for (ResultEntity resultEntity : list) {
+                    if (resultEntity.getId().equals(key)) {
+                        List<Map<String, String>> list1 = resultEntity.getMaterialPropertyStage();
+                        if (list1 == null) {
+                            list1 = new ArrayList<>();
+                            resultEntity.setSellPropertyStage(list1);
+                        }
+                        Map<String, String> map = new HashMap<>();
+                        map.put(dictEntity.getSecondName(), json.getString(key));
+                        list1.add(map);
+                    }
+                }
+            }
+        }
+        if (i == 4) {
+            for (String key : json.keySet()) {
+                for (ResultEntity resultEntity : list) {
+                    if (resultEntity.getId().equals(key)) {
+                        List<Map<String, String>> list1 = resultEntity.getMaterialPropertyStage();
+                        if (list1 == null) {
+                            list1 = new ArrayList<>();
+                            resultEntity.setRecoveryPropertyStage(list1);
                         }
                         Map<String, String> map = new HashMap<>();
                         map.put(dictEntity.getSecondName(), json.getString(key));
