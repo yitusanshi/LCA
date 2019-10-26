@@ -198,8 +198,7 @@ $(function () {
         colModel: [
             {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
-            {label: '运输物质名称', name: 'materialName', index: 'materialName', width: '120px'},
-            {label: '运输方式', name: 'type', index: 'type', width: '80px'},
+            {label: '运输方式', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '运输重量（单位:t）', name: 'weight', index: 'weight', width: '80px'},
             {label: '运输距离（单位:km）', name: 'distance', index: 'distance', width: '80px'},
             {label: '产地', name: 'source', index: 'source', width: '80px'},

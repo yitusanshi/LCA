@@ -14,7 +14,7 @@ $(function () {
             {label: '功能单位', name: 'functionUnit', index: 'function_unit', width: 40},
             {label: '评价数量', name: 'evalNum', index: 'eval_num', width: 50},
 
-            {label: '创建人', name: 'userName', index: 'username', width: 50},
+            {label: '评价年份', name: 'year', index: 'year', width: 50},
             {label: '创建时间', name: 'insertTime', index: 'insert_time', width: 100}
         ],
         viewrecords: true,

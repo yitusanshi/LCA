@@ -11,6 +11,8 @@ import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.cycle.entity.UsageStatisticsEntity;
 import io.renren.modules.prManage.entity.ProductDefineEntity;
 import io.renren.modules.prManage.service.impl.ProductDefineServiceImpl;
+import io.renren.modules.sys.entity.DictEntity;
+import io.renren.modules.sys.service.impl.DictServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class TransportController extends AbstractController {
 
     @Resource
     private ProductDefineServiceImpl defineService;
+
+    @Resource
+    private DictServiceImpl dictService;
 
     /**
      * 列表
@@ -121,6 +126,12 @@ public class TransportController extends AbstractController {
         map.put("page", params.get("page"));
         IPage<TransportEntity> page = new Query<TransportEntity>().getPage(map);
         List<TransportEntity> usageStatisticsEntityList = transportService.getMaterialByBatch(map);
+        for (TransportEntity entity : usageStatisticsEntityList){
+            int type = entity.getType();
+            DictEntity dictEntity = dictService.getByseconId(type);
+            String secondName = dictEntity.getSecondName();
+            entity.setMaterialName(secondName);
+        }
         page.setRecords(usageStatisticsEntityList);
         return R.ok().put("page", new PageUtils(page));
     }
