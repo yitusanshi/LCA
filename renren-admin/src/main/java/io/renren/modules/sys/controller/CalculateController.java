@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.utils.R;
 import io.renren.modules.batch.service.BatchService;
@@ -31,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.renren.modules.sys.shiro.ShiroUtils.getUserId;
+
 /**
  * @Author:wanglei1
  * @Date: 2019/8/23 16:00
@@ -52,6 +55,7 @@ public class CalculateController {
     private DictServiceImpl dictService;
     @Resource
     private BatchService batchService;
+
     public static Map<String, String> map = new HashMap() {{
         put("1", "初级能源消耗(PED)");
         put("2", "非生物资源消耗(ADP elements)");
@@ -72,6 +76,7 @@ public class CalculateController {
     @RequestMapping("/info")
     public R calculate(@RequestParam("version") String version,
                        @RequestParam("prId") int prId) {
+
         HashMap<String, Object> map = new HashMap<>();
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
