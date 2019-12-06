@@ -11,9 +11,9 @@ import java.math.BigDecimal;
  */
 public class App {
     public static void main(String[] args) {
-        String str = null;
-        JSONArray jsonArray = JSONArray.parseArray(str);
-        System.out.println(jsonArray);
+        //String str = null;
+        //JSONArray jsonArray = JSONArray.parseArray(str);
+        System.out.println(1);
         //System.out.println(jsonArray.size());
     }
 }

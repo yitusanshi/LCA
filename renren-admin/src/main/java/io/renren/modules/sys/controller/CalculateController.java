@@ -117,7 +117,7 @@ public class CalculateController {
             //分别从横向维度进行组装，分别组装十四个属性的原料阶段、生产阶段、销售阶段等等
             assemble(i, json, list);
             //需要计算不同的原料的子消耗，比如钢帘线、炭黑等
-            if (i == 0 || i == 3 || i == 4) {
+            if (i == 0  || i == 4) {
                 calculateMaterial(i, list, usageStatisticsEntityList);
             }
         }
@@ -263,30 +263,12 @@ public class CalculateController {
             for (String key : json.keySet()) {
                 for (ResultEntity resultEntity : list) {
                     if (resultEntity.getId().equals(key)) {
-                        List<Map<String, String>> list1 = resultEntity.getMaterialPropertyStage();
-                        if (list1 == null) {
-                            list1 = new ArrayList<>();
-                            resultEntity.setMaterialPropertyStage(list1);
+                        JSONObject jsonObject = resultEntity.getMaterialPropertyStage();
+                        if (jsonObject == null) {
+                            jsonObject = new JSONObject();
+                            resultEntity.setMaterialPropertyStage(jsonObject);
                         }
-                        Map<String, String> map = new HashMap<>();
-                        map.put(dictEntity.getSecondName(), json.getString(key));
-                        list1.add(map);
-                    }
-                }
-            }
-        }
-        if (i == 3) {
-            for (String key : json.keySet()) {
-                for (ResultEntity resultEntity : list) {
-                    if (resultEntity.getId().equals(key)) {
-                        List<Map<String, String>> list1 = resultEntity.getMaterialPropertyStage();
-                        if (list1 == null) {
-                            list1 = new ArrayList<>();
-                            resultEntity.setSellPropertyStage(list1);
-                        }
-                        Map<String, String> map = new HashMap<>();
-                        map.put(dictEntity.getSecondName(), json.getString(key));
-                        list1.add(map);
+                        jsonObject.put(dictEntity.getSecondName(), json.getString(key));
                     }
                 }
             }
@@ -295,14 +277,12 @@ public class CalculateController {
             for (String key : json.keySet()) {
                 for (ResultEntity resultEntity : list) {
                     if (resultEntity.getId().equals(key)) {
-                        List<Map<String, String>> list1 = resultEntity.getMaterialPropertyStage();
-                        if (list1 == null) {
-                            list1 = new ArrayList<>();
-                            resultEntity.setRecoveryPropertyStage(list1);
+                        JSONObject jsonObject = resultEntity.getRecoveryPropertyStage();
+                        if (jsonObject == null) {
+                            jsonObject = new JSONObject();
+                            resultEntity.setRecoveryPropertyStage(jsonObject);
                         }
-                        Map<String, String> map = new HashMap<>();
-                        map.put(dictEntity.getSecondName(), json.getString(key));
-                        list1.add(map);
+                        jsonObject.put(dictEntity.getSecondName(), json.getString(key));
                     }
                 }
             }

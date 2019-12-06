@@ -229,7 +229,10 @@ public class CompareController {
         s = "recoveryStage";
         reduce(json, s, jsonOld.getString(s), jsonNew.getString(s));
 
-       // String materialPropertyStage = jsonOld.getString("materialPropertyStage");
+        s = "materialPropertyStage";
+        reducePropetyStage(json, s, jsonOld.getString(s), jsonNew.getString(s));
+        s = "recoveryPropertyStage";
+        reducePropetyStage(json, s, jsonOld.getString(s), jsonNew.getString(s));
         return json;
     }
     public void reduce(JSONObject jsonObject, String name, String d1, String d2){
@@ -247,15 +250,41 @@ public class CompareController {
         jsonObject.put(name + "_diff", CalculateController.toEngineering(result));
     }
     public void reducePropetyStage(JSONObject jsonObject, String name, String str1, String str2){
-        JSONArray array1 = new JSONArray();
-        JSONArray array2 = new JSONArray();
+        JSONObject json1 = new JSONObject();
+        JSONObject json2 = new JSONObject();
         if ( !StringUtils.isNullOrEmpty(str1)){
-            array1 = JSONArray.parseArray(str1);
+            json1 = JSONObject.parseObject(str1);
         }
         if ( !StringUtils.isNullOrEmpty(str2)){
-            array2 = JSONArray.parseArray(str2);
+            json2 = JSONObject.parseObject(str2);
+        }
+        JSONArray jsonArray = new JSONArray();
+        for (String key1 : json1.keySet()){
+            for (String key2 : json2.keySet()){
+                if (key1.equals(key2)){
+                    JSONObject json = new JSONObject();
+                    reduce(json, key1, json1.getString(key1), json2.getString(key2));
+                    jsonArray.add(json);
+                }
+            }
+        }
+        //如果旧版本存在，新版本不存在
+        for (String key1 : json1.keySet()){
+          if (!json2.containsKey(key1)){
+              JSONObject json = new JSONObject();
+              reduce(json, key1, json1.getString(key1), null);
+              jsonArray.add(json);
+          }
         }
 
+        for (String key2 : json2.keySet()){
+            if (!json1.containsKey(key2)){
+                JSONObject json = new JSONObject();
+                reduce(json, key2, null, json2.getString(key2));
+                jsonArray.add(json);
+            }
+        }
+        jsonObject.put(name, jsonArray);
     }
 
 }

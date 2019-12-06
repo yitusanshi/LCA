@@ -1,7 +1,8 @@
 package io.renren.modules.sys.entity;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
-import org.json.JSONObject;
+
 
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,9 @@ public class ResultEntity {
     private String unit;
     private String productName;
     private String materialStage;
-    private List<Map<String, String>> materialPropertyStage;
-    private List<Map<String, String>> sellPropertyStage;
-    private List<Map<String, String>> recoveryPropertyStage;
+    private JSONObject materialPropertyStage;
+    private JSONObject sellPropertyStage;
+    private JSONObject recoveryPropertyStage;
     private String productStage;
     private String sellStage;
     private String useStage;
