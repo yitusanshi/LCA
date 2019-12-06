@@ -10,6 +10,7 @@ import io.renren.common.utils.Query;
 import io.renren.common.utils.R;
 import io.renren.modules.cycle.entity.UsageStatisticsEntity;
 import io.renren.modules.cycle.service.UsageStatisticsService;
+import io.renren.modules.sys.entity.ResultEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.entity.TransportEntity;
 import io.renren.modules.sys.service.TransportService;
@@ -193,8 +194,10 @@ public class CompareController {
         }
         R r1 = calculateController.calculate(version1, prId);
         R r2 = calculateController.calculate(version2, prId);
-        JSONArray array1 =  (JSONArray) r1.get("resultCal");
-        JSONArray array2 =  (JSONArray) r2.get("resultCal");
+        List<ResultEntity> list1 =  (List<ResultEntity>) r1.get("resultCal");
+        List<ResultEntity> list2 =  (List<ResultEntity>) r2.get("resultCal");
+        JSONArray array1 = JSONArray.parseArray(JSON.toJSONString(list1));
+        JSONArray array2 = JSONArray.parseArray(JSON.toJSONString(list2));
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < array1.size() ; i++) {
             JSONObject jsonOld = array1.getJSONObject(i);
@@ -208,6 +211,7 @@ public class CompareController {
                 }
             }
         }
+        System.out.println("====="+ JSON.toJSONString(jsonArray));
         return R.ok().put("info", jsonArray);
     }
     public JSONObject addProperty(JSONObject jsonOld, JSONObject jsonNew){
