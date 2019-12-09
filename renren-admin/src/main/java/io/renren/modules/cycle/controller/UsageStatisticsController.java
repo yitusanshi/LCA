@@ -64,7 +64,7 @@ public class UsageStatisticsController extends AbstractController {
         String flag = (String) params.get("flag");
         String typeId = (String) params.get("typeId");
         int prId = Integer.valueOf((String) params.get("prId"));
-        if (batchNo == "-1" || "-1".equals(batchNo)) {
+        if ("-1".equals(batchNo)) {
             return R.ok();
         }
         Map<String, Object> map = new HashMap<>();

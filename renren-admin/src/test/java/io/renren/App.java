@@ -1,5 +1,8 @@
 package io.renren;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+
 import java.math.BigDecimal;
 
 /**
@@ -8,8 +11,9 @@ import java.math.BigDecimal;
  */
 public class App {
     public static void main(String[] args) {
-        BigDecimal bigDecimal1 = new BigDecimal("2.344231");
-        BigDecimal bigDecimal2 = new BigDecimal("0.0033500000000000001");
-        System.out.println(bigDecimal1.multiply(bigDecimal2));
+        //String str = null;
+        //JSONArray jsonArray = JSONArray.parseArray(str);
+        System.out.println(1);
+        //System.out.println(jsonArray.size());
     }
 }
