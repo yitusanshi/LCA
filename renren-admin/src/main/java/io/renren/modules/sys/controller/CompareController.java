@@ -265,7 +265,7 @@ public class CompareController {
         }
         BigDecimal decimal1 = new BigDecimal(d1);
         BigDecimal decimal2 = new BigDecimal(d2);
-        BigDecimal result = decimal1.subtract(decimal2).abs();
+        BigDecimal result = decimal1.subtract(decimal2);
         jsonObject.put(name + "_diff", CalculateController.toEngineering(result));
     }
     public void reducePropetyStage(JSONObject jsonObject, String name, String str1, String str2){
