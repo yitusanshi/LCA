@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.renren.modules.sys.shiro.ShiroUtils.getUserId;
+import static java.math.BigDecimal.ROUND_HALF_DOWN;
 
 /**
  * @Author:wanglei1
@@ -132,15 +133,15 @@ public class CalculateController {
     }
     public void devide(ResultEntity resultEntity, BigDecimal bigDecimal){
         if (Strings.isNotEmpty(resultEntity.getMaterialStage()))
-        resultEntity.setMaterialStage(toEngineering(new BigDecimal(resultEntity.getMaterialStage()).divide(bigDecimal)));
+        resultEntity.setMaterialStage(toEngineering(new BigDecimal(resultEntity.getMaterialStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getProductStage()))
-        resultEntity.setProductStage(toEngineering(new BigDecimal(resultEntity.getProductStage()).divide(bigDecimal)));
+        resultEntity.setProductStage(toEngineering(new BigDecimal(resultEntity.getProductStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getUseStage()))
-        resultEntity.setUseStage(toEngineering(new BigDecimal(resultEntity.getUseStage()).divide(bigDecimal)));
+        resultEntity.setUseStage(toEngineering(new BigDecimal(resultEntity.getUseStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getSellStage()))
-        resultEntity.setSellStage(toEngineering(new BigDecimal(resultEntity.getSellStage()).divide(bigDecimal)));
+        resultEntity.setSellStage(toEngineering(new BigDecimal(resultEntity.getSellStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getRecoveryStage()))
-        resultEntity.setRecoveryStage(toEngineering(new BigDecimal(resultEntity.getRecoveryStage()).divide(bigDecimal)));
+        resultEntity.setRecoveryStage(toEngineering(new BigDecimal(resultEntity.getRecoveryStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
     }
     public void calculateMaterial(int i, List<ResultEntity> list, List<UsageStatisticsEntity> usageStatisticsEntityList) {
         Map<String, List<UsageStatisticsEntity>> map = new HashMap<>();
@@ -370,7 +371,7 @@ public class CalculateController {
         }
         BigDecimal flag = new BigDecimal("0.00001");
         if (bigDecimal.compareTo(flag) >= 0) {
-            return bigDecimal.setScale(4, BigDecimal.ROUND_HALF_DOWN).toString();
+            return bigDecimal.setScale(4, ROUND_HALF_DOWN).toString();
         } else {
             return new DecimalFormat("#.#####E0").format(bigDecimal);
             //bigDecimal.stripTrailingZeros().toString();
