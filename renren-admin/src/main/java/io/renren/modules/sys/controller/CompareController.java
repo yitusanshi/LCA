@@ -126,24 +126,39 @@ public class CompareController {
         }
         if (3 == 3){
             JSONObject jsonObject = new JSONObject();
-            JSONArray array = new JSONArray();
-            for (int j = 11; j <= 14 ; j++) {
-                Map<String, Object> map1 = new HashMap<>();
-                map1.put("version", version);
-                map1.put("userId", getUserId());
-                map1.put("flag", 3);
-                map1.put("parentId", 0);
-                map1.put("formId", j);
-                map1.put("prId", prId);
-                List<UsageStatisticsEntity> entityList = usageStatisticsService.getMaterialByBatch(map1);
-                System.out.println(entityList.size() + "=========");
-                JSONObject json1 = new JSONObject();
-                json1.put("formId", j);
-                json1.put("infoList", entityList);
-                array.add(json1);
-            }
-            jsonObject.put("infoList", array);
             jsonObject.put("flag", 3);
+            Map<String, Object> map = new HashMap<>();
+            map.put("version", version);
+            map.put("userId", getUserId());
+            map.put("flag", 3);
+            map.put("parentId", 0);//代表原材料
+            map.put("formId", 10);
+            map.put("prId", prId);
+            List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
+            System.out.println("=====" + usageStatisticsEntityList.size());
+            JSONArray array = new JSONArray();
+            for (UsageStatisticsEntity usage : usageStatisticsEntityList){
+                JSONObject json = (JSONObject) JSONObject.toJSON(usage);
+                JSONArray array1 = new JSONArray();
+                for (int j = 11; j <= 15 ; j++) {
+                    Map<String, Object> map1 = new HashMap<>();
+                    map1.put("version", version);
+                    map1.put("userId", getUserId());
+                    map1.put("flag", 3);
+                    map1.put("parentId", usage.getMaterialId());//查询原材料下的子材料
+                    map1.put("formId", j);
+                    map1.put("prId", prId);
+                    List<UsageStatisticsEntity> entityList = usageStatisticsService.getMaterialByBatch(map1);
+                    System.out.println(entityList.size() + "=========");
+                    JSONObject json1 = new JSONObject();
+                    json1.put("formId", j);
+                    json1.put("infoList", entityList);
+                    array1.add(json1);
+                }
+                json.put("prNameList", array1);
+                array.add(json);
+            }
+            jsonObject.put("materialList", array);
             jsonArray.add(jsonObject);
         }
         if (4 == 4){
@@ -183,7 +198,7 @@ public class CompareController {
             jsonObject.put("materialList", array);
             jsonArray.add(jsonObject);
         }
-
+        System.out.println(JSON.toJSONString(jsonArray));
         return R.ok().put("info", jsonArray);
     }
 
