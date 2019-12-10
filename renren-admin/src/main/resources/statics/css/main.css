@@ -94,3 +94,10 @@ tbody > tr > th {
     width: 550px;
     padding-top: 20px;
 }
+
+.noBorder {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: 0px 0px 0px 0px;
+}

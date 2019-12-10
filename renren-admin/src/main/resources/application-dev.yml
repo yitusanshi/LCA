@@ -5,7 +5,9 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
       url: jdbc:mysql://localhost:3306/renren_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
       username: root
-      password: root
+      password: bjkj2019
+#      password: root
+
       initial-size: 10
       max-active: 100
       min-idle: 10

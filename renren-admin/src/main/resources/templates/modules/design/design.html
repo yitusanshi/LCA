@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>绿色设计</title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="mainList">
+        <div class="grid-btn">
+            <shiro.hasPermission name="sys:batch:save">
+                <a class="btn btn-primary" @click="queryData()"><i class="fa fa-plus"></i>&nbsp;查询</a>
+            </shiro.hasPermission>
+            <div class="form-group col-sm-2">
+                <select id="selectPr" class="form-control" v-model="prSelect"
+                        @change="selectPrId($event)">
+                    <option value="-1" selected="selected">请选择产品</option>
+                    <option v-for="item in prList" :value="item.id">
+                        {{item.prName}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-sm-2">
+                <select id="select" class="form-control" v-model="batchSelect">
+                    <option value="-1" selected="selected">请选择批次号</option>
+                    <option v-for="item in batchNos" :value="item.batchNo">
+                        {{item.batchNo}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+    <form id="designId">
+        <table id="designTable"></table>
+        <div id="jqGridPager"></div>
+    </form>
+    <div class="grid-btn">
+        <a class="btn btn-primary" style="float: right" @click="saveData()">&nbsp;保存数据</a>
+    </div>
+
+    <div id="batchNo" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">方案版本</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bNo" placeholder="方案版本"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">使用量</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="bUsage"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">单位</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly v-model="bUnit" placeholder="单位"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script src="${request.contextPath}/statics/js/modules/design/design.js?_${.now?long}"></script>
+</body>
+</html>

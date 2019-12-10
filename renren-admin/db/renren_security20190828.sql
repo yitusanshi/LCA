@@ -8841,7 +8841,7 @@ CREATE TABLE `sys_dept` (
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES ('1', '0', 'Lca绿色设计平台', '0', '0');
+INSERT INTO `sys_dept` VALUES ('1', '0', '轮胎产品生命周期数据库', '0', '0');
 INSERT INTO `sys_dept` VALUES ('2', '1', '河南风神轮胎有限公司', '1', '0');
 INSERT INTO `sys_dept` VALUES ('3', '1', '河南好想你股份有限公司', '2', '0');
 INSERT INTO `sys_dept` VALUES ('4', '3', '技术部', '0', '0');

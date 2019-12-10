@@ -1,19 +1,32 @@
 $(function () {
+    pageInit();
+});
+
+function pageInit() {
     $("#menuMaterialTable").jqGrid({
         datatype: "json",
+        url: baseURL + "calculate/info",
         colModel: [
-            {label: '影响类型', name: 'typeName', index: 'typeName', width: '80px'},
-            {label: '单位', name: 'unit', index: 'unit', width: '80px'},
+            {label: '影响类型', name: 'typeName', index: 'typeName', width: '120px'},
+            {label: '单位', name: 'unit', index: 'unit', width: '120px'},
             {label: '产品名称', name: 'productName', index: 'productName', width: '80px'},
             {label: '原料阶段', name: 'materialStage', index: 'materialStage', width: '80px'},
             {label: '生产阶段', name: 'productStage', index: 'productStage', width: '80px'},
             {label: '销售阶段', name: 'sellStage', index: 'sellStage', width: '80px'},
             {label: '使用阶段', name: 'useStage', index: 'useStage', width: '80px'},
             {label: '回收处理阶段', name: 'recoveryStage', index: 'recoveryStage', width: '80px'}
-        ]
+        ],
+        postData: {
+            'batchNo': "",
+            "prId": ""
+        },
+        height: "25%",
+        gridComplete: function () {
+            //隐藏grid底部滚动条
+            $("#menuMaterialTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+        }
     });
-});
-
+}
 
 function queryResylt() {
     $.ajax({
@@ -27,17 +40,41 @@ function queryResylt() {
         success: function (result) {
             if (result.code == 0) {
                 var resultCal = result.resultCal;
+                resultCal.sort(function (a, b) {
+                    return a.id - b.id;
+                })
                 var tr = "";
                 for (var i = 0; i < resultCal.length; i++) {
                     tr += "<tr>"
-                    tr += "<td>" + resultCal[i].typeName + "</td>";
-                    tr += "<td>" + resultCal[i].unit + "</td>";
-                    tr += "<td>" + resultCal[i].productName + "</td>";
-                    tr += "<td>" + resultCal[i].materialStage + "</td>";
-                    tr += "<td>" + resultCal[i].productStage + "</td>";
-                    tr += "<td>" + resultCal[i].sellStage + "</td>";
-                    tr += "<td>" + resultCal[i].useStage + "</td>";
-                    tr += "<td>" + resultCal[i].recoveryStage + "</td>";
+                    tr += "<td style='width: 120px;'>" + resultCal[i].typeName + "</td>";
+                    tr += "<td style='width: 120px;'>" + resultCal[i].unit + "</td>";
+                    tr += "<td style='width: 80px;'>" + resultCal[i].productName + "</td>";
+                    if (resultCal[i].materialStage == "" || resultCal[i].materialStage == null) {
+                        tr += "<td style='width: 80px;'>0</td>";
+                    } else {
+                        tr += "<td style='width: 80px;'>" + resultCal[i].materialStage + "</td>";
+                    }
+                    if (resultCal[i].productStage == "" || resultCal[i].productStage == null) {
+                        tr += "<td style='width: 80px;'>0</td>";
+                    } else {
+                        tr += "<td style='width: 80px;'>" + resultCal[i].productStage + "</td>";
+                    }
+
+                    if (resultCal[i].sellStage == "" || resultCal[i].sellStage == null) {
+                        tr += "<td style='width: 80px;'>0</td>";
+                    } else {
+                        tr += "<td style='width: 80px;'>" + resultCal[i].sellStage + "</td>";
+                    }
+                    if (resultCal[i].useStage == "" || resultCal[i].useStage == null) {
+                        tr += "<td style='width: 80px;'>0</td>";
+                    } else {
+                        tr += "<td style='width: 80px;'>" + resultCal[i].useStage + "</td>";
+                    }
+                    if (resultCal[i].recoveryStage == "" || resultCal[i].recoveryStage == null) {
+                        tr += "<td style='width: 80px;'>0</td>";
+                    } else {
+                        tr += "<td style='width: 80px;'>" + resultCal[i].recoveryStage + "</td>";
+                    }
                 }
                 tr += "</tr>";
                 $('#menuMaterialTable').html(tr);
