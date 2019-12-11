@@ -1,6 +1,6 @@
-$(function () {
+/*$(function () {
     pageInit();
-});
+});*/
 
 function pageInit() {
     $("#resultTable").jqGrid({
@@ -45,177 +45,85 @@ function queryResult() {
         success: function (result) {
             if (result.code == 0) {
                 var info = result.info;
+                info.sort(function (a, b) {
+                    return a.id - b.id;
+                })
                 var versionOld = result.versionOld;
                 var versionNew = result.versionNew;
                 var tr = '';
+                tr += ' <thead>';
+                tr += '<tr>';
+                tr += '<th rowspan="2" style="width: 120px;text-align: center;vertical-align: center;">影响类型</th>';
+                tr += '<th rowspan="2" style="width: 100px;text-align: center;vertical-align: center;">单位</th>';
+                tr += '<th colspan="3" style="width: 360px;text-align: center;">原料阶段</th>';
+                tr += '<th colspan="3" style="width: 360px;text-align: center;">生产阶段</th>';
+                tr += '<th colspan="3" style="width: 360px;text-align: center;">销售阶段</th>';
+                tr += '<th colspan="3" style="width: 360px;text-align: center;">使用阶段</th>';
+                tr += '<th colspan="3" style="width: 360px;text-align: center;">回收处理阶段</th>';
+                tr += '</tr>';
+
+                tr += '<tr>';
+                tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                tr += '<td style="width: 120px;">对比结果</td>';
+                tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                tr += '<td style="width: 120px;">对比结果</td>';
+                tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                tr += '<td style="width: 120px;">对比结果</td>';
+                tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                tr += '<td style="width: 120px;">对比结果</td>';
+                tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                tr += '<td style="width: 120px;">对比结果</td>';
+                tr += '</tr></thead><tbody>';
+                tr += "";
                 for (var i = 0; i < info.length; i++) {
                     var listInfo = info[i];
-                    /*
-                    * 老版本
-                    * */
-                    tr += '<table id="dresult"><tr>';
-                    tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.productName + '</td>';
-                    tr += '<td style="width: 120px;">' + versionOld + '</td>';
-                    tr += '<td style="width: 120px;">/</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.materialStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.productStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.sellStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.useStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_old + '</td>';
-                    tr += "</tr>";
-                    /*
-                    * 新版本
-                    * */
                     tr += "<tr>";
                     tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.productName + '</td>';
-                    tr += '<td style="width: 120px;">' + versionNew + '</td>';
-                    tr += '<td style="width: 120px;">/</td>';
+                    /*
+                    * 原料阶段
+                    * */
+                    tr += '<td style="width: 120px;">' + listInfo.materialStage_old + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.materialStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.productStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.sellStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.useStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_new + '</td>';
-                    tr += "</tr>";
+                    tr += '<td style="width: 120px;">' + listInfo.materialStage_diff + '</td>';
+
 
                     /*
-                   * 差异值
-                   * */
-                    tr += "<tr>";
-                    tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.productName + '</td>';
-                    tr += '<td style="width: 120px;">对比结果</td>';
-                    tr += '<td style="width: 120px;">/</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.materialStage_diff + '</td>';
+                    * 生产阶段
+                    * */
+                    tr += '<td style="width: 120px;">' + listInfo.productStage_old + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.productStage_new + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.productStage_diff + '</td>';
+
+                    /*
+                    * 销售阶段
+                    * */
+                    tr += '<td style="width: 120px;">' + listInfo.sellStage_old + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.sellStage_new + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.sellStage_diff + '</td>';
+
+                    /*
+                    * 使用阶段
+                    * */
+                    tr += '<td style="width: 120px;">' + listInfo.useStage_old + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.useStage_new + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.useStage_diff + '</td>';
+
+                    /*
+                    * 回收处理阶段
+                    * */
+
+                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_old + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_new + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.recoveryStage_diff + '</td>';
-                    tr += "</tr>";
-                    var materialPropertyStage = listInfo.materialPropertyStage;
-                    for (var j = 0; j < materialPropertyStage.length; j++) {
-                        for (var m in materialPropertyStage[j]) {
-                            if (m.split("_")[1] == "old") {
-                                tr += "<tr>"
-                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
-                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                                tr += '<td style="width: 120px;">原料阶段|' + m.split("_")[0] + '</td>';
-                                tr += '<td style="width: 120px;">' + versionOld + '</td>';
-                                tr += '<td style="width: 120px;">' + materialPropertyStage[j][m] + '</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += "</tr>";
-                                break;
-                            }
-                        }
-                        for (var m in materialPropertyStage[j]) {
-                            if (m.split("_")[1] == "new") {
-                                tr += "<tr>"
-                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
-                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                                tr += '<td style="width: 120px;">原料阶段|' + m.split("_")[0] + '</td>';
-                                tr += '<td style="width: 120px;">' + versionNew + '</td>';
-                                tr += '<td style="width: 120px;">' + materialPropertyStage[j][m] + '</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += "</tr>";
-                                break;
-                            }
-                        }
-                        for (var m in materialPropertyStage[j]) {
-                            if (m.split("_")[1] == "diff") {
-                                tr += "<tr>"
-                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
-                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                                tr += '<td style="width: 120px;">原料阶段|' + m.split("_")[0] + '</td>';
-                                tr += '<td style="width: 120px;">对比结果</td>';
-                                tr += '<td style="width: 120px;">' + materialPropertyStage[j][m] + '</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += "</tr>";
-                                break;
-                            }
-                        }
-                    }
-                    var recoveryPropertyStage = listInfo.recoveryPropertyStage;
-                    for (var j = 0; j < recoveryPropertyStage.length; j++) {
-                        for (var m in materialPropertyStage[j]) {
-                            if (m.split("_")[1] == "old") {
-                                tr += "<tr>"
-                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
-                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                                tr += '<td style="width: 120px;">回收阶段|' + m.split("_")[0] + '</td>';
-                                tr += '<td style="width: 120px;">' + versionOld + '</td>';
-                                tr += '<td style="width: 120px;">' + recoveryPropertyStage[j][m] + '</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += "</tr>";
-                                break;
-                            }
-                        }
-                        for (var m in materialPropertyStage[j]) {
-                            if (m.split("_")[1] == "new") {
-                                tr += "<tr>"
-                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
-                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                                tr += '<td style="width: 120px;">回收阶段|' + m.split("_")[0] + '</td>';
-                                tr += '<td style="width: 120px;">' + versionNew + '</td>';
-                                tr += '<td style="width: 120px;">' + recoveryPropertyStage[j][m] + '</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += "</tr>";
-                                break;
-                            }
-                        }
-                        for (var m in materialPropertyStage[j]) {
-                            if (m.split("_")[1] == "diff") {
-                                tr += "<tr>"
-                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
-                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
-                                tr += '<td style="width: 120px;">回收阶段|' + m.split("_")[0] + '</td>';
-                                tr += '<td style="width: 120px;">对比结果</td>';
-                                tr += '<td style="width: 120px;">' + recoveryPropertyStage[j][m] + '</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += '<td style="width: 120px;">/</td>';
-                                tr += "</tr>";
-                                break;
-                            }
-                        }
-                    }
+                    tr += "</tr></tbody>";
                 }
-                tr += "</table>";
                 $('#resultTable').html(tr);
-                $('#dresult').mergeCell({
-                    cols: [0,1,2]
-                });
             } else {
                 layer.alert(result.msg);
             }
