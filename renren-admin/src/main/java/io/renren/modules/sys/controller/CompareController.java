@@ -46,7 +46,7 @@ public class CompareController {
         System.out.println(1111);
         JSONArray jsonArray = new JSONArray();
         //第一阶段数据
-        if (0 == 0){
+        if (0 == 0) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("flag", 0);
             Map<String, Object> map = new HashMap<>();
@@ -59,10 +59,10 @@ public class CompareController {
             List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
             System.out.println("=====" + usageStatisticsEntityList.size());
             JSONArray array = new JSONArray();
-            for (UsageStatisticsEntity usage : usageStatisticsEntityList){
+            for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
                 JSONObject json = (JSONObject) JSONObject.toJSON(usage);
                 JSONArray array1 = new JSONArray();
-                for (int j = 11; j <= 15 ; j++) {
+                for (int j = 11; j <= 15; j++) {
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("version", version);
                     map1.put("userId", getUserId());
@@ -85,10 +85,10 @@ public class CompareController {
         }
 
         //第二阶段
-        if (1 == 1){
+        if (1 == 1) {
             JSONObject jsonObject = new JSONObject();
             JSONArray array = new JSONArray();
-            for (int j = 11; j <= 14 ; j++) {
+            for (int j = 11; j <= 14; j++) {
                 Map<String, Object> map1 = new HashMap<>();
                 map1.put("version", version);
                 map1.put("userId", getUserId());
@@ -107,7 +107,7 @@ public class CompareController {
             jsonObject.put("flag", 1);
             jsonArray.add(jsonObject);
         }
-        if (2 == 2){
+        if (2 == 2) {
             JSONObject jsonObject = new JSONObject();
             Map<String, Object> map1 = new HashMap<>();
             map1.put("version", version);
@@ -121,7 +121,7 @@ public class CompareController {
             jsonObject.put("flag", 2);
             jsonArray.add(jsonObject);
         }
-        if (3 == 3){
+        if (3 == 3) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("flag", 3);
             Map<String, Object> map = new HashMap<>();
@@ -134,10 +134,10 @@ public class CompareController {
             List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
             System.out.println("=====" + usageStatisticsEntityList.size());
             JSONArray array = new JSONArray();
-            for (UsageStatisticsEntity usage : usageStatisticsEntityList){
+            for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
                 JSONObject json = (JSONObject) JSONObject.toJSON(usage);
                 JSONArray array1 = new JSONArray();
-                for (int j = 11; j <= 15 ; j++) {
+                for (int j = 11; j <= 15; j++) {
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("version", version);
                     map1.put("userId", getUserId());
@@ -158,7 +158,7 @@ public class CompareController {
             jsonObject.put("materialList", array);
             jsonArray.add(jsonObject);
         }
-        if (4 == 4){
+        if (4 == 4) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("flag", 4);
             Map<String, Object> map = new HashMap<>();
@@ -171,10 +171,10 @@ public class CompareController {
             List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
             System.out.println("=====" + usageStatisticsEntityList.size());
             JSONArray array = new JSONArray();
-            for (UsageStatisticsEntity usage : usageStatisticsEntityList){
+            for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
                 JSONObject json = (JSONObject) JSONObject.toJSON(usage);
                 JSONArray array1 = new JSONArray();
-                for (int j = 11; j <= 15 ; j++) {
+                for (int j = 11; j <= 15; j++) {
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("version", version);
                     map1.put("userId", getUserId());
@@ -200,33 +200,34 @@ public class CompareController {
     }
 
     @RequestMapping(value = "/result", method = RequestMethod.GET)
-    public R result(@RequestParam("version1") String version1, @RequestParam("version2") String version2, @RequestParam("prId") int prId){
-        if (StringUtils.isNullOrEmpty(version1) || StringUtils.isNullOrEmpty(version2) ){
+    public R result(@RequestParam("version1") String version1, @RequestParam("version2") String version2, @RequestParam("prId") int prId) {
+        if (StringUtils.isNullOrEmpty(version1) || StringUtils.isNullOrEmpty(version2)) {
             return R.error("请选择版本");
         }
         R r1 = calculateController.calculate(version1, prId);
         R r2 = calculateController.calculate(version2, prId);
-        List<ResultEntity> list1 =  (List<ResultEntity>) r1.get("resultCal");
-        List<ResultEntity> list2 =  (List<ResultEntity>) r2.get("resultCal");
+        List<ResultEntity> list1 = (List<ResultEntity>) r1.get("resultCal");
+        List<ResultEntity> list2 = (List<ResultEntity>) r2.get("resultCal");
         JSONArray array1 = JSONArray.parseArray(JSON.toJSONString(list1));
         JSONArray array2 = JSONArray.parseArray(JSON.toJSONString(list2));
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < array1.size() ; i++) {
+        for (int i = 0; i < array1.size(); i++) {
             JSONObject jsonOld = array1.getJSONObject(i);
             String idOld = jsonOld.getString("id");
             for (int j = 0; j < array2.size(); j++) {
                 JSONObject jsonNew = array2.getJSONObject(j);
                 String idNew = jsonNew.getString("id");
-                if (idOld.equals(idNew)){
+                if (idOld.equals(idNew)) {
                     JSONObject json = addProperty(array1.getJSONObject(i), array2.getJSONObject(j));
                     jsonArray.add(json);
                 }
             }
         }
-        System.out.println("====="+ JSON.toJSONString(jsonArray));
-        return R.ok().put("info", jsonArray);
+        System.out.println("=====" + JSON.toJSONString(jsonArray));
+        return R.ok().put("info", jsonArray).put("versionOld", version1).put("versionNew", version2);
     }
-    public JSONObject addProperty(JSONObject jsonOld, JSONObject jsonNew){
+
+    public JSONObject addProperty(JSONObject jsonOld, JSONObject jsonNew) {
         JSONObject json = new JSONObject();
         json.put("id", jsonOld.getString("id"));
         json.put("typeName", jsonOld.getString("typeName"));
@@ -251,13 +252,14 @@ public class CompareController {
         reducePropetyStage(json, s, jsonOld.getString(s), jsonNew.getString(s));
         return json;
     }
-    public void reduce(JSONObject jsonObject, String name, String d1, String d2){
+
+    public void reduce(JSONObject jsonObject, String name, String d1, String d2) {
         jsonObject.put(name + "_old", d1);
         jsonObject.put(name + "_new", d2);
-        if (d1 == null){
+        if (d1 == null) {
             d1 = "0";
         }
-        if (d2 == null){
+        if (d2 == null) {
             d2 = "0";
         }
         BigDecimal decimal1 = new BigDecimal(d1);
@@ -265,19 +267,20 @@ public class CompareController {
         BigDecimal result = decimal1.subtract(decimal2);
         jsonObject.put(name + "_diff", CalculateController.toEngineering(result));
     }
-    public void reducePropetyStage(JSONObject jsonObject, String name, String str1, String str2){
+
+    public void reducePropetyStage(JSONObject jsonObject, String name, String str1, String str2) {
         JSONObject json1 = new JSONObject();
         JSONObject json2 = new JSONObject();
-        if ( !StringUtils.isNullOrEmpty(str1)){
+        if (!StringUtils.isNullOrEmpty(str1)) {
             json1 = JSONObject.parseObject(str1);
         }
-        if ( !StringUtils.isNullOrEmpty(str2)){
+        if (!StringUtils.isNullOrEmpty(str2)) {
             json2 = JSONObject.parseObject(str2);
         }
         JSONArray jsonArray = new JSONArray();
-        for (String key1 : json1.keySet()){
-            for (String key2 : json2.keySet()){
-                if (key1.equals(key2)){
+        for (String key1 : json1.keySet()) {
+            for (String key2 : json2.keySet()) {
+                if (key1.equals(key2)) {
                     JSONObject json = new JSONObject();
                     reduce(json, key1, json1.getString(key1), json2.getString(key2));
                     jsonArray.add(json);
@@ -285,16 +288,16 @@ public class CompareController {
             }
         }
         //如果旧版本存在，新版本不存在
-        for (String key1 : json1.keySet()){
-          if (!json2.containsKey(key1)){
-              JSONObject json = new JSONObject();
-              reduce(json, key1, json1.getString(key1), null);
-              jsonArray.add(json);
-          }
+        for (String key1 : json1.keySet()) {
+            if (!json2.containsKey(key1)) {
+                JSONObject json = new JSONObject();
+                reduce(json, key1, json1.getString(key1), null);
+                jsonArray.add(json);
+            }
         }
 
-        for (String key2 : json2.keySet()){
-            if (!json1.containsKey(key2)){
+        for (String key2 : json2.keySet()) {
+            if (!json1.containsKey(key2)) {
                 JSONObject json = new JSONObject();
                 reduce(json, key2, null, json2.getString(key2));
                 jsonArray.add(json);

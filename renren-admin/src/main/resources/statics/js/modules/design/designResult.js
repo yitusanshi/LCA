@@ -3,343 +3,219 @@ $(function () {
 });
 
 function pageInit() {
-    $("#designTable").jqGrid({
+    $("#resultTable").jqGrid({
         datatype: "json",
-        url: baseURL + "compare/info",
+        url: baseURL + "compare/result",
         colModel: [
-            {label: '阶段名称', name: 'flagName', index: 'flagName', width: '80px'},
-            {label: '阶段标识', name: 'flag', index: 'flag', width: '80px', hidden: true},
-            {label: '用户ID', name: 'userId', index: 'userId', width: '80px', hidden: true},
-            {label: '来源ID', name: 'formId', index: 'formId', width: '80px', hidden: true},
-            {label: '产品ID', name: 'prId', index: 'prId', width: '80px', hidden: true},
-            {label: '父类ID', name: 'parentId', index: 'parentId', width: '80px', hidden: true},
-            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
-            {label: '物质ID', name: 'materialId', index: 'materialId', width: '80px', hidden: true},
-            {label: '物质名称', name: 'materialName', index: 'materialName', width: '80px'},
-            {label: '父级物质名称', name: 'fmaterialName', index: 'fmaterialName', width: '80px'},
-            {label: '使用量/消耗量/排放量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
-            {label: '单位', name: 'unit', index: 'unit', width: '80px'}
+            {label: '影响类型', name: 'typeName', index: 'typeName', width: '120px'},
+            {label: '单位', name: 'unit', index: 'unit', width: '120px'},
+            {label: '物质名称', name: 'productName', index: 'productName', width: '120px'},
+            {label: '方案名称', nanme: 'versionName', index: 'versionName', width: '120px'},
+            {label: '上游物质', name: 'diffName', index: 'diffName', width: '120px'},
+            {label: '原料阶段', name: 'materialStage', index: 'materialStage', width: '120px'},
+            {label: '生产阶段', name: 'productStage', index: 'productStage', width: '120px'},
+            {label: '销售阶段', name: 'sellStage', index: 'sellStage', width: '120px'},
+            {label: '使用阶段', name: 'useStage', index: 'useStage', width: '120px'},
+            {label: '回收处理阶段', name: 'recoveryStage', index: 'recoveryStage', width: '120px'}
         ],
         postData: {
-            'batchNo': "0",
+            'version1': "0",
+            'version2': "0",
             "prId": "0"
         },
         height: "25%",
-        gridComplete: function () {
-            //隐藏grid底部滚动条
-            $("#designTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
-        }
+        /* gridComplete: function () {
+             //隐藏grid底部滚动条
+             $("#resultTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+         }*/
     });
 }
 
 
-function queryData() {
+function queryResult() {
     $.ajax({
         type: "GET",
-        url: baseURL + 'compare/info',
+        url: baseURL + 'compare/result',
         data: {
-            "batchNo": vm.batchSelect,
+            "version1": vm.batchSelect,
+            "version2": vm.batchSelect1,
             'prId': vm.prSelect
         },
         dataType: "json",
         success: function (result) {
-            alert("返回数成功了。。。。。")
             if (result.code == 0) {
                 var info = result.info;
+                var versionOld = result.versionOld;
+                var versionNew = result.versionNew;
                 var tr = '';
                 for (var i = 0; i < info.length; i++) {
-                    var flag = info[i].flag;
-                    var materialList = info[i].materialList;
-                    if (flag == "0") {
-                        var materialList = info[i].materialList;
-                        for (var j = 0; j < materialList.length; j++) {
-                            tr += "<tr>"
-                            tr += '<td><input type="text" class="noBorder"  value="原料阶段" style="width: 120px;" readonly="readonly"></td>';
-                            tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + materialList[j].flag + '"></td>';
-                            tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + materialList[j].userId + '"></td>';
-                            tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + materialList[j].formId + '"></td>';
-                            tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + materialList[j].prId + '"></td>';
-                            tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + materialList[j].parentId + '"></td>';
-                            tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + materialList[j].prName + '"></td>';
-                            tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + materialList[j].materialId + '"></td>';
-                            tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '"></td>';
-                            tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="无"></td>';
-                            tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + materialList[j].materialUsage + '"></td>';
-                            tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + materialList[j].unit + '"></td>';
-                            tr += "</tr>"
-                            /*
-                            * 开始各个物质层了
-                            * */
-                            var prNameList = materialList[j].prNameList;
-                            for (var p = 0; p < prNameList.length; p++) {
-                                var infoList = prNameList[p].infoList;
-                                if (prNameList[p].formId == "11") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += "<tr>"
-                                        tr += '<td><input type="text" class="noBorder"  value="原料阶段" style="width: 120px;" readonly="readonly"></td>';
-                                        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[m].flag + '"></td>';
-                                        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[m].userId + '"></td>';
-                                        tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[m].formId + '"></td>';
-                                        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[m].prId + '"></td>';
-                                        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[m].parentId + '"></td>';
-                                        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[m].prName + '"></td>';
-                                        tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[m].materialId + '"></td>';
-                                        tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[m].materialName + '"></td>';
-                                        tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '->原材料消耗"></td>';
-                                        tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[m].materialUsage + '"></td>';
-                                        tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[m].unit + '"></td>';
-                                        tr += "</tr>"
-                                    }
-                                } else if (prNameList[p].formId == "12") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += "<tr>"
-                                        tr += '<td><input type="text" class="noBorder"  value="原料阶段" style="width: 120px;" readonly="readonly"></td>';
-                                        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[m].flag + '"></td>';
-                                        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[m].userId + '"></td>';
-                                        tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[m].formId + '"></td>';
-                                        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[m].prId + '"></td>';
-                                        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[m].parentId + '"></td>';
-                                        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[m].prName + '"></td>';
-                                        tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[m].materialId + '"></td>';
-                                        tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[m].materialName + '"></td>';
-                                        tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '->资源能源消耗"></td>';
-                                        tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[m].materialUsage + '"></td>';
-                                        tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[m].unit + '"></td>';
-                                        tr += "</tr>";
-                                    }
-                                } else if (prNameList[p].formId == "13") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += "<tr>";
-                                        tr += '<td><input type="text" class="noBorder"  value="原料阶段" style="width: 120px;" readonly="readonly"></td>';
-                                        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[m].flag + '"></td>';
-                                        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[m].userId + '"></td>';
-                                        tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[m].formId + '"></td>';
-                                        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[m].prId + '"></td>';
-                                        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[m].parentId + '"></td>';
-                                        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[m].prName + '"></td>';
-                                        tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[m].materialId + '"></td>';
-                                        tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[m].materialName + '"></td>';
-                                        tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '->排放与废气"></td>';
-                                        tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[m].materialUsage + '"></td>';
-                                        tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[m].unit + '"></td>';
-                                        tr += "</tr>";
-                                    }
-                                } else if (prNameList[p].formId == "14") {
+                    var listInfo = info[i];
+                    /*
+                    * 老版本
+                    * */
+                    tr += '<table id="dresult"><tr>';
+                    tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.productName + '</td>';
+                    tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                    tr += '<td style="width: 120px;">/</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.materialStage_old + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.productStage_old + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.sellStage_old + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.useStage_old + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_old + '</td>';
+                    tr += "</tr>";
+                    /*
+                    * 新版本
+                    * */
+                    tr += "<tr>";
+                    tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.productName + '</td>';
+                    tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                    tr += '<td style="width: 120px;">/</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.materialStage_new + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.productStage_new + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.sellStage_new + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.useStage_new + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_new + '</td>';
+                    tr += "</tr>";
 
-                                } else if (prNameList[p].formId == "15") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += "<tr>"
-                                        tr += '<td><input type="text" class="noBorder"  value="原料阶段" style="width: 120px;" readonly="readonly"></td>';
-                                        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[m].flag + '"></td>';
-                                        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[m].userId + '"></td>';
-                                        tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[m].formId + '"></td>';
-                                        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[m].prId + '"></td>';
-                                        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[m].parentId + '"></td>';
-                                        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[m].prName + '"></td>';
-                                        tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[m].materialId + '"></td>';
-                                        tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[m].materialName + '"></td>';
-                                        tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '->包装过程"></td>';
-                                        tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[m].materialUsage + '"></td>';
-                                        tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[m].unit + '"></td>';
-                                        tr += "</tr>";
-                                    }
-                                } else {
-                                    layer.alert("生命周期阶段数据分类有问题，请联系管理员");
-                                }
-                            }
-
-                        }
-
-                    } else if (flag == "1") {
-                        var infoLists = info[i].infoList;
-                        for (var k = 0; k < infoLists.length; k++) {
-                            var formId = infoLists[k].formId;
-                            var infoList = infoLists[k].infoList;
-                            if (formId == "11") {
-                                for (var j = 0; j < infoList.length; j++) {
-                                    tr += "<tr>"
-                                    tr += '<td><input type="text" class="noBorder"  value="生产阶段" style="width: 120px;" readonly="readonly"></td>';
-                                    tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[j].flag + '"></td>';
-                                    tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[j].userId + '"></td>';
-                                    tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[j].formId + '"></td>';
-                                    tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[j].prId + '"></td>';
-                                    tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[j].parentId + '"></td>';
-                                    tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[j].prName + '"></td>';
-                                    tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[j].materialId + '"></td>';
-                                    tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[j].materialName + '"></td>';
-                                    tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="原材料消耗"></td>';
-                                    tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[j].materialUsage + '"></td>';
-                                    tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[j].unit + '"></td>';
-                                    tr += "</tr>";
-                                }
-                            } else if (formId == "12") {
-                                for (var j = 0; j < infoList.length; j++) {
-                                    tr += "<tr>"
-                                    tr += '<td><input type="text" class="noBorder"  value="生产阶段" style="width: 120px;" readonly="readonly"></td>';
-                                    tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[j].flag + '"></td>';
-                                    tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[j].userId + '"></td>';
-                                    tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[j].formId + '"></td>';
-                                    tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[j].prId + '"></td>';
-                                    tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[j].parentId + '"></td>';
-                                    tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[j].prName + '"></td>';
-                                    tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[j].materialId + '"></td>';
-                                    tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[j].materialName + '"></td>';
-                                    tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="资源能源消耗"></td>';
-                                    tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[j].materialUsage + '"></td>';
-                                    tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[j].unit + '"></td>';
-                                    tr += "</tr>";
-                                }
-                            } else if (formId == "13") {
-                                for (var j = 0; j < infoList.length; j++) {
-                                    tr += "<tr>"
-                                    tr += '<td><input type="text" class="noBorder"  value="生产阶段" style="width: 120px;" readonly="readonly"></td>';
-                                    tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[j].flag + '"></td>';
-                                    tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[j].userId + '"></td>';
-                                    tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[j].formId + '"></td>';
-                                    tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[j].prId + '"></td>';
-                                    tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[j].parentId + '"></td>';
-                                    tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[j].prName + '"></td>';
-                                    tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[j].materialId + '"></td>';
-                                    tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[j].materialName + '"></td>';
-                                    tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="排放与废气"></td>';
-                                    tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[j].materialUsage + '"></td>';
-                                    tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[j].unit + '"></td>';
-                                    tr += "</tr>";
-                                }
-                            } else if (formId == "14") {
-
-                            } else if (formId == "15") {
-                                for (var j = 0; j < infoList.length; j++) {
-                                    tr += "<tr>"
-                                    tr += '<td><input type="text" class="noBorder"  value="生产阶段" style="width: 120px;" readonly="readonly"></td>';
-                                    tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[j].flag + '"></td>';
-                                    tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[j].userId + '"></td>';
-                                    tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[j].formId + '"></td>';
-                                    tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[j].prId + '"></td>';
-                                    tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[j].parentId + '"></td>';
-                                    tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[j].prName + '"></td>';
-                                    tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[j].materialId + '"></td>';
-                                    tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[j].materialName + '"></td>';
-                                    tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="包装过程"></td>';
-                                    tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[j].materialUsage + '"></td>';
-                                    tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[j].unit + '"></td>';
-                                    tr += "</tr>";
-                                }
-                            }
-
-                        }
-                    } else if (flag == "2") {
-
-                    } else if (flag == "3") {
-
-                    } else if (flag == "4") {
-                        /*
-                        * 回收处理阶段
-                        * */
-                        var materialList = info[i].materialList;
-                        for (var j = 0; j < materialList.length; j++) {
-                            tr += "<tr>"
-                            tr += '<td><input type="text" class="noBorder"  value="回收处理阶段" style="width: 120px;" readonly="readonly"></td>';
-                            tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + materialList[j].flag + '"></td>';
-                            tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + materialList[j].userId + '"></td>';
-                            tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + materialList[j].formId + '"></td>';
-                            tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + materialList[j].prId + '"></td>';
-                            tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + materialList[j].parentId + '"></td>';
-                            tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + materialList[j].prName + '"></td>';
-                            tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + materialList[j].materialId + '"></td>';
-                            tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '"></td>';
-                            tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="无"></td>';
-                            tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + materialList[j].materialUsage + '"></td>';
-                            tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + materialList[j].unit + '"></td>';
-                            tr += "</tr>"
-                            /*
-                            * 开始各个物质层了
-                            * */
-                            var prNameList = materialList[j].prNameList;
-                            for (var p = 0; p < prNameList.length; p++) {
-                                var infoList = prNameList[p].infoList;
-                                if (prNameList[p].formId == "11") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += "<tr>"
-                                        tr += '<td><input type="text" class="noBorder"  value="回收处理阶段" style="width: 120px;" readonly="readonly"></td>';
-                                        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[m].flag + '"></td>';
-                                        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[m].userId + '"></td>';
-                                        tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[m].formId + '"></td>';
-                                        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[m].prId + '"></td>';
-                                        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[m].parentId + '"></td>';
-                                        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[m].prName + '"></td>';
-                                        tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[m].materialId + '"></td>';
-                                        tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[m].materialName + '"></td>';
-                                        tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '->原材料消耗"></td>';
-                                        tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[m].materialUsage + '"></td>';
-                                        tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[m].unit + '"></td>';
-                                        tr += "</tr>"
-                                    }
-                                } else if (prNameList[p].formId == "12") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += "<tr>"
-                                        tr += '<td><input type="text" class="noBorder"  value="回收处理阶段" style="width: 120px;" readonly="readonly"></td>';
-                                        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[m].flag + '"></td>';
-                                        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[m].userId + '"></td>';
-                                        tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[m].formId + '"></td>';
-                                        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[m].prId + '"></td>';
-                                        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[m].parentId + '"></td>';
-                                        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[m].prName + '"></td>';
-                                        tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[m].materialId + '"></td>';
-                                        tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[m].materialName + '"></td>';
-                                        tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '->资源能源消耗"></td>';
-                                        tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[m].materialUsage + '"></td>';
-                                        tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[m].unit + '"></td>';
-                                        tr += "</tr>";
-                                    }
-                                } else if (prNameList[p].formId == "13") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += "<tr>";
-                                        tr += '<td><input type="text" class="noBorder"  value="回收处理阶段" style="width: 120px;" readonly="readonly"></td>';
-                                        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[m].flag + '"></td>';
-                                        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[m].userId + '"></td>';
-                                        tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[m].formId + '"></td>';
-                                        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[m].prId + '"></td>';
-                                        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[m].parentId + '"></td>';
-                                        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[m].prName + '"></td>';
-                                        tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[m].materialId + '"></td>';
-                                        tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[m].materialName + '"></td>';
-                                        tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '->排放与废气"></td>';
-                                        tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[m].materialUsage + '"></td>';
-                                        tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[m].unit + '"></td>';
-                                        tr += "</tr>";
-                                    }
-                                } else if (prNameList[p].formId == "14") {
-
-                                } else if (prNameList[p].formId == "15") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += "<tr>"
-                                        tr += '<td><input type="text" class="noBorder"  value="回收处理阶段" style="width: 120px;" readonly="readonly"></td>';
-                                        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + infoList[m].flag + '"></td>';
-                                        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + infoList[m].userId + '"></td>';
-                                        tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + infoList[m].formId + '"></td>';
-                                        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + infoList[m].prId + '"></td>';
-                                        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + infoList[m].parentId + '"></td>';
-                                        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + infoList[m].prName + '"></td>';
-                                        tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + infoList[m].materialId + '"></td>';
-                                        tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + infoList[m].materialName + '"></td>';
-                                        tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialList[j].materialName + '->包装过程"></td>';
-                                        tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + infoList[m].materialUsage + '"></td>';
-                                        tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + infoList[m].unit + '"></td>';
-                                        tr += "</tr>";
-                                    }
-                                } else {
-                                    layer.alert("生命周期阶段数据分类有问题，请联系管理员");
-                                }
+                    /*
+                   * 差异值
+                   * */
+                    tr += "<tr>";
+                    tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.productName + '</td>';
+                    tr += '<td style="width: 120px;">对比结果</td>';
+                    tr += '<td style="width: 120px;">/</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.materialStage_diff + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.productStage_diff + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.sellStage_diff + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.useStage_diff + '</td>';
+                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_diff + '</td>';
+                    tr += "</tr>";
+                    var materialPropertyStage = listInfo.materialPropertyStage;
+                    for (var j = 0; j < materialPropertyStage.length; j++) {
+                        for (var m in materialPropertyStage[j]) {
+                            if (m.split("_")[1] == "old") {
+                                tr += "<tr>"
+                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                                tr += '<td style="width: 120px;">原料阶段|' + m.split("_")[0] + '</td>';
+                                tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                                tr += '<td style="width: 120px;">' + materialPropertyStage[j][m] + '</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += "</tr>";
+                                break;
                             }
                         }
-                    } else {
-                        layer.alert("生命周期阶段数据有问题，请联系管理员");
+                        for (var m in materialPropertyStage[j]) {
+                            if (m.split("_")[1] == "new") {
+                                tr += "<tr>"
+                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                                tr += '<td style="width: 120px;">原料阶段|' + m.split("_")[0] + '</td>';
+                                tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                                tr += '<td style="width: 120px;">' + materialPropertyStage[j][m] + '</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += "</tr>";
+                                break;
+                            }
+                        }
+                        for (var m in materialPropertyStage[j]) {
+                            if (m.split("_")[1] == "diff") {
+                                tr += "<tr>"
+                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                                tr += '<td style="width: 120px;">原料阶段|' + m.split("_")[0] + '</td>';
+                                tr += '<td style="width: 120px;">对比结果</td>';
+                                tr += '<td style="width: 120px;">' + materialPropertyStage[j][m] + '</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += "</tr>";
+                                break;
+                            }
+                        }
                     }
-
-
+                    var recoveryPropertyStage = listInfo.recoveryPropertyStage;
+                    for (var j = 0; j < recoveryPropertyStage.length; j++) {
+                        for (var m in materialPropertyStage[j]) {
+                            if (m.split("_")[1] == "old") {
+                                tr += "<tr>"
+                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                                tr += '<td style="width: 120px;">回收阶段|' + m.split("_")[0] + '</td>';
+                                tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                                tr += '<td style="width: 120px;">' + recoveryPropertyStage[j][m] + '</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += "</tr>";
+                                break;
+                            }
+                        }
+                        for (var m in materialPropertyStage[j]) {
+                            if (m.split("_")[1] == "new") {
+                                tr += "<tr>"
+                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                                tr += '<td style="width: 120px;">回收阶段|' + m.split("_")[0] + '</td>';
+                                tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                                tr += '<td style="width: 120px;">' + recoveryPropertyStage[j][m] + '</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += "</tr>";
+                                break;
+                            }
+                        }
+                        for (var m in materialPropertyStage[j]) {
+                            if (m.split("_")[1] == "diff") {
+                                tr += "<tr>"
+                                tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
+                                tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+                                tr += '<td style="width: 120px;">回收阶段|' + m.split("_")[0] + '</td>';
+                                tr += '<td style="width: 120px;">对比结果</td>';
+                                tr += '<td style="width: 120px;">' + recoveryPropertyStage[j][m] + '</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += '<td style="width: 120px;">/</td>';
+                                tr += "</tr>";
+                                break;
+                            }
+                        }
+                    }
                 }
-                $('#designTable').html(tr);
+                tr += "</table>";
+                $('#resultTable').html(tr);
+                $('#dresult').mergeCell({
+                    cols: [0,1,2]
+                });
             } else {
                 layer.alert(result.msg);
             }
@@ -357,6 +233,7 @@ var vm = new Vue({
         batchNos: [],
         prList: [],
         batchSelect: "-1",
+        batchSelect1: "-1",
         prSelect: "-1",
         materialId: '',
         material_name: '',
@@ -410,17 +287,14 @@ var vm = new Vue({
                     } else {
                         alert(r.msg);
                     }
-                }
-
-                ,
-            })
-            ;
+                },
+            });
 
         },
         reload: function (event) {
             vm.showList = true;
-            var page = $("#designTable").jqGrid('getGridParam', 'page');
-            $("#designTable").jqGrid('setGridParam', {
+            var page = $("#resultTable").jqGrid('getGridParam', 'page');
+            $("#resultTable").jqGrid('setGridParam', {
                 page: page,
                 postData: {
                     'batchNo': vm.batchSelect,
@@ -461,69 +335,9 @@ function LayuiSelect(selectId, url, unitId) {
                 var unit = data.value.split("_")[2];
                 $(unitId).val(unit);
             });
-            /*if (value != undefined && value != null && value != '') {
-                $(selectId).val(value);
-            }*/
             formSelect.render();
         });
 
     })
-
-};
-
-
-/**
- * 自动将form表单封装成json对象序列化form表单
- */
-$.fn.serializeObject = function () {
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function () {
-        if (o[this.name]) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
-};
-
-function saveData() {
-    layer.open({
-        type: 1,
-        skin: 'layui-layer-molv',
-        title: "保存修改数据",
-        area: ['550px', '400px'],
-        shadeClose: false,
-        content: jQuery("#batchNo"),
-        btn: ['保存', '取消'],
-        btn1: function (index) {
-            var data = {
-                "batchNo": vm.bNo,
-                "prUsage": vm.bUsage,
-                "prUnit": vm.bUnit,
-                "datas": JSON.stringify($('#designId').serializeObject())
-            };
-            $.ajax({
-                type: "POST",
-                url: baseURL + "sys/batch/saveData",
-                data: data,
-                dataType: "json",
-                success: function (result) {
-                    if (result.code == 0) {
-                        layer.close(index);
-                        layer.alert('保存成功', function (index) {
-                            location.reload();
-                        });
-                    } else {
-                        layer.alert(result.msg);
-                    }
-                }
-            });
-        }
-    });
 
 }

@@ -335,8 +335,6 @@ function queryData() {
                     } else {
                         layer.alert("生命周期阶段数据有问题，请联系管理员");
                     }
-
-
                 }
                 $('#designTable').html(tr);
             } else {
