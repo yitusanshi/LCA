@@ -269,7 +269,7 @@ public class CalculateController {
                             jsonObject = new JSONObject();
                             resultEntity.setMaterialPropertyStage(jsonObject);
                         }
-                        jsonObject.put(dictEntity.getSecondName(), json.getString(key));
+                        jsonObject.put(dictEntity.getSecondName(), toEngineering((BigDecimal)(json.get(key))));
                     }
                 }
             }
@@ -283,7 +283,7 @@ public class CalculateController {
                             jsonObject = new JSONObject();
                             resultEntity.setRecoveryPropertyStage(jsonObject);
                         }
-                        jsonObject.put(dictEntity.getSecondName(), json.getString(key));
+                        jsonObject.put(dictEntity.getSecondName(), toEngineering((BigDecimal)(json.get(key))));
                     }
                 }
             }

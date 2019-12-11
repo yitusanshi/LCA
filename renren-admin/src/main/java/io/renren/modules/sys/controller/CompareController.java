@@ -210,6 +210,8 @@ public class CompareController {
         List<ResultEntity> list2 = (List<ResultEntity>) r2.get("resultCal");
         JSONArray array1 = JSONArray.parseArray(JSON.toJSONString(list1));
         JSONArray array2 = JSONArray.parseArray(JSON.toJSONString(list2));
+        System.out.println(JSON.toJSONString(array1));
+        System.out.println(JSON.toJSONString(array2));
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < array1.size(); i++) {
             JSONObject jsonOld = array1.getJSONObject(i);
