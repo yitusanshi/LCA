@@ -71,8 +71,23 @@ public class UsageStatisticsEntity implements Serializable {
     private String formId;
 
 
+    /*
+     * 产品ID
+     * */
     private int prId;
 
+
+    /*
+     * 产品名称
+     * */
     private String prName;
+
+
+    /*
+     * 数据来源
+     *0，无任何来源； 1，上游数据； 2，背景数据， 3，暂无来源
+     * */
+
+    private int sourceFlag = 0;
 
 }

@@ -13,6 +13,7 @@ import io.renren.modules.prManage.service.ProductDefineService;
 import io.renren.modules.prManage.service.impl.ProductDefineServiceImpl;
 import io.renren.modules.sys.controller.AbstractController;
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,13 +146,28 @@ public class UsageStatisticsController extends AbstractController {
     public R updateMaterialById(@RequestParam Map<String, Object> params) {
         String id = (String) params.get("id");
         String materialUsage = (String) params.get("usage");
+        String sourceFlag = (String) params.get("sourceFlag");
         if (StringUtils.isBlank(materialUsage)) {
             return R.error("消耗量不能为空！");
         }
         Map<String, Object> map = new HashMap<>();
         map.put("id", Integer.valueOf(id));
         map.put("materialUsage", Double.valueOf(materialUsage));
+        map.put("sourceFlag", Integer.valueOf(sourceFlag));
         usageStatisticsService.updateMaterialById(map);
+        if (!"1".equals(sourceFlag)) {
+            System.out.println("开始去删除了" + Integer.valueOf(id));
+
+            UsageStatisticsEntity usageId = usageStatisticsService.getUsageStatisticsEntityById(Integer.valueOf(id));
+            Map<String, Object> delMap = new HashedMap();
+            delMap.put("version", usageId.getVersion());
+            delMap.put("prId", usageId.getPrId());
+            delMap.put("parentId", usageId.getMaterialId());
+            delMap.put("flag", usageId.getFlag());
+            delMap.put("userId", usageId.getUserId());
+            usageStatisticsService.deleteMaterialByMap(delMap);
+            System.out.println("删除结束");
+        }
         return R.ok();
     }
 
@@ -169,6 +185,12 @@ public class UsageStatisticsController extends AbstractController {
         String name = (String) params.get("secondName");
         String unit = (String) params.get("unit");
         String usage = (String) params.get("usage");
+
+        int sourceFlag = 0;
+        String sourceFlags = (String) params.get("sourceFlag");
+        if (StringUtils.isNotBlank(sourceFlags) || sourceFlags != null) {
+            sourceFlag = Integer.valueOf(sourceFlags);
+        }
         if (!StringUtils.isNotBlank(usage) || "".equals(usage) || usage == null) {
             return R.error("物质【 " + name + " 】使用量不能为空！");
         }
@@ -178,6 +200,7 @@ public class UsageStatisticsController extends AbstractController {
         String prName = defineEntity.getPrName();
 
         UsageStatisticsEntity usageStatistics = new UsageStatisticsEntity();
+        usageStatistics.setSourceFlag(sourceFlag);
         usageStatistics.setPrName(prName);
         usageStatistics.setPrId(prId);
         usageStatistics.setUserId(getUserId());
