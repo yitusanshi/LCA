@@ -11,20 +11,17 @@ $(function () {
             {label: '用户id', name: 'userId', index: 'userId', hidden: true},
             {label: '原料id', name: 'materialId', index: 'materialId', hidden: true},
             {label: 'id', name: 'id', index: 'id', hidden: true},
-            {label: '来源id', name: 'raw_material_source_update', index: 'raw_material_source_update', hidden: true},
+            {label: '来源id', name: 'sourceFlag', index: 'sourceFlag', hidden: true},
             {
                 label: '操作', name: 'perate', index: 'perate', formatter: function (value, rows, index) {
-                    /*   if (index.raw_material_source_update == 0) {
-                           return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
-                       } else if (index.raw_material_source_update == 1) {
-
-                       } else {
-                           return "暂无数据来源";
-                       }*/
-
-                    return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
-
-
+                    if (index.sourceFlag == 1) {
+                        return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
+                    } else if (index.sourceFlag == 2) {
+                        return "背景数据";
+                    } else if (index.sourceFlag == 3) {
+                        return "暂无数据来源";
+                    }
+                    /* return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";*/
                 }
             }
         ],
@@ -527,7 +524,8 @@ function addMaterial() {
                     "batchNo": vm.batchSelect,
                     'prId': vm.prSelect,
                     "materialId": "0",
-                    "usage": $("#raw_material_usage").val()
+                    "usage": $("#raw_material_usage").val(),
+                    "sourceFlag": $("#raw_material_source").val()
                 },
                 dataType: "json",
                 success: function (result) {
@@ -663,7 +661,8 @@ function updateMaterial(jqId) {
                 url: baseURL + "sys/usagestatistics/updateMaterialById",
                 data: {
                     "id": material.id,
-                    "usage": $("#raw_material_usage_update").val()
+                    "usage": $("#raw_material_usage_update").val(),
+                    "sourceFlag": $("#raw_material_source_update").val()
                 },
                 dataType: "json",
                 success: function (result) {

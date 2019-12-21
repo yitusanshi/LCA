@@ -38,4 +38,9 @@ public class TransportServiceImpl extends ServiceImpl<TransportDao, TransportEnt
         return transportDao.getMaterialByBatch(params);
     }
 
+    @Override
+    public void delTransportEntityByMap(Map<String, Object> map) {
+        transportDao.delTransportEntityByMap(map);
+    }
+
 }

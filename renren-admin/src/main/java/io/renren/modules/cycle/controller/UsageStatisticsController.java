@@ -12,6 +12,7 @@ import io.renren.modules.prManage.entity.ProductDefineEntity;
 import io.renren.modules.prManage.service.ProductDefineService;
 import io.renren.modules.prManage.service.impl.ProductDefineServiceImpl;
 import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.service.TransportService;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +47,9 @@ public class UsageStatisticsController extends AbstractController {
 
     @Resource
     private ProductDefineServiceImpl defineService;
+
+    @Autowired
+    TransportService transportService;
 
     /**
      * 列表
@@ -166,6 +170,7 @@ public class UsageStatisticsController extends AbstractController {
             delMap.put("flag", usageId.getFlag());
             delMap.put("userId", usageId.getUserId());
             usageStatisticsService.deleteMaterialByMap(delMap);
+            transportService.delTransportEntityByMap(delMap);
             System.out.println("删除结束");
         }
         return R.ok();
