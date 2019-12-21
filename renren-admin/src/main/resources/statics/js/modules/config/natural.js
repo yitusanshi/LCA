@@ -12,7 +12,7 @@ $(function () {
             {label: '序号', name: 'excelOrder', index: 'excelOrder', width: '80px', hidden: true},
             {
                 label: '操作', name: 'operId', index: 'operId', width: '80px', formatter: function (value, rows, index) {
-                    return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-fa-edit'></i>修改</button>&nbsp;&nbsp;";
+                    return "<button class='btn btn-primary' onclick='updateBgFactorById(" + index.id + ",\"" + index.secondName + "\",\"" + index.name + "\",\"" + index.factor + "\",\"" + index.unit + "\");'><i class='fa fa-edit'></i>修改</button>&nbsp;&nbsp;";
                 }
             }
         ],
@@ -46,6 +46,46 @@ $(function () {
         }
     });
 });
+
+
+function updateBgFactorById(id, secondName, name, factor, unit) {
+
+    $("#bgSecondName").val(secondName);
+    $("#bgName").val(name);
+    $("#bgFactor").val(factor);
+    $("#bgUnit").val(unit);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "修改原材料/背景物质因子",
+        area: ['600px', '350px'],
+        shadeClose: false,
+        content: jQuery("#bgFactorUpdateById"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            var data = {
+                "id": id,
+                "factor": $("#bgFactor").val()
+            };
+            $.ajax({
+                type: "POST",
+                url: baseURL + "calculateFeature/update",
+                data: data,
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            location.reload();
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
+}
 
 
 function queryNaturalData() {
@@ -108,6 +148,9 @@ var vm = new Vue({
                     });
                 }
             });
+        },
+        updateBgFactorById: function () {
+
         },
         reload: function (event) {
             vm.showList = true;
