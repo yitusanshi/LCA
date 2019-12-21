@@ -1,10 +1,318 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>自然资源</title>
+    <title>背景数据配置</title>
     <#include "/header.html">
 </head>
 <body>
-自然资源
+<div id="rrapp" v-cloak>
+    <div v-show="mainList">
+        <div class="grid-btn">
+            <shiro.hasPermission name="calculateFeature:save">
+                <a class="btn btn-primary" onclick="queryNaturalData()"><i class="fa fa-search"></i>&nbsp;查询</a>
+            </shiro.hasPermission>
+            <shiro.hasPermission name="calculateFeature:save">
+                <a class="btn btn-primary" @click="addBgFactor"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            </shiro.hasPermission>
+
+            <div class="form-group col-sm-2">
+                <select id="selectNaId" class="form-control" v-model="selectNatural">
+                    <option value="-1" selected="selected">请选择原材料/背景物质</option>
+                    <option value="10">原材料种类</option>
+                    <option value="11">上游原料种类</option>
+                    <option value="12">资源能源种类</option>
+                    <option value="13">排放与废气种类</option>
+                    <option value="14">运输方式种类</option>
+                    <option value="15">包装材料种类</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" id="bgNameId" placeholder="背景物质/原材料名称" v-model="bgName">
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <table id="naturalTable"></table>
+    <div id="jqGridPager"></div>
+
+    <div id="designDiv" style="overflow: auto" class="table-responsive">
+        <form id="designId">
+            <table id="designTable" class="table table-bordered text-nowrap" data-striped="true"
+                   data-height="80"></table>
+        </form>
+    </div>
+
+
+    <div id="bgFactorId" style="display: none;">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 250px;">物质种类</label>
+                <div class="layui-input-inline" style="width: 350px;">
+                    <select id="selectBgId">
+                        <option value="10" selected="selected">原材料种类</option>
+                        <option value="11">上游原料种类</option>
+                        <option value="12">资源能源种类</option>
+                        <option value="13">排放与废气种类</option>
+                        <option value="14">运输方式种类</option>
+                        <option value="15">包装材料种类</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">物质名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="secondName" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="secondUnit" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">初级能源消耗(PED)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg1" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg1Unit" class="layui-input " value="MJ"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">非生物资源消耗(ADP elements)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg2" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg2Unit" class="layui-input " value="kg Sb eq.|ADPE"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">水资源消耗(WU)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg3" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg3Unit" class="layui-input " value="kg"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">全球变暖(不含生物炭)(GWP)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg4" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg4Unit" class="layui-input " value="kg CO2 eq.|GWP"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">臭氧层消耗(ODP)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg5" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg5Unit" class="layui-input " value="kg R11 eq.|ODP"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">酸化(AP)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg6" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg6Unit" class="layui-input " value="kg SO2 eq.|AP"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">可吸入颗粒物</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg7" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg7Unit" class="layui-input " value="kg PM2.5 eq."
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">光化学烟雾(POCP)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg8" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg8Unit" class="layui-input "
+                               value="kg Ethene eq.|POCP"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">光化学臭氧合成(POFP)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg9" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg9Unit" class="layui-input " value="kg NMVOC eq."
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">富营养化(EP)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg10" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg10Unit" class="layui-input "
+                               value="kg Phosphate eq.|EP"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:250px;">生态毒性</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg11" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg11Unit" class="layui-input " value="CTUe"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">人体毒性(HTP)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg12" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg12Unit" class="layui-input " value="kg DCB eq."
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">人体毒性-致癌</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg13" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg13Unit" class="layui-input " value="CTUh"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 250px;">人体毒性-非致癌</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondName" id="bg14" class="layui-input" placeholder="背景因子值(eg:0.00)"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">单位</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="secondUnit" id="bg14Unit" class="layui-input " value="CTUh"
+                               readonly="readonly">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script src="${request.contextPath}/statics/js/modules/config/natural.js?_${.now?long}"></script>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //各种基于事件的操作，下面会有进一步介绍
+    });
+</script>
+
 </body>
 </html>

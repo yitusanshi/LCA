@@ -17,5 +17,10 @@ public interface TransportService extends IService<TransportEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     List<TransportEntity> getMaterialByBatch(Map<String, Object> params);
+
+    void delTransportEntityByMap(Map<String, Object> map);
+
+
+
 }
 
