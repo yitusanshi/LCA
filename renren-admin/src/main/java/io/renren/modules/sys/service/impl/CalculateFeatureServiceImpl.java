@@ -1,6 +1,7 @@
 package io.renren.modules.sys.service.impl;
 
 import io.renren.modules.sys.entity.DictEntity;
+import io.renren.modules.sys.entity.FeatrueFactorEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,21 @@ public class CalculateFeatureServiceImpl extends ServiceImpl<CalculateFeatureDao
     @Resource
     private CalculateFeatureDao calculateFeatureDao;
     @Override
-    public List<CalculateFeatureEntity> queryPage(Map<String, Object> params) {
+    public List<CalculateFeatureEntity> queryPage2(Map<String, Object> params) {
+
         List<CalculateFeatureEntity> list = calculateFeatureDao.queryByIds((List<Integer>) params.get("secondIdList"));
         return list;
 
+    }
+
+    @Override
+    public PageUtils queryPage(Map<String, Object> params) {
+        IPage<CalculateFeatureEntity> page = this.page(
+                new Query<CalculateFeatureEntity>().getPage(params),
+                new QueryWrapper<CalculateFeatureEntity>().apply(" SELECT * FROM calculate_feature")
+        );
+
+        return new PageUtils(page);
     }
 
     @Override

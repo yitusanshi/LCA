@@ -48,7 +48,7 @@
             AND type_id = #{typeId}
         </if>
         <if test='materialName != null and materialName!=""'>
-            AND second_name = #{materialName}
+            AND second_name like CONCAT('%',#{materialName},'%')
         </if>
         GROUP BY second_id
     </select>

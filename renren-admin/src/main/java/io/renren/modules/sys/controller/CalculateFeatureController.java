@@ -59,9 +59,7 @@ public class CalculateFeatureController {
         newMap.put("secondIdList", new ArrayList<>(nameMap.keySet()));
         IPage<CalculateFeatureEntity> page = new Query<CalculateFeatureEntity>().getPage(newMap);
 
-
-
-        List<CalculateFeatureEntity> list1 = calculateFeatureService.queryPage(newMap);
+         List<CalculateFeatureEntity> list1 = calculateFeatureService.queryPage2(newMap);
         for (CalculateFeatureEntity calculateFeatureEntity : list1) {
             if (nameMap.containsKey(calculateFeatureEntity.getFeature11SecondId())) {
                 calculateFeatureEntity.setSecondName(nameMap.get(calculateFeatureEntity.getFeature11SecondId()));
