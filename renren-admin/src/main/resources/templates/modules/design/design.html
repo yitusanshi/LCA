@@ -3,6 +3,16 @@
 <head>
     <title>绿色设计</title>
     <#include "/header.html">
+    <style>
+        /*#designTable tr:nth-child(even) {*/
+        /*    background: #cdd6d5;*/
+        /*}*/
+
+        /*#designTable tr {*/
+        /*    background: #d0dfcc;*/
+        /*}*/
+
+    </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -31,10 +41,14 @@
         </div>
 
     </div>
-    <form id="designId">
-        <table id="designTable"></table>
-        <div id="jqGridPager"></div>
-    </form>
+    <br>
+    <br>
+    <div id="designDiv" style="overflow: auto" class="table-responsive">
+        <form id="designId">
+            <table id="designTable" class="table table-bordered text-nowrap" data-striped="true"
+                   data-height="80"></table>
+        </form>
+    </div>
     <div class="grid-btn">
         <a class="btn btn-primary" style="float: right" @click="saveData()">&nbsp;保存数据</a>
     </div>
@@ -64,7 +78,6 @@
             </div>
         </form>
     </div>
-
 </div>
 <script src="${request.contextPath}/statics/js/modules/design/design.js?_${.now?long}"></script>
 </body>

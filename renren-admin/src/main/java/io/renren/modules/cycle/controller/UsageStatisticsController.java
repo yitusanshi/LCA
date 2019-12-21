@@ -169,6 +169,10 @@ public class UsageStatisticsController extends AbstractController {
         String name = (String) params.get("secondName");
         String unit = (String) params.get("unit");
         String usage = (String) params.get("usage");
+        if (!StringUtils.isNotBlank(usage) || "".equals(usage) || usage == null) {
+            return R.error("物质【 " + name + " 】使用量不能为空！");
+        }
+
         int prId = Integer.valueOf((String) params.get("prId"));
         ProductDefineEntity defineEntity = defineService.getById(prId);
         String prName = defineEntity.getPrName();

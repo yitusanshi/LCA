@@ -31,8 +31,39 @@
         </div>
 
     </div>
-    <table id="menuMaterialTable" class="layui-table"></table>
-    <div id="jqGridPager"></div>
+    <br>
+    <br>
+    <div id="resultId" style="overflow: auto">
+        <table id="menuMaterialTable" class="table table-bordered text-nowrap" data-striped="true" data-height="80">
+        </table>
+    </div>
+    <!--<table id="menuMaterialTable" class="layui-table"></table>
+    <div id="jqGridPager"></div>-->
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    原料阶段计算结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="showId" style="overflow: auto">
+                    <table id="showTable" class="table table-bordered text-nowrap" data-striped="true"
+                           data-height="80">
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 <script src="${request.contextPath}/statics/js/modules/result/check.js?_${.now?long}"></script>
 </body>

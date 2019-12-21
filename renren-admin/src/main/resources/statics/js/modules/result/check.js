@@ -1,31 +1,14 @@
-$(function () {
-    pageInit();
-});
-
-function pageInit() {
-    $("#menuMaterialTable").jqGrid({
-        datatype: "json",
-        url: baseURL + "calculate/info",
-        colModel: [
-            {label: '影响类型', name: 'typeName', index: 'typeName', width: '120px'},
-            {label: '单位', name: 'unit', index: 'unit', width: '120px'},
-            {label: '产品名称', name: 'productName', index: 'productName', width: '80px'},
-            {label: '原料阶段', name: 'materialStage', index: 'materialStage', width: '80px'},
-            {label: '生产阶段', name: 'productStage', index: 'productStage', width: '80px'},
-            {label: '销售阶段', name: 'sellStage', index: 'sellStage', width: '80px'},
-            {label: '使用阶段', name: 'useStage', index: 'useStage', width: '80px'},
-            {label: '回收处理阶段', name: 'recoveryStage', index: 'recoveryStage', width: '80px'}
-        ],
-        postData: {
-            'batchNo': "",
-            "prId": ""
-        },
-        height: "25%",
-        gridComplete: function () {
-            //隐藏grid底部滚动条
-            $("#menuMaterialTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
-        }
-    });
+function resultShowTitle(materNames) {
+    var tr = '';
+    tr += ' <thead>';
+    tr += '<tr>';
+    tr += '<th rowspan="1" style="width: 150px;text-align: center;">影响类型</th>';
+    tr += '<th rowspan="1" style="width: 150px;text-align: center;">单位</th>';
+    for (var i = 0; i < materNames.length; i++) {
+        tr += '<th colspan="1" style="width: 150px;text-align: center;">' + materNames[i] + '</th>';
+    }
+    tr += '</tr></thead><tbody>';
+    return tr;
 }
 
 function queryResylt() {
@@ -40,44 +23,89 @@ function queryResylt() {
         success: function (result) {
             if (result.code == 0) {
                 var resultCal = result.resultCal;
+                if (resultCal.length < 0) {
+                    return;
+
+                }
                 resultCal.sort(function (a, b) {
                     return a.id - b.id;
                 })
                 var tr = "";
+                /*
+               * 原料阶段物质名称
+               *
+               * */
+                var materNames = [];
+                var materialNameList = resultCal[0].materialPropertyStage;
+                var i = 0;
+                for (var m in materialNameList) {
+                    materNames[i] = m;
+                    i++;
+                }
+                var showTable = '';
+                if (materNames.length > 0) {
+                    showTable += resultShowTitle(materNames);
+                }
+                tr += ' <thead>';
+                tr += '<tr>';
+                tr += '<th rowspan="1" style="width: 150px;text-align: center;vertical-align: middle!important;">产品名称</th>';
+                tr += '<th rowspan="1" style="width: 150px;text-align: center;vertical-align: middle!important;">影响类型</th>';
+                tr += '<th rowspan="1" style="width: 150px;text-align: center;vertical-align: middle!important;">单位</th>';
+                tr += '<th colspan="1" style="width: 150px;text-align: center;"><button class="btn btn-primary btn-xs"  data-toggle="modal" data-target="#myModal">原料阶段</button></th>';
+                tr += '<th colspan="1" style="width: 150px;text-align: center;">生产阶段</th>';
+                tr += '<th colspan="1" style="width: 150px;text-align: center;">销售阶段</th>';
+                tr += '<th colspan="1" style="width: 150px;text-align: center;">使用阶段</th>';
+                tr += '<th colspan="1" style="width: 150px;text-align: center;">回收处理阶段</th>';
+                tr += '</tr></thead><tbody>';
                 for (var i = 0; i < resultCal.length; i++) {
-                    tr += "<tr>"
-                    tr += "<td style='width: 120px;'>" + resultCal[i].typeName + "</td>";
-                    tr += "<td style='width: 120px;'>" + resultCal[i].unit + "</td>";
-                    tr += "<td style='width: 80px;'>" + resultCal[i].productName + "</td>";
+                    tr += "<tr>";
+                    tr += '<td style="width: 150px;text-align: center;">' + resultCal[i].productName + '</td>';
+                    tr += "<td style='width: 150px;'>" + resultCal[i].typeName + "</td>"
+                    tr += "<td style='width: 150px;'>" + resultCal[i].unit + "</td>";
                     if (resultCal[i].materialStage == "" || resultCal[i].materialStage == null) {
-                        tr += "<td style='width: 80px;'>0</td>";
+                        tr += "<td style='width: 150px;'>0</td>";
                     } else {
-                        tr += "<td style='width: 80px;'>" + resultCal[i].materialStage + "</td>";
+                        tr += "<td style='width: 150px;'>" + resultCal[i].materialStage + "</td>";
                     }
                     if (resultCal[i].productStage == "" || resultCal[i].productStage == null) {
-                        tr += "<td style='width: 80px;'>0</td>";
+                        tr += "<td style='width: 150px;'>0</td>";
                     } else {
-                        tr += "<td style='width: 80px;'>" + resultCal[i].productStage + "</td>";
+                        tr += "<td style='width: 150px;'>" + resultCal[i].productStage + "</td>";
                     }
 
                     if (resultCal[i].sellStage == "" || resultCal[i].sellStage == null) {
-                        tr += "<td style='width: 80px;'>0</td>";
+                        tr += "<td style='width: 150px;'>0</td>";
                     } else {
-                        tr += "<td style='width: 80px;'>" + resultCal[i].sellStage + "</td>";
+                        tr += "<td style='width: 150px;'>" + resultCal[i].sellStage + "</td>";
                     }
                     if (resultCal[i].useStage == "" || resultCal[i].useStage == null) {
-                        tr += "<td style='width: 80px;'>0</td>";
+                        tr += "<td style='width: 150px;'>0</td>";
                     } else {
-                        tr += "<td style='width: 80px;'>" + resultCal[i].useStage + "</td>";
+                        tr += "<td style='width: 150px;'>" + resultCal[i].useStage + "</td>";
                     }
                     if (resultCal[i].recoveryStage == "" || resultCal[i].recoveryStage == null) {
-                        tr += "<td style='width: 80px;'>0</td>";
+                        tr += "<td style='width: 150px;'>0</td>";
                     } else {
-                        tr += "<td style='width: 80px;'>" + resultCal[i].recoveryStage + "</td>";
+                        tr += "<td style='width: 150px;'>" + resultCal[i].recoveryStage + "</td>";
+                    }
+
+                    if (materNames.length > 0) {
+                        showTable += '<tr>';
+                        showTable += '<td style="width: 150px;">' + resultCal[i].typeName + '</td>';
+                        showTable += '<td style="width: 150px;">' + resultCal[i].unit + '</td>';
+                        for (var m = 0; m < materNames.length; m++) {
+                            showTable += '<td style="width: 150px;">' + resultCal[i].materialPropertyStage[materNames[m]] + '</td>';
+                        }
+                        showTable += '</tr>';
                     }
                 }
-                tr += "</tr>";
+                tr += "</tr></tbody>";
+                if (materNames.length > 0) {
+                    showTable += "</tbody>";
+                }
                 $('#menuMaterialTable').html(tr);
+                $('#showTable').html(showTable);
+
             } else {
                 layer.alert(result.msg);
             }

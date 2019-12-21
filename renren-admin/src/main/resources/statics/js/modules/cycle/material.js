@@ -11,9 +11,20 @@ $(function () {
             {label: '用户id', name: 'userId', index: 'userId', hidden: true},
             {label: '原料id', name: 'materialId', index: 'materialId', hidden: true},
             {label: 'id', name: 'id', index: 'id', hidden: true},
+            {label: '来源id', name: 'raw_material_source_update', index: 'raw_material_source_update', hidden: true},
             {
                 label: '操作', name: 'perate', index: 'perate', formatter: function (value, rows, index) {
+                    /*   if (index.raw_material_source_update == 0) {
+                           return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
+                       } else if (index.raw_material_source_update == 1) {
+
+                       } else {
+                           return "暂无数据来源";
+                       }*/
+
                     return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";
+
+
                 }
             }
         ],
@@ -191,6 +202,53 @@ $(function () {
 
     });
 
+
+    //包装过程
+    $("#packTable").jqGrid({
+        url: baseURL + 'sys/usagestatistics/listMaterial',
+        datatype: "local",
+        colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
+            {label: '批次号', name: 'version', index: 'version', width: '80px'},
+            {label: '包装材料', name: 'materialName', index: 'materialName', width: '120px'},
+            {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
+            {label: '单位', name: 'unit', index: 'unit', width: '80px'},
+            {label: '备注', name: 'desc', index: 'desc', width: '80px'},
+            {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
+        ],
+        postData: {
+            'batchNo': "",
+            'flag': 0,
+            'materialId': 0,
+            'typeId': 15
+        },
+        viewrecords: true,
+        height: "25%",
+        rowNum: 10,
+        rowList: [10, 30, 50],
+        rownumbers: true,
+        rownumWidth: 25,
+        multiselect: true,
+        pager: "#packGridPager",
+        caption: "包装过程",
+        jsonReader: {
+            root: "page.list",
+            page: "page.currPage",
+            total: "page.totalPage",
+            records: "page.totalCount"
+        },
+        prmNames: {
+            page: "page",
+            rows: "limit",
+            order: "order"
+        },
+        gridComplete: function () {
+            //隐藏grid底部滚动条
+            $("#packTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+        }
+
+    });
+
     //运输过程
     $("#transPortTable").jqGrid({
         url: baseURL + 'sys/transport/listTransport',
@@ -290,6 +348,20 @@ function showMaterial(userId, materialId, name) {
         }
     }).trigger("reloadGrid");
 
+    /*包装材料*/
+    var gaspage = $("#gasTable").jqGrid('getGridParam', 'page');
+    $("#packTable").jqGrid('setGridParam', {
+        datatype: 'json',
+        page: gaspage,
+        postData: {
+            'batchNo': vm.batchSelect,
+            'prId': vm.prSelect,
+            'flag': 0,
+            'materialId': materialId
+        }
+    }).trigger("reloadGrid");
+
+
     /*运输*/
     var transpage = $("#transPortTable").jqGrid('getGridParam', 'page');
     $("#transPortTable").jqGrid('setGridParam', {
@@ -319,10 +391,14 @@ function addConsume(typeId) {
         vm.add_title_name = "资源能源名称";
         vm.useage_name = "消耗量";
 
-    } else {
+    } else if (typeId == '13') {
         titles = '添加排放信息';
         vm.add_title_name = "排放名称";
         vm.useage_name = "排放量";
+    } else {
+        titles = '添加包装信息';
+        vm.add_title_name = "包装材料";
+        vm.useage_name = "消耗量";
     }
     LayuiSelect("#consume_id", baseURL + "sys/lcadict/query/" + typeId, "#unit_id");
     layer.open({
@@ -522,6 +598,8 @@ function delConsume(typeId) {
         tableId = "#reseTable"
     } else if (typeId == "13") {
         tableId = "#gasTable";
+    } else if (typeId == "15") {
+        tableId = "#packTable";
     } else {
         tableId = "#transPortTable";
         url = baseURL + "sys/transport/delete";
@@ -634,7 +712,9 @@ var vm = new Vue({
     },
     methods: {
         reloads: function () {
-            location.reload();
+            vm.mainList = true;
+            vm.showUsage = false;
+            /*vm.reload();*/
         },
         addBatchNo: function () {
             layer.open({

@@ -1,11 +1,11 @@
-$(function () {
+/*$(function () {
     pageInit();
-});
+});*/
 
-function pageInit() {
+/*function pageInit() {
     $("#designTable").jqGrid({
         datatype: "json",
-       /* url: baseURL + "compare/info",*/
+       /!* url: baseURL + "compare/info",*!/
         colModel: [
             {label: '阶段名称', name: 'flagName', index: 'flagName', width: '80px'},
             {label: '阶段标识', name: 'flag', index: 'flag', width: '80px', hidden: true},
@@ -25,13 +25,13 @@ function pageInit() {
             "prId": "0"
         },
         height: "25%"
-        /*,
+        /!*,
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#designTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
-        }*/
+        }*!/
     });
-}
+}*/
 
 
 function queryData() {
@@ -47,6 +47,23 @@ function queryData() {
             if (result.code == 0) {
                 var info = result.info;
                 var tr = '';
+                tr += '<thead>';
+                tr += '<tr>';
+                tr += '<th style="width: 120px;text-align: center;">产品名称</th>';
+                tr += '<th style="width: 90px;text-align: center;">阶段名称</th>';
+                tr += '<th style="width: 120px;text-align: center;display: none;">阶段标识</th>';
+                tr += '<th style="width: 120px;text-align: center;display: none;">用户ID</th>';
+                tr += '<th style="width: 120px;text-align: center;display: none;">来源ID</th>';
+                tr += '<th style="width: 120px;text-align: center;display: none;">产品ID</th>';
+                tr += '<th style="width: 120px;text-align: center;display: none;">父类ID</th>';
+                tr += '<th style="width: 200px;text-align: center;">所属过程</th>';
+                tr += '<th style="width: 120px;text-align: center;display: none;">物质ID</th>';
+                tr += '<th style="width: 220px;text-align: center;">物质名称</th>';
+                tr += '<th style="width: 120px;text-align: center;">使用量/消耗量/排放量</th>';
+                tr += '<th style="width: 120px;text-align: center;">单位</th>';
+                tr += '</tr></thead><tbody>';
+
+
                 for (var i = 0; i < info.length; i++) {
                     var flag = info[i].flag;
                     var materialList = info[i].materialList;
@@ -155,6 +172,7 @@ function queryData() {
                         layer.alert("生命周期阶段数据有问题，请联系管理员");
                     }
                 }
+                tr += '</tbody>';
                 $('#designTable').html(tr);
             } else {
                 layer.alert(result.msg);
@@ -166,16 +184,16 @@ function queryData() {
 function trHtml(stageName, objInfo, materialNames) {
     var tr = "";
     tr += "<tr>"
-    tr += '<td><input type="text" class="noBorder"  value="' + stageName + '" style="width: 120px;" readonly="readonly"></td>';
+    tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + objInfo.prName + '"></td>';
+    tr += '<td><input type="text" class="noBorder"  value="' + stageName + '" style="width: 90px;" readonly="readonly"></td>';
     tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + objInfo.flag + '"></td>';
     tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + objInfo.userId + '"></td>';
     tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + objInfo.formId + '"></td>';
     tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + objInfo.prId + '"></td>';
     tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + objInfo.parentId + '"></td>';
-    tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + objInfo.prName + '"></td>';
-    tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialNames + '"></td>';
+    tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 200px;" readonly="readonly" value="' + materialNames + '"></td>';
     tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + objInfo.materialId + '"></td>';
-    tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + objInfo.materialName + '"></td>';
+    tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 220px;" readonly="readonly" value="' + objInfo.materialName + '"></td>';
     tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + objInfo.materialUsage + '"></td>';
     tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + objInfo.unit + '"></td>';
     tr += "</tr>"
@@ -362,3 +380,30 @@ function saveData() {
     });
 
 }
+
+/*function mergeCells(data, fieldName, colspan, target) {
+    //声明一个map计算相同属性值在data对象出现的次数和
+    var sortMap = {};
+    for (var i = 0; i < data.length; i++) {
+        for (var prop in data[i]) {
+            if (prop == fieldName) {
+                var key = data[i][prop]
+                if (sortMap.hasOwnProperty(key)) {
+                    sortMap[key] = sortMap[key] * 1 + 1;
+                } else {
+                    sortMap[key] = 1;
+                }
+                break;
+            }
+        }
+    }
+    for (var prop in sortMap) {
+        console.log(prop, sortMap[prop])
+    }
+    var index = 0;
+    for (var prop in sortMap) {
+        var count = sortMap[prop] * 1;
+        $(target).bootstrapTable('mergeCells', {index: index, field: fieldName, colspan: colspan, rowspan: count});
+        index += count;
+    }
+}*/

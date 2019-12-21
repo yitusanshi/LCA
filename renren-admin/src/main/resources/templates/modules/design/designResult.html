@@ -38,18 +38,37 @@
             </div>
             <br>
             <br>
-            <div id="designId" style="overflow: scroll;">
+            <div id="designId" style="overflow: auto">
                 <table id="resultTable" class="table table-bordered text-nowrap" data-striped="true" data-height="80">
-                   <!-- <thead>
-
-                    </thead>
-                    <tbody id="resultBody">
-
-                    </tbody>-->
                 </table>
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    原料阶段对比结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="showId" style="overflow: auto">
+                    <table id="showTable" class="table table-bordered text-nowrap" data-striped="true"
+                           data-height="80">
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 <script src="${request.contextPath}/statics/js/modules/design/designResult.js?_${.now?long}"></script>
 </body>

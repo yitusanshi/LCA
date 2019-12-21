@@ -6,61 +6,29 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div v-show="mainList">
-        <div class="grid-btn">
-            <div class="form-group col-sm-2">
-                <select id="selectPr" class="form-control" v-model="prSelect"
-                        @change="selectPrId($event)">
-                    <option value="-1" selected="selected">请选择产品</option>
-                    <option v-for="item in prList" :value="item.id">
-                        {{item.prName}}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group col-sm-2">
-                <select id="select" class="form-control" v-model="batchSelect"
-                        @change="selectBatchAndUserId($event)">
-                    <option value="-1" selected="selected">请选择批次号</option>
-                    <option v-for="item in batchNos" :value="item.batchNo">
-                        {{item.batchNo}}
-                    </option>
-                </select>
-            </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <a class="btn btn-primary" @click="addMaterial()"><i class="fa fa-plus"></i>&nbsp;新增原辅料</a>
-            <a class="btn btn-primary" @click="updateMaterial('menuMaterialTable')"><i
-                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="delMaterial('menuMaterialTable')"><i
-                    class="fa fa-trash-o"></i>&nbsp;删除</a>
-        </div>
-        <table id="menuMaterialTable"></table>
-        <div id="jqGridPager"></div>
-
-    </div>
-
     <div v-show="showUsage" class="panel panel-default">
-        <div class="grid-btn">
-            <div class="form-group">
-                <label class="btn form-control">{{usage_title}}</label>
-                <button class="btn btn-primary" style="float:right" @click="reloads"><i
-                        class="fa fa-mail-reply"></i>&nbsp;返回
-                </button>
-            </div>
-
+        <div class="form-group col-sm-2">
+            <select id="selectPr" class="form-control" v-model="prSelect"
+                    @change="selectPrId($event)">
+                <option value="-1" selected="selected">请选择产品</option>
+                <option v-for="item in prList" :value="item.id">
+                    {{item.prName}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-sm-2">
+            <select id="select" class="form-control" v-model="batchSelect"
+                    @change="reloadPro()">
+                <option value="-1" selected="selected">请选择批次号</option>
+                <option v-for="item in batchNos" :value="item.batchNo">
+                    {{item.batchNo}}
+                </option>
+            </select>
         </div>
         <br>
         <br>
-
-        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
-            <a class="btn btn-primary" @click="addConsume('11')"><i class="fa fa-plus"></i>&nbsp;添加上游原辅料消耗</a>
-            <a class="btn btn-primary" @click="delConsume('11')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-        </div>
-        <table id="rawMaterialTable" width="95%"></table>
-        <div id="rawGridPager"></div>
-
+        <br>
+        <br>
         <!-- 资源能源消耗-->
         <!-- <div class="panel-heading">资源能源消耗</div>-->
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
@@ -94,89 +62,14 @@
                 <div class="form-group">
                     <div class="col-sm-2 control-label">{{useage_name}}</div>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="usage_id" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">单位</div>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly id="unit_id" placeholder="单位"/>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!--新增原材料使用量-->
-    <div id="raw_material_id" style="display: none;">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">数据来源</div>
-                    <div class="col-sm-10">
-                        <select name="modules" id="raw_material_source" class="form-control">
-                            <option value="0" selected>上游数据</option>
-                            <option value="1">背景数据</option>
-                            <option value="2">暂无数据来源</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">原材料名称</div>
-                    <div class="col-sm-10 layui-form">
-                        <select name="modules" id="raw_material_name" class="form-control" lay-verify="required"
-                                lay-filter="myselect" lay-search></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">原材料数量</div>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="raw_material_usage"
+                        <input type="text" class="form-control" id="usage_id"
                                onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-2 control-label">单位</div>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly id="raw_material_unit" placeholder="单位"/>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!--更新原材料使用量-->
-    <div id="raw_material_id_update" style="display: none;">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">数据来源</div>
-                    <div class="col-sm-10">
-                        <select name="modules" id="raw_material_source_update" class="form-control">
-                            <option value="0" selected>上游数据</option>
-                            <option value="1">背景数据</option>
-                            <option value="2">暂无数据来源</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">原材料名称</div>
-                    <div class="col-sm-10 layui-form">
-                        <input type="text" class="form-control" readonly id="raw_material_name_update"
-                               placeholder="原材料名称"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">原材料数量</div>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="raw_material_usage_update" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">单位</div>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly id="raw_material_unit_update"
-                               placeholder="单位"/>
+                        <input type="text" class="form-control" readonly id="unit_id" placeholder="单位"/>
                     </div>
                 </div>
             </div>

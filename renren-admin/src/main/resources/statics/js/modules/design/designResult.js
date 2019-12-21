@@ -1,37 +1,3 @@
-/*$(function () {
-    pageInit();
-});*/
-
-function pageInit() {
-    $("#resultTable").jqGrid({
-        datatype: "json",
-        url: baseURL + "compare/result",
-        colModel: [
-            {label: '影响类型', name: 'typeName', index: 'typeName', width: '120px'},
-            {label: '单位', name: 'unit', index: 'unit', width: '120px'},
-            {label: '物质名称', name: 'productName', index: 'productName', width: '120px'},
-            {label: '方案名称', nanme: 'versionName', index: 'versionName', width: '120px'},
-            {label: '上游物质', name: 'diffName', index: 'diffName', width: '120px'},
-            {label: '原料阶段', name: 'materialStage', index: 'materialStage', width: '120px'},
-            {label: '生产阶段', name: 'productStage', index: 'productStage', width: '120px'},
-            {label: '销售阶段', name: 'sellStage', index: 'sellStage', width: '120px'},
-            {label: '使用阶段', name: 'useStage', index: 'useStage', width: '120px'},
-            {label: '回收处理阶段', name: 'recoveryStage', index: 'recoveryStage', width: '120px'}
-        ],
-        postData: {
-            'version1': "0",
-            'version2': "0",
-            "prId": "0"
-        },
-        height: "25%",
-        /* gridComplete: function () {
-             //隐藏grid底部滚动条
-             $("#resultTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
-         }*/
-    });
-}
-
-
 function queryResult() {
     $.ajax({
         type: "GET",
@@ -45,17 +11,41 @@ function queryResult() {
         success: function (result) {
             if (result.code == 0) {
                 var info = result.info;
+                if (info.length <= 0) {
+                    return;
+                }
                 info.sort(function (a, b) {
                     return a.id - b.id;
                 })
+
+                /*
+                * 原料阶段物质名称
+                *
+                * */
+                var materNames = [];
+                var materialNameList = info[0].materialPropertyStage;
+                var materLen = materialNameList.length;
+                for (var i = 0; i < materialNameList.length; i++) {
+                    for (var m in materialNameList[i]) {
+                        if (m.split("_")[1] == "old" || m.split("_")[1] == "new" || m.split("_")[1] == "diff") {
+                            materNames[i] = m.split("_")[0];
+                            break;
+                        }
+                    }
+                }
                 var versionOld = result.versionOld;
                 var versionNew = result.versionNew;
                 var tr = '';
+
+
+                var showTable = '';
+                showTable += resultShowTitle(versionOld, versionNew, materNames, materLen);
+
                 tr += ' <thead>';
                 tr += '<tr>';
-                tr += '<th rowspan="2" style="width: 120px;text-align: center;vertical-align: center;">影响类型</th>';
-                tr += '<th rowspan="2" style="width: 100px;text-align: center;vertical-align: center;">单位</th>';
-                tr += '<th colspan="3" style="width: 360px;text-align: center;">原料阶段</th>';
+                tr += '<th rowspan="2" style="width: 120px;text-align: center;vertical-align: middle!important;">影响类型</th>';
+                tr += '<th rowspan="2" style="width: 100px;text-align: center;vertical-align: middle!important;">单位</th>';
+                tr += '<th colspan="3" style="width: 360px;text-align: center;"><button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal">原料阶段</button></th>';
                 tr += '<th colspan="3" style="width: 360px;text-align: center;">生产阶段</th>';
                 tr += '<th colspan="3" style="width: 360px;text-align: center;">销售阶段</th>';
                 tr += '<th colspan="3" style="width: 360px;text-align: center;">使用阶段</th>';
@@ -79,7 +69,6 @@ function queryResult() {
                 tr += '<td style="width: 120px;">' + versionNew + '</td>';
                 tr += '<td style="width: 120px;">对比结果</td>';
                 tr += '</tr></thead><tbody>';
-                tr += "";
                 for (var i = 0; i < info.length; i++) {
                     var listInfo = info[i];
                     tr += "<tr>";
@@ -92,6 +81,9 @@ function queryResult() {
                     tr += '<td style="width: 120px;">' + listInfo.materialStage_new + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.materialStage_diff + '</td>';
 
+                    if (materLen > 0) {
+                        showTable += resultBody(listInfo.typeName, listInfo.unit, materNames, materLen, listInfo.materialPropertyStage);
+                    }
 
                     /*
                     * 生产阶段
@@ -118,17 +110,76 @@ function queryResult() {
                     * 回收处理阶段
                     * */
 
-                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_old + '</td>';
+                    tr += '<td  style="width: 120px;">' + listInfo.recoveryStage_old + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.recoveryStage_new + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.recoveryStage_diff + '</td>';
                     tr += "</tr></tbody>";
+
+                }
+                if (materLen > 0) {
+                    showTable += '</tbody>';
                 }
                 $('#resultTable').html(tr);
+                $('#showTable').html(showTable);
             } else {
                 layer.alert(result.msg);
             }
         }
     });
+}
+
+function resultShowTitle(versionOld, versionNew, materNames, materLen) {
+    var tr = '';
+    tr += ' <thead>';
+    tr += '<tr>';
+    tr += '<th rowspan="2" style="width: 120px;text-align: center;vertical-align: middle!important;">影响类型</th>';
+    tr += '<th rowspan="2" style="width: 100px;text-align: center;vertical-align: middle!important;">单位</th>';
+    for (var i = 0; i < materLen; i++) {
+        tr += '<th colspan="3" style="width: 360px;text-align: center;">' + materNames[i] + '</th>';
+    }
+    tr += '</tr>';
+    tr += '<tr>';
+    for (var i = 0; i < materLen; i++) {
+        tr += '<td style="width: 120px;">' + versionOld + '</td>';
+        tr += '<td style="width: 120px;">' + versionNew + '</td>';
+        tr += '<td style="width: 120px;">对比结果</td>';
+    }
+    tr += '</tr></thead>';
+    console.log("显示标题：" + versionNew + "===" + versionOld + "===" + materLen + "===" + materNames + "===" + tr);
+    return tr;
+}
+
+function resultBody(typeName, unit, materNames, materLen, mater) {
+    var tr = '';
+    tr += '<tr>';
+    tr += '<td style="width: 120px;">' + typeName + '</td>';
+    tr += '<td style="width: 120px;">' + unit + '</td>';
+    for (var i = 0; i < materLen; i++) {
+        tr += getDiff(materNames[i], materLen, mater[i]);
+    }
+    tr += '</tr>';
+    console.log("原料物质体" + typeName + "===" + unit + "===" + materNames + "===" + mater + "===" + materLen + "====" + tr);
+    return tr;
+
+}
+
+function getDiff(materNames, materLen, materStage) {
+    var tr = '';
+    for (var i = 0; i < materLen; i++) {
+        for (var m in materStage) {
+            if (m.split("_")[0] == materNames) {
+                tr += '<td style="width: 120px;">' + materStage[materNames + "_old"] + '</td>';
+                tr += '<td style="width: 120px;">' + materStage[materNames + "_new"] + '</td>';
+                tr += '<td style="width: 120px;">' + materStage[materNames + "_diff"] + '</td>';
+                break;
+            }
+        }
+        break;
+    }
+    console.log("不同版本" + materNames + "===" + materLen + "====" + materStage + "===" + tr);
+    return tr;
+
+
 }
 
 var vm = new Vue({
