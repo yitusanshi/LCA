@@ -32,7 +32,7 @@ public class CalculateFeatureServiceImpl extends ServiceImpl<CalculateFeatureDao
     @Override
     public List<CalculateFeatureEntity> queryPage(Map<String, Object> params) {
         IPage<CalculateFeatureEntity> page = new Query<CalculateFeatureEntity>().getPage(params);
-        List<CalculateFeatureEntity> list = calculateFeatureDao.queryByIds((Set<Integer>) params.get("secondIdList"));
+        List<CalculateFeatureEntity> list = calculateFeatureDao.queryByIds((List<Integer>) params.get("secondIdList"));
         return list;
 
     }
