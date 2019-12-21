@@ -3,7 +3,7 @@
 
 <mapper namespace="io.renren.modules.sys.dao.DictDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="io.renren.modules.sys.entity.DictEntity" id="dictMap">
         <result property="typeId" column="type_id"/>
         <result property="secondId" column="second_id"/>
@@ -16,7 +16,7 @@
     <select id="getQueryList" parameterType="java.util.HashMap" resultMap="dictMap">
         SELECT * FROM dict WHERE type_id = #{typeid} AND user_id = #{userid}
     </select>
-    <select id="getByseconId" parameterType="java.lang.Integer" resultMap = "dictMap">
+    <select id="getByseconId" parameterType="java.lang.Integer" resultMap="dictMap">
         SELECT * FROM dict WHERE second_id = #{0}
     </select>
     <select id="updateBysencondId" parameterType="io.renren.modules.sys.entity.DictEntity">
@@ -29,7 +29,8 @@
         </foreach>
     </delete>
 
-    <insert id="saveDict" parameterType="io.renren.modules.sys.entity.DictEntity" useGeneratedKeys="true" keyProperty="secondId">
+    <insert id="saveDict" parameterType="io.renren.modules.sys.entity.DictEntity" useGeneratedKeys="true"
+            keyProperty="secondId">
       INSERT INTO dict(type_id, second_name, `desc`, `user_id`, unit) VALUES (#{typeId}, #{secondName},
       #{desc}, #{userId}, #{unit})
     </insert>
@@ -37,17 +38,17 @@
     <select id="quertByTypeId" parameterType="java.lang.Integer" resultMap="dictMap">
         SELECT * FROM dict WHERE type_id = #{0}
     </select>
-    <select id="querySystemBoundry" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
+    <select id="querySystemBoundry" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         SELECT d.second_id FROM product_define p JOIN dict d on p.system_boundary = d.second_id AND p.id = #{0}
     </select>
 
     <select id="query" parameterType="java.util.Map" resultMap="dictMap">
         SELECT * FROM dict where 1 = 1
-        <if test="typeId != -1">
-          AND  type_id = #{typeId}
+        <if test='typeId gt -1'>
+            AND type_id = #{typeId}
         </if>
-        <if test="materialName != null">
-            AND  second_name = #{materialName}
+        <if test='materialName != null and materialName!=""'>
+            AND second_name = #{materialName}
         </if>
         GROUP BY second_id
     </select>

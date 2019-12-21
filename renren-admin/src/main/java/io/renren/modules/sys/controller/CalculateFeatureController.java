@@ -42,6 +42,7 @@ public class CalculateFeatureController {
 
         map.put("materialName", materialName);
 
+
         List<DictEntity> list = dictService.query(map);
         System.out.println("list大小" + list.size());
 
@@ -54,7 +55,7 @@ public class CalculateFeatureController {
         HashMap<String, Object> newMap = new HashMap<>();
         //newMap.put("page", params.get("page"));
 
-        newMap.put("secondIdList", new ArrayList<>(nameMap.entrySet()));
+        newMap.put("secondIdList", new ArrayList<>(nameMap.keySet()));
         List<CalculateFeatureEntity> list1 = calculateFeatureService.queryPage(newMap);
         for (CalculateFeatureEntity calculateFeatureEntity : list1) {
             if (nameMap.containsKey(calculateFeatureEntity.getFeature11SecondId())) {
