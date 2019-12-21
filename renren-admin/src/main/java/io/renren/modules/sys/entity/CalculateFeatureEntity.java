@@ -48,4 +48,6 @@ public class CalculateFeatureEntity implements Serializable {
 
 	private Integer excelOrder;
 
+	private String secondName;
+
 }

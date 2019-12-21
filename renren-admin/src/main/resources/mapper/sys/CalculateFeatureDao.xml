@@ -17,4 +17,16 @@
     <select id="getById" parameterType="java.lang.Integer" resultMap="calculateFeatureMap">
         SELECT * FROM calculate_feature WHERE feature_11_second_id = #{0}
     </select>
+    <select id="queryByIds" parameterType="java.util.List" resultMap="calculateFeatureMap">
+      SELECT * FROM calculate_feature WHERE feature_11_second_id in
+        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <update id="update">
+        UPDATE calculate_feature SET factor = #{factor} WHERE id = #{id}
+    </update>
+    
+    <insert id=""
 </mapper>

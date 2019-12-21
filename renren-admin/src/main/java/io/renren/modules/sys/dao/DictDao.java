@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字段映射表  id和name的映射
@@ -28,4 +29,6 @@ public interface DictDao extends BaseMapper<DictEntity> {
 
     List<DictEntity> quertByTypeId(int typeId);
     int querySystemBoundry(int prid);
+    List<DictEntity> query(Map<String, Object> map);
+    int maxSecondId();
 }

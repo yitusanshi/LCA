@@ -74,6 +74,23 @@ public class CalculateController {
         put("14", "人体毒性-非致癌");
     }};
 
+
+    public static Map<String, String> unitMap = new HashMap() {{
+        put("1", "MJ");
+        put("2", "kg Sb eq.|ADPE");
+        put("3", "kg");
+        put("4", "kg CO2 eq.|GWP");
+        put("5", "kg R11 eq.|ODP");
+        put("6", "kg SO2 eq.|AP");
+        put("7", "kg PM2.5 eq.");
+        put("8", "kg Ethene eq.|POCP");
+        put("9", "kg NMVOC eq.");
+        put("10", "kg Phosphate eq.|EP");
+        put("11", "CTUe");
+        put("12", "kg DCB eq.");
+        put("13", "CTUh");
+        put("14", "CTUh");
+    }};
     @RequestMapping("/info")
     public R calculate(@RequestParam("version") String version,
                        @RequestParam("prId") int prId) {
@@ -190,9 +207,11 @@ public class CalculateController {
             paraMap.put("form_id", 10);
             paraMap.put("user_id", userid);
             UsageStatisticsEntity usageStatisticsEntity = usageStatisticsService.getUsageByParm(paraMap);
+
+            System.out.println("---------------------" + usageStatisticsEntity.getMaterialName());
             divide(json, usageStatisticsEntity.getMaterialUsage());
 
-            if (i == 3){
+            if (i == 0){
                 //原料阶段
                 assemblePropertyList(0, json, list, dict);
             }

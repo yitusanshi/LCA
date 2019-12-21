@@ -16,8 +16,10 @@ import java.util.Map;
  */
 public interface CalculateFeatureService extends IService<CalculateFeatureEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+    List<CalculateFeatureEntity> queryPage(Map<String, Object> params);
 
     List<CalculateFeatureEntity> getById(int id);
+
+    void update(int id, double factor);
 }
 

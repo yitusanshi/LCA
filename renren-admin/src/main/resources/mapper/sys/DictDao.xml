@@ -40,4 +40,18 @@
     <select id="querySystemBoundry" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
         SELECT d.second_id FROM product_define p JOIN dict d on p.system_boundary = d.second_id AND p.id = #{0}
     </select>
+
+    <select id="query" parameterType="java.util.Map" resultMap="dictMap">
+        SELECT * FROM dict where 1 = 1
+        <if test="typeId != -1">
+          AND  type_id = #{typeId}
+        </if>
+        <if test="materialName != null">
+            AND  second_name = #{materialName}
+        </if>
+        GROUP BY second_id
+    </select>
+    <select id="maxSecondId">
+        SELECT MAX(second_id) FROM dict
+    </select>
 </mapper>
