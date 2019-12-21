@@ -51,7 +51,7 @@
         </if>
         GROUP BY second_id
     </select>
-    <select id="maxSecondId">
+    <select id="maxSecondId" resultType="java.lang.Integer">
         SELECT MAX(second_id) FROM dict
     </select>
 </mapper>

@@ -52,7 +52,8 @@ public class CalculateFeatureController {
 
         HashMap<String, Object> newMap = new HashMap<>();
         //newMap.put("page", params.get("page"));
-        newMap.put("secondIdList", nameMap.entrySet());
+
+        newMap.put("secondIdList", new ArrayList<>(nameMap.entrySet()));
         List<CalculateFeatureEntity> list1 = calculateFeatureService.queryPage(newMap);
         for (CalculateFeatureEntity calculateFeatureEntity : list1) {
             if (nameMap.containsKey(calculateFeatureEntity.getFeature11SecondId())) {
