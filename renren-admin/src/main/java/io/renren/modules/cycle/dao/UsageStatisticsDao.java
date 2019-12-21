@@ -24,4 +24,6 @@ public interface UsageStatisticsDao extends BaseMapper<UsageStatisticsEntity> {
     void deleteMaterial(Map<String, Object> map);
 
     void updateMaterialById(Map<String, Object> map);
+
+    UsageStatisticsEntity getUsageByParm(Map<String, Object> map);
 }

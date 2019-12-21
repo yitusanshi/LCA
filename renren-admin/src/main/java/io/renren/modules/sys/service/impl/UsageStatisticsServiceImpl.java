@@ -54,5 +54,10 @@ public class UsageStatisticsServiceImpl extends ServiceImpl<UsageStatisticsDao, 
         usageStatisticsDao.updateMaterialById(map);
     }
 
+    @Override
+    public UsageStatisticsEntity getUsageByParm(Map<String, Object> map) {
+        return usageStatisticsDao.getUsageByParm(map);
+    }
+
 
 }
