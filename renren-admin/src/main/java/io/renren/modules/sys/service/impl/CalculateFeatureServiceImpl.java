@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -30,7 +32,7 @@ public class CalculateFeatureServiceImpl extends ServiceImpl<CalculateFeatureDao
     @Override
     public List<CalculateFeatureEntity> queryPage(Map<String, Object> params) {
         IPage<CalculateFeatureEntity> page = new Query<CalculateFeatureEntity>().getPage(params);
-        List<CalculateFeatureEntity> list = calculateFeatureDao.queryByIds((List<Integer>) params.get("secondIdList"));
+        List<CalculateFeatureEntity> list = calculateFeatureDao.queryByIds((Set<Integer>) params.get("secondIdList"));
         return list;
 
     }

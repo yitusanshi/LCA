@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -17,7 +18,7 @@ import java.util.List;
 @Mapper
 public interface CalculateFeatureDao extends BaseMapper<CalculateFeatureEntity> {
     List<CalculateFeatureEntity> getById(int id);
-    List<CalculateFeatureEntity> queryByIds(List<Integer> ids);
+    List<CalculateFeatureEntity> queryByIds(Set<Integer> ids);
     void update(@Param("id") int id, @Param("factor") double factor);
     void saveList(List<CalculateFeatureEntity> list);
 }
