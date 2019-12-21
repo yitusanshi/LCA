@@ -17,7 +17,7 @@
     <select id="getById" parameterType="java.lang.Integer" resultMap="calculateFeatureMap">
         SELECT * FROM calculate_feature WHERE feature_11_second_id = #{0}
     </select>
-    <select id="queryByIds" parameterType="java.util.List" resultMap="calculateFeatureMap">
+    <select id="queryByIds" parameterType="java.util.List" resultType="io.renren.modules.sys.entity.CalculateFeatureEntity">
         SELECT * FROM calculate_feature WHERE 1=1 and feature_11_second_id in
         <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
             #{id}

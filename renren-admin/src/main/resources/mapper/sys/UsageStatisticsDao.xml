@@ -106,7 +106,7 @@
     </delete>
 
     <select id="getUsageByParm" parameterType="java.util.Map" resultMap="usageStatisticsMap">
-        SELECT * FROM usage_statistics WHERE material_id = #{material_id} AND version = #{version} AND flag = #{flag} and form_id = #{form_id} AND user_id = #{user_id}
+        SELECT * FROM usage_statistics WHERE material_id = #{material_id} AND version = #{version} AND flag = #{flag} and form_id = #{form_id} AND user_id = #{user_id} and pr_id = #{pr_id}
     </select>
 
 </mapper>

@@ -178,6 +178,10 @@ public class CalculateController {
             if (sourceFlag == 3){
                 continue;
             }
+            //上游数据
+            if (sourceFlag == 1){
+                continue;
+            }
             //背景数据
             if (sourceFlag == 2){
                 String key = usage.getMaterialId() + "";
@@ -208,10 +212,11 @@ public class CalculateController {
             paraMap.put("flag", i);
             paraMap.put("form_id", 10);
             paraMap.put("user_id", userid);
+            paraMap.put("pr_id", entry.getValue().get(0).getPrId());
             UsageStatisticsEntity usageStatisticsEntity = usageStatisticsService.getUsageByParm(paraMap);
 
             System.out.println("---------------------" + usageStatisticsEntity.getMaterialName());
-            divide(json, usageStatisticsEntity.getMaterialUsage());
+           // divide(json, usageStatisticsEntity.getMaterialUsage());
 
             if (i == 0){
                 //原料阶段
@@ -280,6 +285,10 @@ public class CalculateController {
      */
     public void mulity(List<UsageStatisticsEntity> usageStatisticsEntityList, JSONObject json) {
         for (UsageStatisticsEntity usageStatistics : usageStatisticsEntityList) {
+            //上游数据和无来源数据不参与
+            if (usageStatistics.getSourceFlag() == 1 || usageStatistics.getSourceFlag() == 3){
+                continue;
+            }
             BigDecimal usage = new BigDecimal(usageStatistics.getMaterialUsage() + "");
             int materialId = usageStatistics.getMaterialId();
             List<CalculateFeatureEntity> factors = calculateFeatureService.getById(materialId);
@@ -321,6 +330,7 @@ public class CalculateController {
                             jsonObject = new JSONObject();
                             resultEntity.setMaterialPropertyStage(jsonObject);
                         }
+                        System.out.println();
                         if (toEngineering((BigDecimal)(json.get(key))).equals("0E0")){
                             jsonObject.put(dictEntity.getSecondName(), "0");
                         }else {
@@ -362,7 +372,8 @@ public class CalculateController {
                             BigDecimal bigDecimal = new BigDecimal(resultEntity.getMaterialStage());
                             decimal =decimal.add(bigDecimal);
                         }
-                        if (toEngineering((BigDecimal) (decimal)).equals("0E0")){
+                        System.out.println("------" + toEngineering((BigDecimal) (decimal)));
+                        if (toEngineering(decimal).equals("0E0")){
                             resultEntity.setMaterialStage("0");
                         }else {
                             resultEntity.setMaterialStage(toEngineering((BigDecimal) (decimal)));
@@ -382,7 +393,7 @@ public class CalculateController {
                             System.out.println("decimal : " +decimal.toString() + "bigdecimal : "+ bigDecimal.toString());
                             decimal =decimal.add(bigDecimal);
                         }
-                        if (toEngineering((BigDecimal) (decimal)).equals("0E0")){
+                        if (toEngineering(decimal).equals("0E0")){
                             resultEntity.setProductStage("0");
                         }else {
                             resultEntity.setProductStage(toEngineering((BigDecimal) (decimal)));
@@ -400,7 +411,7 @@ public class CalculateController {
                             BigDecimal bigDecimal = new BigDecimal(resultEntity.getSellStage());
                             decimal =decimal.add(bigDecimal);
                         }
-                        if (toEngineering((BigDecimal) (decimal)).equals("0E0")){
+                        if (toEngineering(decimal).equals("0E0")){
                             resultEntity.setSellStage("0");
                         }else {
                             resultEntity.setSellStage(toEngineering((BigDecimal) (decimal)));
@@ -418,7 +429,7 @@ public class CalculateController {
                             BigDecimal bigDecimal = new BigDecimal(resultEntity.getUseStage());
                             decimal =decimal.add(bigDecimal);
                         }
-                        if (toEngineering((BigDecimal) (decimal)).equals("0E0")){
+                        if (toEngineering(decimal).equals("0E0")){
                             resultEntity.setUseStage("0");
                         }else {
                             resultEntity.setUseStage(toEngineering((BigDecimal) (decimal)));
@@ -437,7 +448,7 @@ public class CalculateController {
                             decimal =decimal.add(bigDecimal);
                         }
 
-                        if (toEngineering((BigDecimal) (decimal)).equals("0E0")){
+                        if (toEngineering(decimal).equals("0E0")){
                             resultEntity.setRecoveryStage("0");
                         }else {
                             resultEntity.setRecoveryStage(toEngineering((BigDecimal) (decimal)));
@@ -474,19 +485,37 @@ public class CalculateController {
     public void sumTotal(List<ResultEntity> list){
         for (ResultEntity resultEntity : list){
             BigDecimal bigDecimal = new BigDecimal("0");
-            bigDecimal.add(new BigDecimal(resultEntity.getMaterialStage()));
-            bigDecimal.add(new BigDecimal(resultEntity.getProductStage()));
-            bigDecimal.add(new BigDecimal(resultEntity.getSellStage()));
-            bigDecimal.add(new BigDecimal(resultEntity.getUseStage()));
-            bigDecimal.add(new BigDecimal(resultEntity.getRecoveryStage()));
-            JSONObject json1 = resultEntity.getMaterialPropertyStage();
-            for (String key : json1.keySet()){
-                bigDecimal.add((BigDecimal) json1.get(key));
+            if (resultEntity.getMaterialStage() != null){
+                bigDecimal = bigDecimal.add(new BigDecimal(resultEntity.getMaterialStage()));
             }
-            JSONObject json2 = resultEntity.getRecoveryPropertyStage();
-            for (String key : json2.keySet()){
-                bigDecimal.add((BigDecimal) json2.get(key));
+            if (resultEntity.getProductStage() != null){
+                bigDecimal = bigDecimal.add(new BigDecimal(resultEntity.getProductStage()));
             }
+            if (resultEntity.getSellStage() != null) {
+                bigDecimal = bigDecimal.add(new BigDecimal(resultEntity.getSellStage()));
+            }
+
+            if (resultEntity.getUseStage() != null) {
+                bigDecimal = bigDecimal.add(new BigDecimal(resultEntity.getUseStage()));
+            }
+
+            if (resultEntity.getRecoveryStage() != null) {
+                bigDecimal =  bigDecimal.add(new BigDecimal(resultEntity.getRecoveryStage()));
+            }
+
+            /*if (resultEntity.getMaterialPropertyStage() != null) {
+                JSONObject json1 = resultEntity.getMaterialPropertyStage();
+                for (String key : json1.keySet()){
+                    bigDecimal =  bigDecimal.add(new BigDecimal( (String) json1.get(key)));
+                }
+            }
+            if (resultEntity.getRecoveryPropertyStage() != null) {
+                JSONObject json2 = resultEntity.getRecoveryPropertyStage();
+                for (String key : json2.keySet()){
+                    bigDecimal = bigDecimal.add(new BigDecimal( (String) json2.get(key)));
+                }
+            }*/
+
             resultEntity.setTotal(bigDecimal.toString());
         }
     }
