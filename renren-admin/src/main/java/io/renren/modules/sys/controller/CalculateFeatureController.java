@@ -1,11 +1,13 @@
 package io.renren.modules.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 import io.renren.common.utils.R;
 import io.renren.modules.sys.entity.CalculateFeatureEntity;
 import io.renren.modules.sys.entity.DictEntity;
+import io.renren.modules.sys.service.CalculateFeatureService;
 import io.renren.modules.sys.service.DictService;
 import io.renren.modules.sys.service.impl.CalculateFeatureServiceImpl;
 import io.renren.modules.sys.service.impl.DictServiceImpl;
@@ -27,11 +29,11 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/calculateFeature")
-public class CalculateFeatureController extends AbstractController{
+public class CalculateFeatureController {
     @Resource
     private DictServiceImpl dictService;
     @Resource
-    private CalculateFeatureServiceImpl calculateFeatureService;
+    private CalculateFeatureService calculateFeatureService;
 
     @RequestMapping("/queryByParam")
     public R queryByTypeId(@RequestParam Map<String, Object> params) {
@@ -41,7 +43,6 @@ public class CalculateFeatureController extends AbstractController{
         map.put("typeId", Integer.valueOf(typeId));
 
         map.put("materialName", materialName);
-        map.put("page", params.get("page"));
 
 
         List<DictEntity> list = dictService.query(map);
@@ -52,25 +53,21 @@ public class CalculateFeatureController extends AbstractController{
             nameMap.put(dictEntity.getSecondId(), dictEntity.getSecondName());
         }
 
-
-        Map<String, Object> newMap = new HashMap<>();
-        //newMap.put("page", params.get("page"));
+        HashMap<String, Object> newMap = new HashMap<>();
+        newMap.put("page", params.get("page"));
 
         newMap.put("secondIdList", new ArrayList<>(nameMap.keySet()));
+        IPage<CalculateFeatureEntity> page = new Query<CalculateFeatureEntity>().getPage(newMap);
 
-        IPage<CalculateFeatureEntity> page = new Query<CalculateFeatureEntity>().getPage(map);
-        System.out.println("==4444444888888444444===");
+
+
         List<CalculateFeatureEntity> list1 = calculateFeatureService.queryPage(newMap);
-        System.out.println("==4444444899999444444===");
-
         for (CalculateFeatureEntity calculateFeatureEntity : list1) {
             if (nameMap.containsKey(calculateFeatureEntity.getFeature11SecondId())) {
                 calculateFeatureEntity.setSecondName(nameMap.get(calculateFeatureEntity.getFeature11SecondId()));
             }
         }
-        System.out.println("==444444444444444===");
         page.setRecords(list1);
-        System.out.println("==44444455555555554444444===");
         return R.ok().put("page", new PageUtils(page));
     }
 
