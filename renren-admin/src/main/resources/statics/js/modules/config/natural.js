@@ -9,7 +9,12 @@ $(function () {
             {label: '影响因素名称', name: 'name', index: 'name', width: '150px'},
             {label: '特征化值', name: 'factor', index: 'factor', width: '180px'},
             {label: '单位', name: 'unit', index: 'unit', width: '120px'},
-            {label: '序号', name: 'excelOrder', index: 'excelOrder', width: '80px', hidden: true}
+            {label: '序号', name: 'excelOrder', index: 'excelOrder', width: '80px', hidden: true},
+            {
+                label: '操作', name: 'operId', index: 'operId', width: '80px', formatter: function (value, rows, index) {
+                    return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-fa-edit'></i>修改</button>&nbsp;&nbsp;";
+                }
+            }
         ],
         postData: {
             'typeId': vm.selectNatural,

@@ -3,7 +3,7 @@
 
 <mapper namespace="io.renren.modules.sys.dao.CalculateFeatureDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="io.renren.modules.sys.entity.CalculateFeatureEntity" id="calculateFeatureMap">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
@@ -18,8 +18,8 @@
         SELECT * FROM calculate_feature WHERE feature_11_second_id = #{0}
     </select>
     <select id="queryByIds" parameterType="java.util.List" resultMap="calculateFeatureMap">
-      SELECT * FROM calculate_feature WHERE feature_11_second_id in
-        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+        SELECT * FROM calculate_feature WHERE 1=1 and feature_11_second_id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </select>
@@ -28,15 +28,15 @@
         UPDATE calculate_feature SET factor = #{factor} WHERE id = #{id}
     </update>
 
-    <insert id="insert" parameterType="java.util.List" >
-    insert into calculate_feature (`name`, feature_11_second_id,
-      factor, unit,
-      excel_order)
-    values
-    <foreach collection="list" item="item" index="index" separator=",">
-     ( #{item.name,jdbcType=VARCHAR}, #{item.feature11SecondId,jdbcType=INTEGER},
-      #{item.factor,jdbcType=DECIMAL}, #{item.unit,jdbcType=VARCHAR},
-      #{item.excelOrder,jdbcType=INTEGER})
-    </foreach>
-  </insert>
+    <insert id="saveList" parameterType="java.util.List">
+        insert into calculate_feature (`name`, feature_11_second_id,
+        factor, unit,
+        excel_order)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.name,jdbcType=VARCHAR}, #{item.feature11SecondId,jdbcType=INTEGER},
+            #{item.factor,jdbcType=DECIMAL}, #{item.unit,jdbcType=VARCHAR},
+            #{item.excelOrder,jdbcType=INTEGER})
+        </foreach>
+    </insert>
 </mapper>

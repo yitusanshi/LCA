@@ -43,6 +43,7 @@ public class CalculateFeatureController {
         map.put("materialName", materialName);
 
         List<DictEntity> list = dictService.query(map);
+        System.out.println("list大小" + list.size());
 
         Map<Integer, String> nameMap = new HashMap<>();
         for (DictEntity dictEntity : list) {
@@ -76,6 +77,9 @@ public class CalculateFeatureController {
         Integer typeid = Integer.valueOf(type);
         String secondName = (String) params.get("secondName");
         String unit = (String) params.get("unit");
+        if (StringUtils.isBlank(secondName) || StringUtils.isBlank(unit)) {
+            return R.error("物质名称或者单位不能为空");
+        }
         int maxid = dictService.maxSecondId() + 1;
         DictEntity dictEntity = new DictEntity();
         dictEntity.setTypeId(typeid);
@@ -88,7 +92,11 @@ public class CalculateFeatureController {
             CalculateFeatureEntity calculateFeatureEntity = new CalculateFeatureEntity();
             calculateFeatureEntity.setName(CalculateController.map.get(i + ""));
             calculateFeatureEntity.setFeature11SecondId(maxid);
-            calculateFeatureEntity.setFactor(new BigDecimal((String) params.get(i + "")));
+            if (StringUtils.isBlank((String) params.get(i + ""))) {
+                calculateFeatureEntity.setFactor(new BigDecimal(0));
+            } else {
+                calculateFeatureEntity.setFactor(new BigDecimal((String) params.get(i + "")));
+            }
             calculateFeatureEntity.setUnit(CalculateController.unitMap.get(i + ""));
             calculateFeatureEntity.setExcelOrder(i);
             list.add(calculateFeatureEntity);
