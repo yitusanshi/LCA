@@ -34,7 +34,7 @@ public class CalculateFeatureController {
     private CalculateFeatureServiceImpl calculateFeatureService;
 
     @RequestMapping("/queryByParam")
-    public R queryByTypeId(@RequestParam Map<String, Object> params){
+    public R queryByTypeId(@RequestParam Map<String, Object> params) {
         String typeId = (String) params.get("typeId");
         String materialName = (String) params.get("materialName");
         Map<String, Object> map = new HashMap<>();
@@ -45,7 +45,7 @@ public class CalculateFeatureController {
         List<DictEntity> list = dictService.query(map);
 
         Map<Integer, String> nameMap = new HashMap<>();
-        for (DictEntity dictEntity : list){
+        for (DictEntity dictEntity : list) {
             nameMap.put(dictEntity.getSecondId(), dictEntity.getSecondName());
         }
         IPage<CalculateFeatureEntity> page = new Query<CalculateFeatureEntity>().getPage(params);
@@ -54,8 +54,8 @@ public class CalculateFeatureController {
         //newMap.put("page", params.get("page"));
         newMap.put("secondIdList", nameMap.entrySet());
         List<CalculateFeatureEntity> list1 = calculateFeatureService.queryPage(newMap);
-        for (CalculateFeatureEntity calculateFeatureEntity : list1){
-            if (nameMap.containsKey(calculateFeatureEntity.getFeature11SecondId())){
+        for (CalculateFeatureEntity calculateFeatureEntity : list1) {
+            if (nameMap.containsKey(calculateFeatureEntity.getFeature11SecondId())) {
                 calculateFeatureEntity.setSecondName(nameMap.get(calculateFeatureEntity.getFeature11SecondId()));
             }
         }
@@ -64,13 +64,15 @@ public class CalculateFeatureController {
     }
 
     @RequestMapping("/update")
-    public R update(@RequestParam int id, @RequestParam String factor){
+    public R update(@RequestParam int id, @RequestParam String factor) {
         calculateFeatureService.update(id, Double.valueOf(factor));
         return R.ok();
     }
+
     @RequestMapping("/add")
-    public R add(@RequestParam Map<String, Object> params){
-        Integer typeid = (Integer)params.get("typeId");
+    public R add(@RequestParam Map<String, Object> params) {
+        String type = (String) params.get("typeId");
+        Integer typeid = Integer.valueOf(type);
         String secondName = (String) params.get("secondName");
         String unit = (String) params.get("unit");
         int maxid = dictService.maxSecondId() + 1;
@@ -81,23 +83,23 @@ public class CalculateFeatureController {
         dictEntity.setSecondId(maxid);
 
         List<CalculateFeatureEntity> list = new ArrayList<>();
-        for (int i = 1; i <= 14 ; i++) {
+        for (int i = 1; i <= 14; i++) {
             CalculateFeatureEntity calculateFeatureEntity = new CalculateFeatureEntity();
-            calculateFeatureEntity.setName(CalculateController.map.get(i+""));
+            calculateFeatureEntity.setName(CalculateController.map.get(i + ""));
             calculateFeatureEntity.setFeature11SecondId(maxid);
-            calculateFeatureEntity.setFactor(new BigDecimal((String)params.get(i + "")));
+            calculateFeatureEntity.setFactor(new BigDecimal((String) params.get(i + "")));
             calculateFeatureEntity.setUnit(CalculateController.unitMap.get(i + ""));
             calculateFeatureEntity.setExcelOrder(i);
             list.add(calculateFeatureEntity);
         }
         calculateFeatureService.saveList(list);
         //最后存入dict表
-        if (typeid == 12){
+        if (typeid == 12) {
             dictEntity.setTypeId(11);
             dictService.save(dictEntity);
             dictEntity.setTypeId(12);
             dictService.save(dictEntity);
-        }else {
+        } else {
             dictService.save(dictEntity);
         }
 
