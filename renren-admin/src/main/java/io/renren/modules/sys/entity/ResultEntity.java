@@ -19,12 +19,12 @@ public class ResultEntity {
     private String productName;
     private String materialStage;
     private JSONObject materialPropertyStage;
-    private JSONObject sellPropertyStage;
     private JSONObject recoveryPropertyStage;
     private String productStage;
     private String sellStage;
     private String useStage;
     private String recoveryStage;
+    private String total;
 
     @Override
     public String toString() {

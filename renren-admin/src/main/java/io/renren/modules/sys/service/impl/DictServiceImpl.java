@@ -64,4 +64,11 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
     public int querySystemBoundry(int prid){
         return dictDao.querySystemBoundry(prid);
     }
+
+    public List<DictEntity> query(Map<String, Object> map){
+        return dictDao.query(map);
+    }
+    public int maxSecondId(){
+        return dictDao.maxSecondId();
+    }
 }

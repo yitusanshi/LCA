@@ -1,8 +1,12 @@
 package io.renren.modules.sys.service.impl;
 
+import io.renren.modules.sys.entity.DictEntity;
+import io.renren.modules.sys.entity.SysUserEntity;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,18 +28,26 @@ public class CalculateFeatureServiceImpl extends ServiceImpl<CalculateFeatureDao
     @Resource
     private CalculateFeatureDao calculateFeatureDao;
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        IPage<CalculateFeatureEntity> page = this.page(
-                new Query<CalculateFeatureEntity>().getPage(params),
-                new QueryWrapper<CalculateFeatureEntity>()
-        );
+    public List<CalculateFeatureEntity> queryPage(Map<String, Object> params) {
+        IPage<CalculateFeatureEntity> page = new Query<CalculateFeatureEntity>().getPage(params);
+        List<CalculateFeatureEntity> list = calculateFeatureDao.queryByIds((List<Integer>) params.get("secondIdList"));
+        return list;
 
-        return new PageUtils(page);
     }
 
     @Override
     public List<CalculateFeatureEntity> getById(int id) {
         return calculateFeatureDao.getById(id);
+    }
+
+    @Override
+    public void update(int id, double factor) {
+        calculateFeatureDao.update(id, factor);
+    }
+
+    @Override
+    public void saveList(List<CalculateFeatureEntity> list) {
+        calculateFeatureDao.saveList(list);
     }
 
 }

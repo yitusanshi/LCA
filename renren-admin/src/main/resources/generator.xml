@@ -5,7 +5,7 @@
 <generatorConfiguration>
     <!-- 配置mysql 驱动jar包路径.用了绝对路径 -->
     <classPathEntry
-            location="D:\jar\mysql-connector-java-5.1.46\mysql-connector-java-5.1.46-bin.jar"/>
+            location="D:\Tomcat\apache-tomcat-8.5.37\webapps\haoxiangni_war\WEB-INF\lib\mysql-connector-java-5.0.8.jar"/>
    <!-- <classPathEntry
             location="D:\Git\spring2\lib\mysql-connector-java-5.1.30-bin.jar"/>-->
     <context id="mysql_tables" >
@@ -30,23 +30,23 @@
                   enableDeleteByExample="false" enableSelectByExample="false"
                   selectByExampleQueryId="false">
            </table>-->
-        <table tableName="factor_table">
+        <table tableName="calculate_feature">
             <!--<columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>-->
         </table>
-        <table tableName="featrue_factor">
-             <!--<columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>-->
+     <!--   <table tableName="featrue_factor">
+             &lt;!&ndash;<columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>&ndash;&gt;
         </table>
         <table tableName="life_cycle">
              <columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>
         </table>
         <table tableName="product_define">
-             <!--<columnOverride column="classify_desc" jdbcType="VARCHAR"> </columnOverride>-->
+             &lt;!&ndash;<columnOverride column="classify_desc" jdbcType="VARCHAR"> </columnOverride>&ndash;&gt;
         </table>
         <table tableName="transport">
-             <!--<columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>-->
+             &lt;!&ndash;<columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>&ndash;&gt;
         </table>
         <table tableName="usage_statistics">
             <columnOverride column="desc" jdbcType="VARCHAR"> </columnOverride>
-        </table>
+        </table>-->
     </context>
 </generatorConfiguration>

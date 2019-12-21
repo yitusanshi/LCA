@@ -27,6 +27,8 @@ public interface UsageStatisticsService extends IService<UsageStatisticsEntity> 
 
     void updateMaterialById(Map<String, Object> map);
 
+    UsageStatisticsEntity getUsageByParm(Map<String, Object> map);
+
     UsageStatisticsEntity getUsageStatisticsEntityById(int id);
 
 

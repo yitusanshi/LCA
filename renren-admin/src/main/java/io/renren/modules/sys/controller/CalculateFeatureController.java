@@ -1,0 +1,106 @@
+package io.renren.modules.sys.controller;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.renren.common.utils.PageUtils;
+import io.renren.common.utils.Query;
+import io.renren.common.utils.R;
+import io.renren.modules.sys.entity.CalculateFeatureEntity;
+import io.renren.modules.sys.entity.DictEntity;
+import io.renren.modules.sys.service.DictService;
+import io.renren.modules.sys.service.impl.CalculateFeatureServiceImpl;
+import io.renren.modules.sys.service.impl.DictServiceImpl;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @Author:wanglei1
+ * @Date: 2019/12/21 14:09
+ */
+@RestController
+@RequestMapping("/calculateFeature")
+public class CalculateFeatureController {
+    @Resource
+    private DictServiceImpl dictService;
+    @Resource
+    private CalculateFeatureServiceImpl calculateFeatureService;
+
+    @RequestMapping("/queryByParam")
+    public R queryByTypeId(@RequestParam Map<String, Object> params){
+        String typeId = (String) params.get("typeId");
+        String materialName = (String) params.get("materialName");
+        Map<String, Object> map = new HashMap<>();
+        map.put("typeId", Integer.valueOf(typeId));
+
+        map.put("materialName", materialName);
+
+        List<DictEntity> list = dictService.query(map);
+
+        Map<Integer, String> nameMap = new HashMap<>();
+        for (DictEntity dictEntity : list){
+            nameMap.put(dictEntity.getSecondId(), dictEntity.getSecondName());
+        }
+        IPage<CalculateFeatureEntity> page = new Query<CalculateFeatureEntity>().getPage(params);
+
+        HashMap<String, Object> newMap = new HashMap<>();
+        //newMap.put("page", params.get("page"));
+        newMap.put("secondIdList", nameMap.entrySet());
+        List<CalculateFeatureEntity> list1 = calculateFeatureService.queryPage(newMap);
+        for (CalculateFeatureEntity calculateFeatureEntity : list1){
+            if (nameMap.containsKey(calculateFeatureEntity.getFeature11SecondId())){
+                calculateFeatureEntity.setSecondName(nameMap.get(calculateFeatureEntity.getFeature11SecondId()));
+            }
+        }
+        page.setRecords(list1);
+        return R.ok().put("page", new PageUtils(page));
+    }
+
+    @RequestMapping("/update")
+    public R update(@RequestParam int id, @RequestParam String factor){
+        calculateFeatureService.update(id, Double.valueOf(factor));
+        return R.ok();
+    }
+    @RequestMapping("/add")
+    public R add(@RequestParam Map<String, Object> params){
+        Integer typeid = (Integer)params.get("typeId");
+        String secondName = (String) params.get("secondName");
+        String unit = (String) params.get("unit");
+        int maxid = dictService.maxSecondId() + 1;
+        DictEntity dictEntity = new DictEntity();
+        dictEntity.setTypeId(typeid);
+        dictEntity.setSecondName(secondName);
+        dictEntity.setUnit(unit);
+        dictEntity.setSecondId(maxid);
+
+        List<CalculateFeatureEntity> list = new ArrayList<>();
+        for (int i = 1; i <= 14 ; i++) {
+            CalculateFeatureEntity calculateFeatureEntity = new CalculateFeatureEntity();
+            calculateFeatureEntity.setName(CalculateController.map.get(i+""));
+            calculateFeatureEntity.setFeature11SecondId(maxid);
+            calculateFeatureEntity.setFactor(new BigDecimal((String)params.get(i + "")));
+            calculateFeatureEntity.setUnit(CalculateController.unitMap.get(i + ""));
+            calculateFeatureEntity.setExcelOrder(i);
+            list.add(calculateFeatureEntity);
+        }
+        calculateFeatureService.saveList(list);
+        //最后存入dict表
+        if (typeid == 12){
+            dictEntity.setTypeId(11);
+            dictService.save(dictEntity);
+            dictEntity.setTypeId(12);
+            dictService.save(dictEntity);
+        }else {
+            dictService.save(dictEntity);
+        }
+
+        return R.ok();
+    }
+}
