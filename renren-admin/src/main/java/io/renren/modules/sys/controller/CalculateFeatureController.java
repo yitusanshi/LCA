@@ -79,14 +79,7 @@ public class CalculateFeatureController {
         dictEntity.setSecondName(secondName);
         dictEntity.setUnit(unit);
         dictEntity.setSecondId(maxid);
-        if (typeid == 12){
-            dictEntity.setTypeId(11);
-            dictService.save(dictEntity);
-            dictEntity.setTypeId(12);
-            dictService.save(dictEntity);
-        }else {
-            dictService.save(dictEntity);
-        }
+
         List<CalculateFeatureEntity> list = new ArrayList<>();
         for (int i = 1; i <= 14 ; i++) {
             CalculateFeatureEntity calculateFeatureEntity = new CalculateFeatureEntity();
@@ -98,6 +91,16 @@ public class CalculateFeatureController {
             list.add(calculateFeatureEntity);
         }
         calculateFeatureService.saveList(list);
+        //最后存入dict表
+        if (typeid == 12){
+            dictEntity.setTypeId(11);
+            dictService.save(dictEntity);
+            dictEntity.setTypeId(12);
+            dictService.save(dictEntity);
+        }else {
+            dictService.save(dictEntity);
+        }
+
         return R.ok();
     }
 }

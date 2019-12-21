@@ -45,4 +45,9 @@ public class CalculateFeatureServiceImpl extends ServiceImpl<CalculateFeatureDao
         calculateFeatureDao.update(id, factor);
     }
 
+    @Override
+    public void saveList(List<CalculateFeatureEntity> list) {
+        calculateFeatureDao.saveList(list);
+    }
+
 }

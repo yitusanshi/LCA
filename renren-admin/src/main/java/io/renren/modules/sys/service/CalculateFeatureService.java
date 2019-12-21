@@ -21,5 +21,7 @@ public interface CalculateFeatureService extends IService<CalculateFeatureEntity
     List<CalculateFeatureEntity> getById(int id);
 
     void update(int id, double factor);
+
+    void saveList(List<CalculateFeatureEntity> list);
 }
 

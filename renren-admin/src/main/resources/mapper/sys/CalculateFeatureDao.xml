@@ -27,6 +27,16 @@
     <update id="update">
         UPDATE calculate_feature SET factor = #{factor} WHERE id = #{id}
     </update>
-    
-    <insert id=""
+
+    <insert id="insert" parameterType="java.util.List" >
+    insert into calculate_feature (`name`, feature_11_second_id,
+      factor, unit,
+      excel_order)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+     ( #{item.name,jdbcType=VARCHAR}, #{item.feature11SecondId,jdbcType=INTEGER},
+      #{item.factor,jdbcType=DECIMAL}, #{item.unit,jdbcType=VARCHAR},
+      #{item.excelOrder,jdbcType=INTEGER})
+    </foreach>
+  </insert>
 </mapper>

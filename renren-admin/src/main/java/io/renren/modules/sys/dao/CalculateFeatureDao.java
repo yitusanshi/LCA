@@ -19,4 +19,5 @@ public interface CalculateFeatureDao extends BaseMapper<CalculateFeatureEntity> 
     List<CalculateFeatureEntity> getById(int id);
     List<CalculateFeatureEntity> queryByIds(List<Integer> ids);
     void update(@Param("id") int id, @Param("factor") double factor);
+    void saveList(List<CalculateFeatureEntity> list);
 }
