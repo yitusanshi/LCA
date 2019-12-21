@@ -150,7 +150,7 @@ public class CalculateController {
         //根据不同的parentid进行归类
         for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
             int parentId = usage.getParentId();
-            int sourceFlag = 123;
+            int sourceFlag = usage.getSourceFlag();
             //无任何来源
             if (parentId == 0 && sourceFlag == 0) {
                 continue;
