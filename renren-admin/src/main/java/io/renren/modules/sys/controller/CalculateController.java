@@ -143,9 +143,9 @@ public class CalculateController {
         calculateTransport(list, version, prId, limit);
         double d = batchService.getusageByVersion(version, prId);
         BigDecimal bigDecimal = new BigDecimal(d);
-        for (ResultEntity resultEntity : list){
+        /*for (ResultEntity resultEntity : list){
             devide(resultEntity, bigDecimal);
-        }
+        }*/
         //计算合计
         sumTotal(list);
         return R.ok().put("resultCal", list);
