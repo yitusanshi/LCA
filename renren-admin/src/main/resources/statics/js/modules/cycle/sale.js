@@ -6,12 +6,13 @@ $(function () {
         colModel: [
             {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
-            {label: '运输物质名称', name: 'materialName', index: 'materialName', width: '120px',hidden: true},
+            {label: '运输物质名称', name: 'materialName', index: 'materialName', width: '120px', hidden: true},
             {label: '运输方式', name: 'materialName', index: 'materialName', width: '80px'},
             {label: '运输重量（单位:t）', name: 'weight', index: 'weight', width: '80px'},
             {label: '运输距离（单位:km）', name: 'distance', index: 'distance', width: '80px'},
             {label: '目的地', name: 'source', index: 'source', width: '80px'},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
             {label: '标识', name: 'flag', index: 'flag', width: '80px', hidden: true}
         ],
         postData: {
@@ -110,6 +111,60 @@ function addTransPort(typeId) {
                     }
                 }
             });
+        }
+    });
+
+
+}
+
+
+/*
+* 修改运输信息
+* */
+
+function updateTransPort(typeId) {
+    var rowKey = getSelectedRowNum(typeId);
+    $("#trans_port_name_update").val(rowKey.prName);
+    $("#trans_port_source_update").val(rowKey.source);
+    $("#trans_port_distance_update").val(rowKey.distance);
+    $("#trans_port_weight_update").val(rowKey.weight);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "修改运输信息",
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#trans_port_update"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/transport/updateTransById",
+                data: {
+                    "id": rowKey.id,
+                    "distance": $("#trans_port_distance_update").val(),
+                    "type": $("#trans_port_type_update").val(),
+                    "weight": $("#trans_port_weight_update").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#trans_port_name_update").val("");
+                            $("#trans_port_source_update").val("");
+                            $("#trans_port_distance_update").val("");
+                            $("#trans_port_weight_update").val("");
+                            layer.close(index);
+                            reloadPro();
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            })
+            ;
         }
     });
 

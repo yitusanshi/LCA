@@ -65,6 +65,11 @@ public class UsageStatisticsServiceImpl extends ServiceImpl<UsageStatisticsDao, 
     }
 
     @Override
+    public void updateOneById(Map<String, Object> map) {
+        usageStatisticsDao.updateOneById(map);
+    }
+
+    @Override
     public UsageStatisticsEntity getUsageByParm(Map<String, Object> map) {
         return usageStatisticsDao.getUsageByParm(map);
     }

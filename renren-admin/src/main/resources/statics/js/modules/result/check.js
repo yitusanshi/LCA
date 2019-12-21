@@ -11,6 +11,18 @@ function resultShowTitle(materNames) {
     return tr;
 }
 
+function converDate(data) {
+    var dataToStr = 0;
+    if (data == null || data == "" || data == "0E0" || data == "0.0000") {
+        dataToStr = 0;
+    } else {
+        dataToStr = data;
+    }
+    return dataToStr;
+
+}
+
+
 function queryResylt() {
     $.ajax({
         type: "POST",
@@ -51,6 +63,7 @@ function queryResylt() {
                 tr += '<th rowspan="1" style="width: 150px;text-align: center;vertical-align: middle!important;">产品名称</th>';
                 tr += '<th rowspan="1" style="width: 150px;text-align: center;vertical-align: middle!important;">影响类型</th>';
                 tr += '<th rowspan="1" style="width: 150px;text-align: center;vertical-align: middle!important;">单位</th>';
+                tr += '<th rowspan="1" style="width: 150px;text-align: center;vertical-align: middle!important;">产品LCA评价结果</th>';
                 tr += '<th colspan="1" style="width: 150px;text-align: center;"><button class="btn btn-primary btn-xs"  data-toggle="modal" data-target="#myModal">原料阶段</button></th>';
                 tr += '<th colspan="1" style="width: 150px;text-align: center;">生产阶段</th>';
                 tr += '<th colspan="1" style="width: 150px;text-align: center;">销售阶段</th>';
@@ -62,39 +75,19 @@ function queryResylt() {
                     tr += '<td style="width: 150px;text-align: center;">' + resultCal[i].productName + '</td>';
                     tr += "<td style='width: 150px;'>" + resultCal[i].typeName + "</td>"
                     tr += "<td style='width: 150px;'>" + resultCal[i].unit + "</td>";
-                    if (resultCal[i].materialStage == "" || resultCal[i].materialStage == null) {
-                        tr += "<td style='width: 150px;'>0</td>";
-                    } else {
-                        tr += "<td style='width: 150px;'>" + resultCal[i].materialStage + "</td>";
-                    }
-                    if (resultCal[i].productStage == "" || resultCal[i].productStage == null) {
-                        tr += "<td style='width: 150px;'>0</td>";
-                    } else {
-                        tr += "<td style='width: 150px;'>" + resultCal[i].productStage + "</td>";
-                    }
-
-                    if (resultCal[i].sellStage == "" || resultCal[i].sellStage == null) {
-                        tr += "<td style='width: 150px;'>0</td>";
-                    } else {
-                        tr += "<td style='width: 150px;'>" + resultCal[i].sellStage + "</td>";
-                    }
-                    if (resultCal[i].useStage == "" || resultCal[i].useStage == null) {
-                        tr += "<td style='width: 150px;'>0</td>";
-                    } else {
-                        tr += "<td style='width: 150px;'>" + resultCal[i].useStage + "</td>";
-                    }
-                    if (resultCal[i].recoveryStage == "" || resultCal[i].recoveryStage == null) {
-                        tr += "<td style='width: 150px;'>0</td>";
-                    } else {
-                        tr += "<td style='width: 150px;'>" + resultCal[i].recoveryStage + "</td>";
-                    }
+                    tr += "<td style='width: 150px;'>" + converDate(resultCal[i].total) + "</td>";
+                    tr += "<td style='width: 150px;'>" + converDate(resultCal[i].materialStage) + "</td>";
+                    tr += "<td style='width: 150px;'>" + converDate(resultCal[i].productStage) + "</td>";
+                    tr += "<td style='width: 150px;'>" + converDate(resultCal[i].sellStage) + "</td>";
+                    tr += "<td style='width: 150px;'>" + converDate(resultCal[i].useStage) + "</td>";
+                    tr += "<td style='width: 150px;'>" + converDate(resultCal[i].recoveryStage) + "</td>";
 
                     if (materNames.length > 0) {
                         showTable += '<tr>';
                         showTable += '<td style="width: 150px;">' + resultCal[i].typeName + '</td>';
                         showTable += '<td style="width: 150px;">' + resultCal[i].unit + '</td>';
                         for (var m = 0; m < materNames.length; m++) {
-                            showTable += '<td style="width: 150px;">' + resultCal[i].materialPropertyStage[materNames[m]] + '</td>';
+                            showTable += '<td style="width: 150px;">' + converDate(resultCal[i].materialPropertyStage[materNames[m]]) + '</td>';
                         }
                         showTable += '</tr>';
                     }
@@ -271,9 +264,6 @@ function LayuiSelect(selectId, url, unitId) {
                 var unit = data.value.split("_")[2];
                 $(unitId).val(unit);
             });
-            /*if (value != undefined && value != null && value != '') {
-                $(selectId).val(value);
-            }*/
             formSelect.render();
         });
 

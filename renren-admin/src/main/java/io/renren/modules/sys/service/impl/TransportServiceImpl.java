@@ -43,4 +43,10 @@ public class TransportServiceImpl extends ServiceImpl<TransportDao, TransportEnt
         transportDao.delTransportEntityByMap(map);
     }
 
+    @Override
+    public void updateTransById(Map<String, Object> map) {
+        transportDao.updateTransById(map);
+
+    }
+
 }

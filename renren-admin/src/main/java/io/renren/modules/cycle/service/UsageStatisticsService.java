@@ -33,5 +33,7 @@ public interface UsageStatisticsService extends IService<UsageStatisticsEntity> 
 
 
     void deleteMaterialByMap(Map<String, Object> map);
+
+    void updateOneById(Map<String, Object> map);
 }
 

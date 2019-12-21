@@ -77,9 +77,9 @@ function queryResult() {
                     /*
                     * 原料阶段
                     * */
-                    tr += '<td style="width: 120px;">' + listInfo.materialStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.materialStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.materialStage_diff + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.materialStage_old) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.materialStage_new) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.materialStage_diff) + '</td>';
 
                     if (materLen > 0) {
                         showTable += resultBody(listInfo.typeName, listInfo.unit, materNames, materLen, listInfo.materialPropertyStage);
@@ -88,31 +88,31 @@ function queryResult() {
                     /*
                     * 生产阶段
                     * */
-                    tr += '<td style="width: 120px;">' + listInfo.productStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.productStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.productStage_diff + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.productStage_old) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.productStage_new) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.productStage_diff) + '</td>';
 
                     /*
                     * 销售阶段
                     * */
-                    tr += '<td style="width: 120px;">' + listInfo.sellStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.sellStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.sellStage_diff + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.sellStage_old) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.sellStage_new) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.sellStage_diff) + '</td>';
 
                     /*
                     * 使用阶段
                     * */
-                    tr += '<td style="width: 120px;">' + listInfo.useStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.useStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.useStage_diff + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.useStage_old) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.useStage_new) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.useStage_diff) + '</td>';
 
                     /*
                     * 回收处理阶段
                     * */
 
-                    tr += '<td  style="width: 120px;">' + listInfo.recoveryStage_old + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_new + '</td>';
-                    tr += '<td style="width: 120px;">' + listInfo.recoveryStage_diff + '</td>';
+                    tr += '<td  style="width: 120px;">' + converDate(listInfo.recoveryStage_old) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.recoveryStage_new) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.recoveryStage_diff) + '</td>';
                     tr += "</tr></tbody>";
 
                 }
@@ -158,7 +158,6 @@ function resultBody(typeName, unit, materNames, materLen, mater) {
         tr += getDiff(materNames[i], materLen, mater[i]);
     }
     tr += '</tr>';
-    console.log("原料物质体" + typeName + "===" + unit + "===" + materNames + "===" + mater + "===" + materLen + "====" + tr);
     return tr;
 
 }
@@ -168,17 +167,25 @@ function getDiff(materNames, materLen, materStage) {
     for (var i = 0; i < materLen; i++) {
         for (var m in materStage) {
             if (m.split("_")[0] == materNames) {
-                tr += '<td style="width: 120px;">' + materStage[materNames + "_old"] + '</td>';
-                tr += '<td style="width: 120px;">' + materStage[materNames + "_new"] + '</td>';
-                tr += '<td style="width: 120px;">' + materStage[materNames + "_diff"] + '</td>';
+                tr += '<td style="width: 120px;">' + converDate(materStage[materNames + "_old"]) + '</td>';
+                tr += '<td style="width: 120px;">' + converDate(materStage[materNames + "_new"]) + '</td>';
+                tr += '<td style="width: 120px;">' + converDate(materStage[materNames + "_diff"]) + '</td>';
                 break;
             }
         }
         break;
     }
-    console.log("不同版本" + materNames + "===" + materLen + "====" + materStage + "===" + tr);
     return tr;
+}
 
+function converDate(data) {
+    var dataToStr = 0;
+    if (data == null || data == "" || data == "0E0" || data == "0.0000") {
+        dataToStr = 0;
+    } else {
+        dataToStr = data;
+    }
+    return dataToStr;
 
 }
 

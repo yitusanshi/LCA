@@ -40,6 +40,18 @@
         <table id="menuMaterialTable"></table>
         <div id="jqGridPager"></div>
 
+
+        <!--运输过程-->
+        <!-- <div class="panel-heading">运输过程</div>-->
+        <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
+            <!--<label>运输过程</label>-->
+            <a class="btn btn-primary" @click="addTransPort('141')"><i class="fa fa-plus"></i>&nbsp;添加原料运输信息</a>
+            <a class="btn btn-primary" @click="updateTransPort('transPortTableYuan')"><i
+                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            <a class="btn btn-primary" @click="delConsume('141')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="transPortTableYuan"></table>
+        <div id="transPortGridPagerYuan"></div>
     </div>
 
     <div v-show="showUsage" class="panel panel-default">
@@ -57,6 +69,8 @@
 
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
             <a class="btn btn-primary" @click="addConsume('11')"><i class="fa fa-plus"></i>&nbsp;添加原材料消耗</a>
+            <a class="btn btn-primary" @click="updateConsume('11')"><i
+                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
             <a class="btn btn-primary" @click="delConsume('11')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="rawMaterialTable" width="95%"></table>
@@ -66,6 +80,8 @@
         <!-- <div class="panel-heading">资源能源消耗</div>-->
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
             <a class="btn btn-primary" @click="addConsume('12')"><i class="fa fa-plus"></i>&nbsp;添加资源能源消耗</a>
+            <a class="btn btn-primary" @click="updateConsume('12')"><i
+                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
             <a class="btn btn-primary" @click="delConsume('12')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="reseTable"></table>
@@ -75,6 +91,8 @@
         <!--<div class="panel-heading">排放与废弃</div>-->
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
             <a class="btn btn-primary" @click="addConsume('13')"><i class="fa fa-plus"></i>&nbsp;添加排放信息</a>
+            <a class="btn btn-primary" @click="updateConsume('13')"><i
+                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
             <a class="btn btn-primary" @click="delConsume('13')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="gasTable"></table>
@@ -84,6 +102,8 @@
         <!--包装过程-->
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
             <a class="btn btn-primary" @click="addConsume('15')"><i class="fa fa-plus"></i>&nbsp;添加包装信息</a>
+            <a class="btn btn-primary" @click="updateConsume('15')"><i
+                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
             <a class="btn btn-primary" @click="delConsume('15')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="packTable"></table>
@@ -94,6 +114,8 @@
         <div class="grid-btn" style="height:34px;margin-top: 10px;margin-bottom: 10px;">
             <!--<label>运输过程</label>-->
             <a class="btn btn-primary" @click="addTransPort('14')"><i class="fa fa-plus"></i>&nbsp;添加原料运输信息</a>
+            <a class="btn btn-primary" @click="updateTransPort('transPortTable')"><i
+                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
             <a class="btn btn-primary" @click="delConsume('14')"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="transPortTable"></table>
@@ -249,6 +271,34 @@
         </form>
     </div>
 
+    <!-- 修改原料废气等资源-->
+    <div id="consume_update" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">{{add_title_name}}</div>
+                    <div class="col-sm-10 layui-form">
+                        <input type="text" class="form-control" readonly id="consume_name_update"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">{{useage_name}}</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="consume_usage_update"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">单位</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly id="consume_unit_update"
+                               placeholder="单位"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <!--新增运输信息-->
     <div id="trans_port_id" style="display: none;">
         <form class="form-horizontal">
@@ -288,6 +338,54 @@
                     <div class="col-sm-2 control-label">运输重量(单位:t)</div>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="trans_port_weight"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--修改运输信息-->
+    <div id="trans_port_update" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输物质</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_name_update" placeholder="请输入运输物质名称"
+                               readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">产地</div>
+                    <div class="col-sm-10 layui-form">
+                        <input type="text" class="form-control" id="trans_port_source_update" placeholder="请输入产地"
+                               readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输方式</div>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="trans_port_type_update">
+                            <option value="139" selected>箱式货车运输</option>
+                            <option value="140">大卡车运输</option>
+                            <option value="141">小卡车运输</option>
+                            <option value="142">挂车运输</option>
+                            <option value="143">货运飞机</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输距离(单位:km)</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_distance_update"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">运输重量(单位:t)</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="trans_port_weight_update"
                                onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
                     </div>
                 </div>

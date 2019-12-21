@@ -21,7 +21,6 @@ $(function () {
                     } else if (index.sourceFlag == 3) {
                         return "暂无数据来源";
                     }
-                    /* return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";*/
                 }
             }
         ],
@@ -58,6 +57,54 @@ $(function () {
         }
     });
 
+    //运输过程阶段下
+    $("#transPortTableYuan").jqGrid({
+        url: baseURL + 'sys/transport/listTransport',
+        datatype: "local",
+        colModel: [
+            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
+            {label: '批次号', name: 'version', index: 'version', width: '80px'},
+            {label: '运输方式', name: 'materialName', index: 'materialName', width: '120px'},
+            {label: '运输重量（单位:t）', name: 'weight', index: 'weight', width: '80px'},
+            {label: '运输距离（单位:km）', name: 'distance', index: 'distance', width: '80px'},
+            {label: '产地', name: 'source', index: 'source', width: '80px'},
+            {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
+            {label: '标识', name: 'flag', index: 'flag', width: '80px', hidden: true}
+        ],
+        postData: {
+            'batchNo': "",
+            'flag': 0,
+            'materialId': 0,
+            'typeId': 14
+        },
+        viewrecords: true,
+        height: "25%",
+        rowNum: 10,
+        rowList: [10, 30, 50],
+        rownumbers: true,
+        rownumWidth: 25,
+        // autowidth: true,
+        multiselect: true,
+        pager: "#transPortGridPagerYuan",
+        caption: "运输过程",
+        jsonReader: {
+            root: "page.list",
+            page: "page.currPage",
+            total: "page.totalPage",
+            records: "page.totalCount"
+        },
+        prmNames: {
+            page: "page",
+            rows: "limit",
+            order: "order"
+        },
+        gridComplete: function () {
+            //隐藏grid底部滚动条
+            $("#transPortTableYuan").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+        }
+    });
+
     //上游原材料表
     $("#rawMaterialTable").jqGrid({
         url: baseURL + 'sys/usagestatistics/listMaterial',
@@ -69,6 +116,7 @@ $(function () {
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
         ],
         postData: {
@@ -116,6 +164,7 @@ $(function () {
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
         ],
         postData: {
@@ -163,6 +212,7 @@ $(function () {
             {label: '排放量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
         ],
         postData: {
@@ -211,6 +261,7 @@ $(function () {
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
         ],
         postData: {
@@ -251,13 +302,14 @@ $(function () {
         url: baseURL + 'sys/transport/listTransport',
         datatype: "local",
         colModel: [
-            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
+            {label: '运输物质', name: 'prName', index: 'prName', width: '80px'},
             {label: '批次号', name: 'version', index: 'version', width: '80px'},
             {label: '运输方式', name: 'materialName', index: 'materialName', width: '120px'},
             {label: '运输重量（单位:t）', name: 'weight', index: 'weight', width: '80px'},
             {label: '运输距离（单位:km）', name: 'distance', index: 'distance', width: '80px'},
             {label: '产地', name: 'source', index: 'source', width: '80px'},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
             {label: '标识', name: 'flag', index: 'flag', width: '80px', hidden: true}
         ],
         postData: {
@@ -447,6 +499,10 @@ function addTransPort(typeId) {
         alert("请选择合适的批次号");
         return;
     }
+    var materialId = 0;
+    if (typeId == "14") {
+        materialId = vm.materialId;
+    }
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -469,7 +525,7 @@ function addTransPort(typeId) {
                     "flag": 0,
                     "batchNo": vm.batchSelect,
                     'prId': vm.prSelect,
-                    "materialId": vm.materialId
+                    "materialId": materialId
                 },
                 dataType: "json",
                 success: function (result) {
@@ -481,7 +537,12 @@ function addTransPort(typeId) {
                             $("#trans_port_distance").val("");
                             $("#trans_port_weight").val("");
                             layer.close(index);
-                            showMaterial("", vm.materialId, vm.material_name);
+                            if (typeId == "14") {
+                                showMaterial("", vm.materialId, vm.material_name);
+                            } else {
+                                vm.reloadTransPort();
+                            }
+
                         });
                     } else {
                         layer.alert(result.msg);
@@ -493,6 +554,59 @@ function addTransPort(typeId) {
 
 
 }
+
+/*function addTransPortYuan(typeId) {
+    if (vm.batchSelect == "-1") {
+        alert("请选择合适的批次号");
+        return;
+    }
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "添加运输数据",
+        area: ['600px', '470px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#trans_port_id"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/transport/saveTransport",
+                data: {
+                    "trans_port_name": $("#trans_port_name").val(),
+                    "trans_port_source": $("#trans_port_source").val(),
+                    "trans_port_type": $("#trans_port_type").val(),
+                    "trans_port_distance": $("#trans_port_distance").val(),
+                    "trans_port_weight": $("#trans_port_weight").val(),
+                    "flag": 0,
+                    "batchNo": vm.batchSelect,
+                    'prId': vm.prSelect,
+                    "materialId": 0
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#trans_port_name").val("");
+                            $("#trans_port_source").val("");
+                            $("#trans_port_distance").val("");
+                            $("#trans_port_weight").val("");
+                            vm.reloadTransPort();
+                            layer.close(index);
+                        });
+
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
+
+
+}*/
 
 
 //添加原材料消耗量
@@ -583,7 +697,6 @@ function delMaterial(jqId) {
     });
 }
 
-
 /*
 * 删除资源消耗，运输。排放等
 * */
@@ -598,8 +711,11 @@ function delConsume(typeId) {
         tableId = "#gasTable";
     } else if (typeId == "15") {
         tableId = "#packTable";
-    } else {
+    } else if (typeId == "14") {
         tableId = "#transPortTable";
+        url = baseURL + "sys/transport/delete";
+    } else {
+        tableId = "#transPortTableYuan";
         url = baseURL + "sys/transport/delete";
     }
     var rowKey = $(tableId).getGridParam("selrow");
@@ -629,6 +745,76 @@ function delConsume(typeId) {
         });
     });
 
+
+}
+
+
+/*
+* 修改资源能源排放
+* */
+function updateConsume(typeId) {
+    var menId = "";
+    var titles = "";
+    if (typeId == '11') {
+        menId = "rawMaterialTable";
+        titles = "修改上游原料";
+        vm.add_title_name = "上游原材料名称";
+        vm.useage_name = "消耗量";
+    } else if (typeId == '12') {
+        menId = "reseTable";
+        titles = '修改资源能源信息';
+        vm.add_title_name = "资源能源名称";
+        vm.useage_name = "消耗量";
+    } else if (typeId == '13') {
+        menId = "gasTable";
+        titles = '修改排放信息';
+        vm.add_title_name = "排放名称";
+        vm.useage_name = "排放量";
+    } else {
+        menId = "packTable";
+        titles = '修改包装信息';
+        vm.add_title_name = "包装材料";
+        vm.useage_name = "消耗量";
+    }
+    var rowKey = getSelectedRowNum(menId);
+    $("#consume_unit_update").val(rowKey.unit);
+    $("#consume_name_update").val(rowKey.materialName);
+    $("#consume_usage_update").val(rowKey.materialUsage);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: titles,
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#consume_update"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/updateById",
+                data: {
+                    "id": rowKey.id,
+                    "usage": $("#consume_usage_update").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#consume_usage_update").val("");
+                            $("#consume_name_update").val("");
+                            $("#consume_unit_update").val("");
+                            layer.close(index);
+                            showMaterial("", vm.materialId, vm.material_name);
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
 
 }
 
@@ -679,6 +865,65 @@ function updateMaterial(jqId) {
             });
         }
     });
+}
+
+
+/*
+* 修改运输信息
+* */
+
+function updateTransPort(typeId) {
+    var rowKey = getSelectedRowNum(typeId);
+    $("#trans_port_name_update").val(rowKey.prName);
+    $("#trans_port_source_update").val(rowKey.source);
+    $("#trans_port_distance_update").val(rowKey.distance);
+    $("#trans_port_weight_update").val(rowKey.weight);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "修改运输信息",
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#trans_port_update"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/transport/updateTransById",
+                data: {
+                    "id": rowKey.id,
+                    "distance": $("#trans_port_distance_update").val(),
+                    "type": $("#trans_port_type_update").val(),
+                    "weight": $("#trans_port_weight_update").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#trans_port_name_update").val("");
+                            $("#trans_port_source_update").val("");
+                            $("#trans_port_distance_update").val("");
+                            $("#trans_port_weight_update").val("");
+                            layer.close(index);
+                            if (typeId == "transPortTable") {
+                                showMaterial("", vm.materialId, vm.material_name);
+                            } else {
+                                vm.reloadTransPort();
+                            }
+
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            })
+            ;
+        }
+    });
+
+
 }
 
 
@@ -788,9 +1033,23 @@ var vm = new Vue({
         },
         selectBatchAndUserId: function (e) {
             vm.reload();
+            vm.reloadTransPort();
+        },
+        reloadTransPort: function (event) {
+            /*运输*/
+            var transpage = $("#transPortTableYuan").jqGrid('getGridParam', 'page');
+            $("#transPortTableYuan").jqGrid('setGridParam', {
+                datatype: 'json',
+                page: transpage,
+                postData: {
+                    'batchNo': vm.batchSelect,
+                    'prId': vm.prSelect,
+                    'flag': 0,
+                    'materialId': 0
+                }
+            }).trigger("reloadGrid");
         },
         reload: function (event) {
-            vm.showList = true;
             var page = $("#menuMaterialTable").jqGrid('getGridParam', 'page');
             $("#menuMaterialTable").jqGrid('setGridParam', {
                 page: page,
@@ -882,9 +1141,6 @@ function LayuiSelect(selectId, url, unitId) {
                 var unit = data.value.split("_")[2];
                 $(unitId).val(unit);
             });
-            /*if (value != undefined && value != null && value != '') {
-                $(selectId).val(value);
-            }*/
             formSelect.render();
         });
 

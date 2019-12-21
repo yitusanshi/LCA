@@ -1,39 +1,3 @@
-/*$(function () {
-    pageInit();
-});*/
-
-/*function pageInit() {
-    $("#designTable").jqGrid({
-        datatype: "json",
-       /!* url: baseURL + "compare/info",*!/
-        colModel: [
-            {label: '阶段名称', name: 'flagName', index: 'flagName', width: '80px'},
-            {label: '阶段标识', name: 'flag', index: 'flag', width: '80px', hidden: true},
-            {label: '用户ID', name: 'userId', index: 'userId', width: '80px', hidden: true},
-            {label: '来源ID', name: 'formId', index: 'formId', width: '80px', hidden: true},
-            {label: '产品ID', name: 'prId', index: 'prId', width: '80px', hidden: true},
-            {label: '父类ID', name: 'parentId', index: 'parentId', width: '80px', hidden: true},
-            {label: '产品名称', name: 'prName', index: 'prName', width: '80px'},
-            {label: '所属过程', name: 'fmaterialName', index: 'fmaterialName', width: '80px'},
-            {label: '物质ID', name: 'materialId', index: 'materialId', width: '80px', hidden: true},
-            {label: '物质名称', name: 'materialName', index: 'materialName', width: '80px'},
-            {label: '使用量/消耗量/排放量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
-            {label: '单位', name: 'unit', index: 'unit', width: '80px'}
-        ],
-        postData: {
-            'batchNo': "0",
-            "prId": "0"
-        },
-        height: "25%"
-        /!*,
-        gridComplete: function () {
-            //隐藏grid底部滚动条
-            $("#designTable").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
-        }*!/
-    });
-}*/
-
-
 function queryData() {
     $.ajax({
         type: "GET",

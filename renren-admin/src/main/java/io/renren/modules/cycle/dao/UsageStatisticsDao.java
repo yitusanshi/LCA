@@ -30,4 +30,6 @@ public interface UsageStatisticsDao extends BaseMapper<UsageStatisticsEntity> {
     UsageStatisticsEntity getUsageStatisticsEntityById(int id);
 
     void deleteMaterialByMap(Map<String, Object> map);
+
+    void updateOneById(Map<String, Object> map);
 }

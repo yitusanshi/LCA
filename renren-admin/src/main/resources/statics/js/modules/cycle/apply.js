@@ -10,6 +10,7 @@ $(function () {
             {label: '消耗量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
         ],
         postData: {
@@ -56,6 +57,7 @@ $(function () {
             {label: '排放量', name: 'materialUsage', index: 'materialUsage', width: '80px'},
             {label: '单位', name: 'unit', index: 'unit', width: '80px'},
             {label: '备注', name: 'desc', index: 'desc', width: '80px'},
+            {label: 'id', name: 'id', index: 'id', width: '80px', hidden: true},
             {label: '用户id', name: 'userId', index: 'userId', width: '80px', hidden: true}
         ],
         postData: {
@@ -207,6 +209,76 @@ function addConsume(typeId) {
         }
     });
 };
+
+
+/*
+* 修改资源能源排放
+* */
+function updateConsume(typeId) {
+    var menId = "";
+    var titles = "";
+    if (typeId == '11') {
+        menId = "rawMaterialTable";
+        titles = "修改上游原料";
+        vm.add_title_name = "上游原材料名称";
+        vm.useage_name = "消耗量";
+    } else if (typeId == '12') {
+        menId = "reseTable";
+        titles = '修改资源能源信息';
+        vm.add_title_name = "资源能源名称";
+        vm.useage_name = "消耗量";
+    } else if (typeId == '13') {
+        menId = "gasTable";
+        titles = '修改排放信息';
+        vm.add_title_name = "排放名称";
+        vm.useage_name = "排放量";
+    } else {
+        menId = "packTable";
+        titles = '修改包装信息';
+        vm.add_title_name = "包装材料";
+        vm.useage_name = "消耗量";
+    }
+    var rowKey = getSelectedRowNum(menId);
+    $("#consume_unit_update").val(rowKey.unit);
+    $("#consume_name_update").val(rowKey.materialName);
+    $("#consume_usage_update").val(rowKey.materialUsage);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: titles,
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#consume_update"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/updateById",
+                data: {
+                    "id": rowKey.id,
+                    "usage": $("#consume_usage_update").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#consume_usage_update").val("");
+                            $("#consume_name_update").val("");
+                            $("#consume_unit_update").val("");
+                            layer.close(index);
+                            reloadPro();
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
+
+}
 
 /*
 * 删除资源消耗，运输。排放等

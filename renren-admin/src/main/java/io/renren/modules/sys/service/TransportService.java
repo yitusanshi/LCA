@@ -21,6 +21,6 @@ public interface TransportService extends IService<TransportEntity> {
     void delTransportEntityByMap(Map<String, Object> map);
 
 
-
+    void updateTransById(Map<String, Object> map);
 }
 

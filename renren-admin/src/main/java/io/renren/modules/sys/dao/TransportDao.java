@@ -18,4 +18,6 @@ public interface TransportDao extends BaseMapper<TransportEntity> {
     List<TransportEntity> getMaterialByBatch(Map<String, Object> params);
 
     void delTransportEntityByMap(Map<String, Object> map);
+
+    void updateTransById(Map<String, Object> map);
 }

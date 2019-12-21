@@ -106,7 +106,6 @@ public class UsageStatisticsController extends AbstractController {
     @RequiresPermissions("sys:usagestatistics:save")
     public R save(@RequestBody UsageStatisticsEntity usageStatistics) {
         usageStatisticsService.save(usageStatistics);
-
         return R.ok();
     }
 
@@ -118,7 +117,6 @@ public class UsageStatisticsController extends AbstractController {
     public R update(@RequestBody UsageStatisticsEntity usageStatistics) {
         ValidatorUtils.validateEntity(usageStatistics);
         usageStatisticsService.updateById(usageStatistics);
-
         return R.ok();
     }
 
@@ -173,6 +171,24 @@ public class UsageStatisticsController extends AbstractController {
             transportService.delTransportEntityByMap(delMap);
             System.out.println("删除结束");
         }
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/updateById")
+    public R update(@RequestParam Map<String, Object> params) {
+        String id = (String) params.get("id");
+        String usage = (String) params.get("usage");
+        Map<String,Object> map= new HashedMap();
+        map.put("id",id);
+        if (StringUtils.isBlank(usage)) {
+            map.put("usage",0);
+        } else {
+            map.put("usage",Double.valueOf(usage));
+        }
+        usageStatisticsService.updateOneById(map);
         return R.ok();
     }
 

@@ -13,6 +13,7 @@ import io.renren.modules.prManage.entity.ProductDefineEntity;
 import io.renren.modules.prManage.service.impl.ProductDefineServiceImpl;
 import io.renren.modules.sys.entity.DictEntity;
 import io.renren.modules.sys.service.impl.DictServiceImpl;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +127,8 @@ public class TransportController extends AbstractController {
         map.put("page", params.get("page"));
         IPage<TransportEntity> page = new Query<TransportEntity>().getPage(map);
         List<TransportEntity> usageStatisticsEntityList = transportService.getMaterialByBatch(map);
-        for (TransportEntity entity : usageStatisticsEntityList){
+        for (TransportEntity entity : usageStatisticsEntityList) {
+            entity.setPrName(entity.getMaterialName());
             int type = entity.getType();
             DictEntity dictEntity = dictService.getByseconId(type);
             String secondName = dictEntity.getSecondName();
@@ -162,6 +164,32 @@ public class TransportController extends AbstractController {
         transportEntity.setWeight(Double.valueOf(weight));
         transportEntity.setPrId(prId);
         transportService.save(transportEntity);
+        return R.ok();
+    }
+
+    @RequestMapping("/updateTransById")
+    public R updateTransById(@RequestParam Map<String, Object> params) {
+        String id = (String) params.get("id");
+        String distance = (String) params.get("distance");
+        String type = (String) params.get("type");
+        String weight = (String) params.get("weight");
+        Map<String, Object> map = new HashedMap();
+
+        map.put("id", id);
+
+        if (StringUtils.isBlank(distance)) {
+            map.put("distance", 0);
+        } else {
+            map.put("distance", distance);
+        }
+        if (StringUtils.isBlank(weight)) {
+            map.put("weight", 0);
+        } else {
+            map.put("weight", weight);
+        }
+        map.put("type", type);
+        transportService.updateTransById(map);
+
         return R.ok();
     }
 
