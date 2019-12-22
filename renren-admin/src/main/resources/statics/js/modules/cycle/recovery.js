@@ -21,7 +21,6 @@ $(function () {
                     } else if (index.sourceFlag == 3) {
                         return "暂无数据来源";
                     }
-                    /* return "<button class='btn btn-primary' onclick='showMaterial(" + index.userId + ",\"" + index.materialId + "\",\"" + index.materialName + "\");'><i class='fa fa-plus'></i>添加上游原料</button>&nbsp;&nbsp;";*/
                 }
             }
         ],
@@ -33,12 +32,12 @@ $(function () {
             'typeId': 10
         },
         viewrecords: true,
-        height: 385,
+        height: "25%",
         rowNum: 10,
         rowList: [10, 30, 50],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#jqGridPager",
         jsonReader: {
@@ -703,7 +702,7 @@ function addTransPort(typeId) {
                     "trans_port_type": $("#trans_port_type").val(),
                     "trans_port_distance": $("#trans_port_distance").val(),
                     "trans_port_weight": $("#trans_port_weight").val(),
-                    "flag": 0,
+                    "flag": 4,
                     "batchNo": vm.batchSelect,
                     'prId': vm.prSelect,
                     "materialId": materialId
@@ -719,11 +718,70 @@ function addTransPort(typeId) {
                             $("#trans_port_weight").val("");
                             layer.close(index);
                             if (typeId == "14") {
+                                alert("刷新14" + typeId);
+                                showMaterial("", vm.materialId, vm.material_name);
+                            } else {
+                                alert("99999" + typeId);
+                                vm.reloadTransPort();
+                            }
+
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
+
+
+}
+
+
+/*
+* 修改运输信息
+* */
+
+function updateTransPort(typeId) {
+    var rowKey = getSelectedRowNum(typeId);
+    $("#trans_port_name_update").val(rowKey.prName);
+    $("#trans_port_source_update").val(rowKey.source);
+    $("#trans_port_distance_update").val(rowKey.distance);
+    $("#trans_port_weight_update").val(rowKey.weight);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "修改运输信息",
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#trans_port_update"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/transport/updateTransById",
+                data: {
+                    "id": rowKey.id,
+                    "distance": $("#trans_port_distance_update").val(),
+                    "type": $("#trans_port_type_update").val(),
+                    "weight": $("#trans_port_weight_update").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#trans_port_name_update").val("");
+                            $("#trans_port_source_update").val("");
+                            $("#trans_port_distance_update").val("");
+                            $("#trans_port_weight_update").val("");
+                            layer.close(index);
+                            if (typeId == "transPortTable") {
                                 showMaterial("", vm.materialId, vm.material_name);
                             } else {
                                 vm.reloadTransPort();
                             }
-
                         });
                     } else {
                         layer.alert(result.msg);
@@ -882,6 +940,96 @@ function delConsume(typeId) {
         });
     });
 
+
+}
+
+
+/*
+* 修改资源能源排放
+* */
+function updateConsume(typeId) {
+    var menId = "";
+    var titles = "";
+    if (typeId == '11') {
+        menId = "rawMaterialTable";
+        titles = "修改上游原料";
+        vm.add_title_name = "上游原材料名称";
+        vm.useage_name = "消耗量";
+    } else if (typeId == '12' || typeId == "121") {
+        if (typeId == "12") {
+            menId = "reseTable";
+        } else {
+            menId = "reseTableYuan";
+        }
+        titles = '修改资源能源信息';
+        vm.add_title_name = "资源能源名称";
+        vm.useage_name = "消耗量";
+    } else if (typeId == '13' || typeId == "131") {
+        if (typeId == "13") {
+            menId = "gasTable";
+        } else {
+            menId = "gasTableYuan";
+        }
+        titles = '修改排放信息';
+        vm.add_title_name = "排放名称";
+        vm.useage_name = "排放量";
+    } else if (typeId == "15" || typeId == "151") {
+        if (typeId == "15") {
+            menId = "packTable";
+        } else {
+            menId = "packTableYuan";
+        }
+        titles = '修改包装信息';
+        vm.add_title_name = "包装材料";
+        vm.useage_name = "消耗量";
+    }
+    var rowKey = getSelectedRowNum(menId);
+    $("#consume_unit_update").val(rowKey.unit);
+    $("#consume_name_update").val(rowKey.materialName);
+    $("#consume_usage_update").val(rowKey.materialUsage);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: titles,
+        area: ['600px', '370px'],
+        shadeClose: false,
+        scrollbar: false,
+        content: jQuery("#consume_update"),
+        btn: ['保存', '取消'],
+        btn1: function (index) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "sys/usagestatistics/updateById",
+                data: {
+                    "id": rowKey.id,
+                    "usage": $("#consume_usage_update").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.close(index);
+                        layer.alert('保存成功', function (index) {
+                            $("#consume_usage_update").val("");
+                            $("#consume_name_update").val("");
+                            $("#consume_unit_update").val("");
+                            layer.close(index);
+                            if (typeId == "11" || typeId == "12" || typeId == "13" || typeId == "15") {
+                                showMaterial("", vm.materialId, vm.material_name);
+                            } else if (typeId == "121") {
+                                vm.reloadRese();
+                            } else if (typeId == "131") {
+                                vm.reloadGas();
+                            } else if (typeId == "151") {
+                                vm.reloadPack();
+                            }
+                        });
+                    } else {
+                        layer.alert(result.msg);
+                    }
+                }
+            });
+        }
+    });
 
 }
 

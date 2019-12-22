@@ -138,6 +138,8 @@ function queryData() {
                 }
                 tr += '</tbody>';
                 $('#designTable').html(tr);
+               /* $("#saveId").css("style.disply", "");*/
+                /*css("style.display":"");*/
             } else {
                 layer.alert(result.msg);
             }

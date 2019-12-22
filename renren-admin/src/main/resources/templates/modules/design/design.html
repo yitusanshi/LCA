@@ -9,8 +9,9 @@
     <div v-show="mainList">
         <div class="grid-btn">
             <shiro.hasPermission name="sys:batch:save">
-                <a class="btn btn-primary" @click="queryData()"><i class="fa fa-plus"></i>&nbsp;查询</a>
+                <a class="btn btn-primary" @click="queryData()"><i class="fa fa-search"></i>&nbsp;查询</a>
             </shiro.hasPermission>
+            <a class="btn btn-primary" @click="saveData()"><i class="fa fa-floppy-o"></i>保存修改数据</a>
             <div class="form-group col-sm-2">
                 <select id="selectPr" class="form-control" v-model="prSelect"
                         @change="selectPrId($event)">
@@ -39,9 +40,7 @@
                    data-height="80"></table>
         </form>
     </div>
-    <div class="grid-btn">
-        <a class="btn btn-primary" style="float: right" @click="saveData()">&nbsp;保存数据</a>
-    </div>
+
 
     <div id="batchNo" style="display: none;">
         <form class="form-horizontal">

@@ -32,12 +32,12 @@ $(function () {
             'typeId': 10
         },
         viewrecords: true,
-        height: 385,
+        height: "25%",
         rowNum: 10,
         rowList: [10, 30, 50],
         rownumbers: true,
         rownumWidth: 25,
-        autowidth: true,
+        // autowidth: true,
         multiselect: true,
         pager: "#jqGridPager",
         jsonReader: {
