@@ -3,6 +3,7 @@ package io.renren.modules.sys.dao;
 import io.renren.modules.sys.entity.DictEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ public interface DictDao extends BaseMapper<DictEntity> {
 
     Integer saveDict(DictEntity dictEntity);
 
-    List<DictEntity> quertByTypeId(int typeId);
+    List<DictEntity> quertByTypeId(@Param("typeId") int typeId, @Param("userid") long userid);
     int querySystemBoundry(int prid);
     List<DictEntity> query(Map<String, Object> map);
     int maxSecondId();

@@ -7,11 +7,13 @@ import io.renren.common.utils.Query;
 import io.renren.common.utils.R;
 import io.renren.modules.sys.entity.CalculateFeatureEntity;
 import io.renren.modules.sys.entity.DictEntity;
+import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.CalculateFeatureService;
 import io.renren.modules.sys.service.DictService;
 import io.renren.modules.sys.service.impl.CalculateFeatureServiceImpl;
 import io.renren.modules.sys.service.impl.DictServiceImpl;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -93,6 +95,9 @@ public class CalculateFeatureController {
         dictEntity.setUnit(unit);
         dictEntity.setSecondId(maxid);
 
+        SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        dictEntity.setUserId(userEntity.getUserId());
+
         List<CalculateFeatureEntity> list = new ArrayList<>();
         for (int i = 1; i <= 14; i++) {
             CalculateFeatureEntity calculateFeatureEntity = new CalculateFeatureEntity();
@@ -111,11 +116,11 @@ public class CalculateFeatureController {
         //最后存入dict表
         if (typeid == 12 || typeid == 11) {
             dictEntity.setTypeId(11);
-            dictService.save(dictEntity);
+            dictService.saveDict(dictEntity);
             dictEntity.setTypeId(12);
-            dictService.save(dictEntity);
+            dictService.saveDict(dictEntity);
         } else {
-            dictService.save(dictEntity);
+            dictService.saveDict(dictEntity);
         }
 
         return R.ok();

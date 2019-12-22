@@ -27,7 +27,7 @@ public class DictEntity implements Serializable {
     /**
      * 映射关系的id
      */
-    @TableId
+
     private Integer secondId;
     /**
      *

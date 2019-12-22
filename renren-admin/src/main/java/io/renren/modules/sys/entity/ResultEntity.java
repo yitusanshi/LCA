@@ -25,6 +25,7 @@ public class ResultEntity {
     private String useStage;
     private String recoveryStage;
     private String total;
+    private String average;
 
     @Override
     public String toString() {

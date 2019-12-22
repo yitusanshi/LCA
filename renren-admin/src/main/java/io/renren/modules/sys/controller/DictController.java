@@ -71,6 +71,8 @@ public class DictController {
         System.out.println(JSON.toJSONString(dict));
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
+        int maxid = dictService.maxSecondId() + 1;
+        dict.setSecondId(maxid);
         dict.setUserId(userid);
         dictService.saveDict(dict);
 
@@ -106,7 +108,9 @@ public class DictController {
     @RequiresPermissions("sys:lcadict:info")
     public R query(@PathVariable("typeId") Integer typeId) {
         System.out.println("-----"+ typeId);
-        List<DictEntity> list = dictService.quertByTypeId(typeId);
+        SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        Long userid = userEntity.getUserId();
+        List<DictEntity> list = dictService.quertByTypeId(typeId, userid);
         //保持和前端同步
         return R.ok().put("dictList", list);
     }

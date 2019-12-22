@@ -57,8 +57,8 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
         System.out.println("-------" + dictEntity.getSecondId());
         return dictEntity.getSecondId();
     }
-    public List<DictEntity> quertByTypeId(int typeId){
-        return dictDao.quertByTypeId(typeId);
+    public List<DictEntity> quertByTypeId(int typeId, long userid){
+        return dictDao.quertByTypeId(typeId, userid);
     }
 
     public int querySystemBoundry(int prid){

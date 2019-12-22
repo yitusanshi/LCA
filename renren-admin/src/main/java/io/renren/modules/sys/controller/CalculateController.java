@@ -141,13 +141,22 @@ public class CalculateController {
         }
         //再分别每个阶段的运输（运输是单独一张表，单独计算）
         calculateTransport(list, version, prId, limit);
-        double d = batchService.getusageByVersion(version, prId);
-        BigDecimal bigDecimal = new BigDecimal(d);
-        /*for (ResultEntity resultEntity : list){
-            devide(resultEntity, bigDecimal);
-        }*/
         //计算合计
         sumTotal(list);
+        //平均计算
+        Double d = batchService.getusageByVersion(version, prId);
+        BigDecimal bigDecimal = new BigDecimal(d);
+        if (d != null){
+            for (ResultEntity resultEntity : list){
+                devide(resultEntity, bigDecimal);
+            }
+        }
+/*
+        for (ResultEntity resultEntity : list){
+            devide(resultEntity, bigDecimal);
+        }*/
+
+
         return R.ok().put("resultCal", list);
     }
     public void devide(ResultEntity resultEntity, BigDecimal bigDecimal){
@@ -161,6 +170,8 @@ public class CalculateController {
         resultEntity.setSellStage(toEngineering(new BigDecimal(resultEntity.getSellStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getRecoveryStage()))
         resultEntity.setRecoveryStage(toEngineering(new BigDecimal(resultEntity.getRecoveryStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
+        if (Strings.isNotEmpty(resultEntity.getTotal()))
+            resultEntity.setTotal(toEngineering(new BigDecimal(resultEntity.getTotal()).divide(bigDecimal, ROUND_HALF_DOWN)));
     }
     public void calculateMaterial(int i, List<ResultEntity> list, List<UsageStatisticsEntity> usageStatisticsEntityList) {
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
@@ -463,11 +474,11 @@ public class CalculateController {
         if (bigDecimal == null) {
             return null;
         }
-        BigDecimal flag = new BigDecimal("0.00001");
+        BigDecimal flag = new BigDecimal("0.0000001");
         if (bigDecimal.compareTo(flag) >= 0) {
-            return bigDecimal.setScale(4, ROUND_HALF_DOWN).toString();
+            return bigDecimal.setScale(6, ROUND_HALF_DOWN).toString();
         } else {
-            return new DecimalFormat("#.#####E0").format(bigDecimal);
+            return new DecimalFormat("#.######E0").format(bigDecimal);
             //bigDecimal.stripTrailingZeros().toString();
         }
     }
@@ -520,5 +531,7 @@ public class CalculateController {
         }
     }
 
+    public void average(ResultEntity resultEntity , BigDecimal bigDecimal){
 
+    }
 }
