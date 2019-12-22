@@ -252,6 +252,11 @@ public class CompareController {
         reducePropetyStage(json, s, jsonOld.getString(s), jsonNew.getString(s));
         s = "recoveryPropertyStage";
         reducePropetyStage(json, s, jsonOld.getString(s), jsonNew.getString(s));
+
+        s = "total";
+        reduce(json, s, jsonOld.getString(s), jsonNew.getString(s));
+        s= "average";
+        reduce(json, s, jsonOld.getString(s), jsonNew.getString(s));
         return json;
     }
 
