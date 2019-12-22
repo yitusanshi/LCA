@@ -3,6 +3,7 @@ package io.renren.modules.prManage.service.impl;
 import io.renren.modules.sys.dao.DictDao;
 import io.renren.modules.sys.entity.DictEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,6 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
         String prName = (String) params.get("roleName");
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
-        IPage<ProductDefineEntity> page = new Query<ProductDefineEntity>().getPage(params);
         HashMap<String, Object> map = new HashMap<>();
         if (userid == 1) {
             map.put("userid", null);
@@ -45,7 +45,7 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
         }
         map.put("prName", prName);
         map.put("industryId", industryId);
-
+        IPage<ProductDefineEntity> page = new Query<ProductDefineEntity>().getPage(map);
         List<ProductDefineEntity> list = productDefineDao.getQueryList(map);
         for (ProductDefineEntity productDefineEntity : list) {
             int i = productDefineEntity.getSystemBoundary();

@@ -27,7 +27,7 @@
         <if test='"userid" == NULL'>
             p.user_id = #{userid}
         </if>
-        industry_id = #{industryId} AND p.pr_name LIKE "%"#{prName}"%"
+        industry_id = #{industryId} AND p.pr_name LIKE CONCAT('%',#{prName,jdbcType=VARCHAR},'%')
     </select>
     <select id="getPrByUserId" resultType="io.renren.modules.prManage.entity.ProductDefineEntity"
             parameterType="java.lang.Long">
