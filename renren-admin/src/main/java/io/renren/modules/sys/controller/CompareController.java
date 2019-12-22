@@ -81,7 +81,23 @@ public class CompareController {
                 array.add(json);
             }
             jsonObject.put("materialList", array);
+
+
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("version", version);
+            map1.put("userId", getUserId());
+            map1.put("flag", 0);
+            map1.put("parentId", 0);
+            map1.put("formId", 14);//运输
+            map1.put("prId", prId);
+            List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map1);
+            jsonObject.put("transPortList", transportEntityList);
+
             jsonArray.add(jsonObject);
+
+
+
+
         }
 
         //第二阶段
@@ -103,7 +119,7 @@ public class CompareController {
                 json1.put("infoList", entityList);
                 array.add(json1);
             }
-            jsonObject.put("infoList", array);
+            jsonObject.put("materialList", array);
             jsonObject.put("flag", 1);
             jsonArray.add(jsonObject);
         }
@@ -117,7 +133,7 @@ public class CompareController {
             map1.put("formId", 14);//运输
             map1.put("prId", prId);
             List<TransportEntity> usageStatisticsEntityList = transportService.getMaterialByBatch(map1);
-            jsonObject.put("infoList", usageStatisticsEntityList);
+            jsonObject.put("transPortList", usageStatisticsEntityList);
             jsonObject.put("flag", 2);
             jsonArray.add(jsonObject);
         }
