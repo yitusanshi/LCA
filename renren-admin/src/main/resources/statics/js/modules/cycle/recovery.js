@@ -683,6 +683,8 @@ function addTransPort(typeId) {
     if (typeId == "14") {
         materialId = vm.materialId;
     }
+
+    LayuiSelect("#trans_port_type", baseURL + "sys/lcadict/query/14", "");
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -699,7 +701,7 @@ function addTransPort(typeId) {
                 data: {
                     "trans_port_name": $("#trans_port_name").val(),
                     "trans_port_source": $("#trans_port_source").val(),
-                    "trans_port_type": $("#trans_port_type").val(),
+                    "trans_port_type": $("#trans_port_type").val().spilt("_")[0],
                     "trans_port_distance": $("#trans_port_distance").val(),
                     "trans_port_weight": $("#trans_port_weight").val(),
                     "flag": 4,
@@ -718,10 +720,8 @@ function addTransPort(typeId) {
                             $("#trans_port_weight").val("");
                             layer.close(index);
                             if (typeId == "14") {
-                                alert("刷新14" + typeId);
                                 showMaterial("", vm.materialId, vm.material_name);
                             } else {
-                                alert("99999" + typeId);
                                 vm.reloadTransPort();
                             }
 
@@ -743,6 +743,7 @@ function addTransPort(typeId) {
 * */
 
 function updateTransPort(typeId) {
+    LayuiSelect("#trans_port_type_update", baseURL + "sys/lcadict/query/14", "");
     var rowKey = getSelectedRowNum(typeId);
     $("#trans_port_name_update").val(rowKey.prName);
     $("#trans_port_source_update").val(rowKey.source);
@@ -764,7 +765,7 @@ function updateTransPort(typeId) {
                 data: {
                     "id": rowKey.id,
                     "distance": $("#trans_port_distance_update").val(),
-                    "type": $("#trans_port_type_update").val(),
+                    "type": $("#trans_port_type_update").val().split("_")[0],
                     "weight": $("#trans_port_weight_update").val()
                 },
                 dataType: "json",

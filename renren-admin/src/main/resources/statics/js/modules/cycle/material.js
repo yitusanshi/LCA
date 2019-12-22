@@ -503,6 +503,7 @@ function addTransPort(typeId) {
     if (typeId == "14") {
         materialId = vm.materialId;
     }
+    LayuiSelect("#trans_port_type", baseURL + "sys/lcadict/query/14", "");
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -519,7 +520,7 @@ function addTransPort(typeId) {
                 data: {
                     "trans_port_name": $("#trans_port_name").val(),
                     "trans_port_source": $("#trans_port_source").val(),
-                    "trans_port_type": $("#trans_port_type").val(),
+                    "trans_port_type": $("#trans_port_type").val().split("_")[0],
                     "trans_port_distance": $("#trans_port_distance").val(),
                     "trans_port_weight": $("#trans_port_weight").val(),
                     "flag": 0,
@@ -554,59 +555,6 @@ function addTransPort(typeId) {
 
 
 }
-
-/*function addTransPortYuan(typeId) {
-    if (vm.batchSelect == "-1") {
-        alert("请选择合适的批次号");
-        return;
-    }
-    layer.open({
-        type: 1,
-        skin: 'layui-layer-molv',
-        title: "添加运输数据",
-        area: ['600px', '470px'],
-        shadeClose: false,
-        scrollbar: false,
-        content: jQuery("#trans_port_id"),
-        btn: ['保存', '取消'],
-        btn1: function (index) {
-            $.ajax({
-                type: "POST",
-                url: baseURL + "sys/transport/saveTransport",
-                data: {
-                    "trans_port_name": $("#trans_port_name").val(),
-                    "trans_port_source": $("#trans_port_source").val(),
-                    "trans_port_type": $("#trans_port_type").val(),
-                    "trans_port_distance": $("#trans_port_distance").val(),
-                    "trans_port_weight": $("#trans_port_weight").val(),
-                    "flag": 0,
-                    "batchNo": vm.batchSelect,
-                    'prId': vm.prSelect,
-                    "materialId": 0
-                },
-                dataType: "json",
-                success: function (result) {
-                    if (result.code == 0) {
-                        layer.close(index);
-                        layer.alert('保存成功', function (index) {
-                            $("#trans_port_name").val("");
-                            $("#trans_port_source").val("");
-                            $("#trans_port_distance").val("");
-                            $("#trans_port_weight").val("");
-                            vm.reloadTransPort();
-                            layer.close(index);
-                        });
-
-                    } else {
-                        layer.alert(result.msg);
-                    }
-                }
-            });
-        }
-    });
-
-
-}*/
 
 
 //添加原材料消耗量
@@ -878,6 +826,7 @@ function updateTransPort(typeId) {
     $("#trans_port_source_update").val(rowKey.source);
     $("#trans_port_distance_update").val(rowKey.distance);
     $("#trans_port_weight_update").val(rowKey.weight);
+    LayuiSelect("#trans_port_type_update", baseURL + "sys/lcadict/query/14", "");
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -894,7 +843,7 @@ function updateTransPort(typeId) {
                 data: {
                     "id": rowKey.id,
                     "distance": $("#trans_port_distance_update").val(),
-                    "type": $("#trans_port_type_update").val(),
+                    "type": $("#trans_port_type_update").val().split("_")[0],
                     "weight": $("#trans_port_weight_update").val()
                 },
                 dataType: "json",
@@ -953,6 +902,7 @@ var vm = new Vue({
     },
     mounted() {
         this.getPr();
+        this.getTransPort();
     },
     methods: {
         reloads: function () {

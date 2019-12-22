@@ -42,13 +42,13 @@
         <div id="transPortGridPager"></div>
     </div>
     <!--新增运输信息-->
-    <div id="trans_port_id" style="display: none;">
+    <div id="trans_port_id" style="display: none">
         <form class="form-horizontal">
-            <div class="form-group" >
-                <div class="form-group" style="display: none">
+            <div class="form-group">
+                <div class="form-group">
                     <div class="col-sm-4 control-label">运输物质</div>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="trans_port_name" value="默认" placeholder="请输入运输物质名称"/>
+                        <input type="text" class="form-control" id="trans_port_name" placeholder="请输入运输物质名称"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -59,26 +59,23 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4 control-label">运输方式</div>
-                    <div class="col-sm-8">
-                        <select class="form-control" id="trans_port_type">
-                            <option value="139" selected>箱式货车运输</option>
-                            <option value="140">大卡车运输</option>
-                            <option value="141">小卡车运输</option>
-                            <option value="142">挂车运输</option>
-                            <option value="143">货运飞机</option>
-                        </select>
+                    <div class="col-sm-8 layui-form">
+                        <select name="modules" id="trans_port_type" class="form-control" lay-verify="required"
+                                lay-filter="myselect" lay-search></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4 control-label">运输距离(单位:km)</div>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="trans_port_distance" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
+                        <input type="text" class="form-control" id="trans_port_distance"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4 control-label">运输重量(单位:t)</div>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="trans_port_weight" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
+                        <input type="text" class="form-control" id="trans_port_weight"
+                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="(eg:0.00)"/>
                     </div>
                 </div>
             </div>
@@ -106,16 +103,23 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-2 control-label">运输方式</div>
-                    <div class="col-sm-10">
-                        <select class="form-control" id="trans_port_type_update">
-                            <option value="139" selected>箱式货车运输</option>
-                            <option value="140">大卡车运输</option>
-                            <option value="141">小卡车运输</option>
-                            <option value="142">挂车运输</option>
-                            <option value="143">货运飞机</option>
-                        </select>
+                    <div class="col-sm-10 layui-form">
+                        <select name="modules" id="trans_port_type_update" class="form-control" lay-verify="required"
+                                lay-filter="myselect" lay-search></select>
                     </div>
                 </div>
+                <!--   <div class="form-group">
+                       <div class="col-sm-2 control-label">运输方式</div>
+                       <div class="col-sm-10">
+                           <select class="form-control" id="trans_port_type_update">
+                               <option value="139" selected>箱式货车运输</option>
+                               <option value="140">大卡车运输</option>
+                               <option value="141">小卡车运输</option>
+                               <option value="142">挂车运输</option>
+                               <option value="143">货运飞机</option>
+                           </select>
+                       </div>
+                   </div>-->
                 <div class="form-group">
                     <div class="col-sm-2 control-label">运输距离(单位:km)</div>
                     <div class="col-sm-10">
