@@ -701,7 +701,7 @@ function addTransPort(typeId) {
                 data: {
                     "trans_port_name": $("#trans_port_name").val(),
                     "trans_port_source": $("#trans_port_source").val(),
-                    "trans_port_type": $("#trans_port_type").val().spilt("_")[0],
+                    "trans_port_type": $("#trans_port_type").val().split("_")[0],
                     "trans_port_distance": $("#trans_port_distance").val(),
                     "trans_port_weight": $("#trans_port_weight").val(),
                     "flag": 4,
