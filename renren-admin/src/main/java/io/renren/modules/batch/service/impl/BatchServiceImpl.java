@@ -49,7 +49,7 @@ public class BatchServiceImpl extends ServiceImpl<BatchDao, BatchEntity> impleme
     }
 
     @Override
-    public double getusageByVersion(String version, int prId) {
+    public Double getusageByVersion(String version, int prId) {
         return batchDao.getusageByVersion(version, prId);
     }
 

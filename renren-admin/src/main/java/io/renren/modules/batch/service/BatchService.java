@@ -23,6 +23,6 @@ public interface BatchService extends IService<BatchEntity> {
 
     List<BatchEntity> getBatchByPrId(Long userId, int prId);
 
-    double getusageByVersion(String version, int prId);
+    Double getusageByVersion(String version, int prId);
 }
 

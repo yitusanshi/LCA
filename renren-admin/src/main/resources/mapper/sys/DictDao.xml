@@ -31,7 +31,7 @@
 
     <insert id="saveDict" parameterType="io.renren.modules.sys.entity.DictEntity" useGeneratedKeys="true"
             keyProperty="secondId">
-      INSERT INTO dict(type_id, second_name, `desc`, `user_id`, unit) VALUES (#{typeId}, #{secondName},
+      INSERT INTO dict(type_id, second_name, second_id , `desc`, `user_id`, unit) VALUES (#{typeId}, #{secondName}, #{secondId},
       #{desc}, #{userId}, #{unit})
     </insert>
 

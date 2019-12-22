@@ -71,6 +71,8 @@ public class DictController {
         System.out.println(JSON.toJSONString(dict));
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
+        int maxid = dictService.maxSecondId() + 1;
+        dict.setSecondId(maxid);
         dict.setUserId(userid);
         dictService.saveDict(dict);
 

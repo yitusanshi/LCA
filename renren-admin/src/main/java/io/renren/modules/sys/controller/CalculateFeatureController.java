@@ -89,6 +89,7 @@ public class CalculateFeatureController {
         dictEntity.setTypeId(typeid);
         dictEntity.setSecondName(secondName);
         dictEntity.setUnit(unit);
+        System.out.println("--------" + maxid);
         dictEntity.setSecondId(maxid);
 
         List<CalculateFeatureEntity> list = new ArrayList<>();
@@ -109,11 +110,11 @@ public class CalculateFeatureController {
         //最后存入dict表
         if (typeid == 12 || typeid == 11) {
             dictEntity.setTypeId(11);
-            dictService.save(dictEntity);
+            dictService.saveDict(dictEntity);
             dictEntity.setTypeId(12);
-            dictService.save(dictEntity);
+            dictService.saveDict(dictEntity);
         } else {
-            dictService.save(dictEntity);
+            dictService.saveDict(dictEntity);
         }
 
         return R.ok();
