@@ -26,8 +26,6 @@ function queryData() {
                 tr += '<th style="width: 120px;text-align: center;">使用量/消耗量/排放量</th>';
                 tr += '<th style="width: 120px;text-align: center;">单位</th>';
                 tr += '</tr></thead><tbody>';
-
-
                 for (var i = 0; i < info.length; i++) {
                     var flag = info[i].flag;
                     var materialList = info[i].materialList;

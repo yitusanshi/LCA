@@ -28,7 +28,7 @@ public interface DictDao extends BaseMapper<DictEntity> {
 
     Integer saveDict(DictEntity dictEntity);
 
-    List<DictEntity> quertByTypeId(@Param("typeId") int typeId, @Param("userid") long userid);
+    List<DictEntity> quertByTypeId(@Param("typeId") int typeId);
     int querySystemBoundry(int prid);
     List<DictEntity> query(Map<String, Object> map);
     int maxSecondId();

@@ -110,7 +110,7 @@ public class DictController {
         System.out.println("-----"+ typeId);
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
-        List<DictEntity> list = dictService.quertByTypeId(typeId, userid);
+        List<DictEntity> list = dictService.quertByTypeId(typeId);
         //保持和前端同步
         return R.ok().put("dictList", list);
     }

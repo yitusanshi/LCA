@@ -45,6 +45,7 @@ function queryResult() {
                 tr += '<tr>';
                 tr += '<th rowspan="2" style="width: 120px;text-align: center;vertical-align: middle!important;">影响类型</th>';
                 tr += '<th rowspan="2" style="width: 100px;text-align: center;vertical-align: middle!important;">单位</th>';
+                tr += '<th colspan="3" style="width: 360px;text-align: center;">产品LCA对比</th>';
                 tr += '<th colspan="3" style="width: 360px;text-align: center;"><button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal">原料阶段</button></th>';
                 tr += '<th colspan="3" style="width: 360px;text-align: center;">生产阶段</th>';
                 tr += '<th colspan="3" style="width: 360px;text-align: center;">销售阶段</th>';
@@ -68,12 +69,25 @@ function queryResult() {
                 tr += '<td style="width: 120px;">' + versionOld + '</td>';
                 tr += '<td style="width: 120px;">' + versionNew + '</td>';
                 tr += '<td style="width: 120px;">对比结果</td>';
+                tr += '<td style="width: 120px;">' + versionOld + '</td>';
+                tr += '<td style="width: 120px;">' + versionNew + '</td>';
+                tr += '<td style="width: 120px;">对比结果</td>';
                 tr += '</tr></thead><tbody>';
                 for (var i = 0; i < info.length; i++) {
                     var listInfo = info[i];
                     tr += "<tr>";
                     tr += '<td style="width: 120px;">' + listInfo.typeName + '</td>';
                     tr += '<td style="width: 120px;">' + listInfo.unit + '</td>';
+
+
+
+                    /*
+                    * 总的结果
+                    * */
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.total_old) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.total_new) + '</td>';
+                    tr += '<td style="width: 120px;">' + converDate(listInfo.total_diff) + '</td>';
+
                     /*
                     * 原料阶段
                     * */

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -23,6 +24,7 @@ import io.renren.modules.sys.service.DictService;
 public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements DictService {
     @Autowired
     private DictDao dictDao;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         Integer typeid = Integer.valueOf((String) params.get("typeid"));
@@ -38,18 +40,20 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
         return new PageUtils(page);
     }
 
-    public  DictEntity getByseconId(int secondid){
+    public DictEntity getByseconId(int secondid) {
         DictEntity dictEntity = dictDao.getByseconId(secondid);
         return dictEntity;
     }
-    public void updateBysencondId(DictEntity dictEntity){
+
+    public void updateBysencondId(DictEntity dictEntity) {
         dictDao.updateBysencondId(dictEntity);
     }
-    public void removeSecondIds(List<Integer> ids){
+
+    public void removeSecondIds(List<Integer> ids) {
         dictDao.removeSecondIds(ids);
     }
 
-    public Integer saveDict(DictEntity dictEntity){
+    public Integer saveDict(DictEntity dictEntity) {
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
         dictEntity.setUserId(userid);
@@ -57,18 +61,20 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
         System.out.println("-------" + dictEntity.getSecondId());
         return dictEntity.getSecondId();
     }
-    public List<DictEntity> quertByTypeId(int typeId, long userid){
-        return dictDao.quertByTypeId(typeId, userid);
+
+    public List<DictEntity> quertByTypeId(int typeId) {
+        return dictDao.quertByTypeId(typeId);
     }
 
-    public int querySystemBoundry(int prid){
+    public int querySystemBoundry(int prid) {
         return dictDao.querySystemBoundry(prid);
     }
 
-    public List<DictEntity> query(Map<String, Object> map){
+    public List<DictEntity> query(Map<String, Object> map) {
         return dictDao.query(map);
     }
-    public int maxSecondId(){
+
+    public int maxSecondId() {
         return dictDao.maxSecondId();
     }
 }
