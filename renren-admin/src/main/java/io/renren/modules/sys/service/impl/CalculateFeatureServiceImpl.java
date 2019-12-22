@@ -30,10 +30,12 @@ public class CalculateFeatureServiceImpl extends ServiceImpl<CalculateFeatureDao
 
     @Resource
     private CalculateFeatureDao calculateFeatureDao;
+
     @Override
     public List<CalculateFeatureEntity> queryPage2(Map<String, Object> params) {
 
-        List<CalculateFeatureEntity> list = calculateFeatureDao.queryByIds((List<Integer>) params.get("secondIdList"));
+//        List<CalculateFeatureEntity> list = calculateFeatureDao.queryByIds((List<Integer>) params.get("secondIdList"));
+        List<CalculateFeatureEntity> list = calculateFeatureDao.queryByMapIds((HashMap<String, Object>) params);
         return list;
 
     }

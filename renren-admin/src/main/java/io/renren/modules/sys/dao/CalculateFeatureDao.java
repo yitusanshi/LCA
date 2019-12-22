@@ -20,7 +20,7 @@ public interface CalculateFeatureDao extends BaseMapper<CalculateFeatureEntity> 
     List<CalculateFeatureEntity> getById(int id);
 
     List<CalculateFeatureEntity> queryByIds(@Param("ids") List<Integer> ids);
-    /*    List<CalculateFeatureEntity> queryByMapIds(HashMap<String, Object> map);*/
+     List<CalculateFeatureEntity> queryByMapIds(HashMap<String, Object> map);
 
 
     void update(@Param("id") int id, @Param("factor") double factor);
