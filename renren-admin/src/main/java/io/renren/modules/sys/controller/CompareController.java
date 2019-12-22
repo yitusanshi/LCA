@@ -182,13 +182,17 @@ public class CompareController {
             map.put("userId", getUserId());
             map.put("flag", 4);
             map.put("parentId", 0);//代表原材料
-            map.put("formId", 10);
+            //map.put("formId", 10);
             map.put("prId", prId);
             List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
             System.out.println("=====" + usageStatisticsEntityList.size());
             JSONArray array = new JSONArray();
             for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
                 JSONObject json = (JSONObject) JSONObject.toJSON(usage);
+                if (json.getInteger("formId") != 10 ){
+                    array.add(json);
+                    continue;
+                }
                 JSONArray array1 = new JSONArray();
                 for (int j = 11; j <= 15; j++) {
                     Map<String, Object> map1 = new HashMap<>();
@@ -209,6 +213,17 @@ public class CompareController {
                 array.add(json);
             }
             jsonObject.put("materialList", array);
+
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("version", version);
+            map1.put("userId", getUserId());
+            map1.put("flag", 4);
+            map1.put("parentId", 0);
+            map1.put("formId", 14);//运输
+            map1.put("prId", prId);
+            List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map1);
+            jsonObject.put("transPortList", transportEntityList);
+
             jsonArray.add(jsonObject);
         }
         System.out.println(JSON.toJSONString(jsonArray));
