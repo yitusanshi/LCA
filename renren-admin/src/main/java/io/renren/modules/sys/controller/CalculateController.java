@@ -145,14 +145,14 @@ public class CalculateController {
         sumTotal(list);
         //平均计算
         Double d = batchService.getusageByVersion(version, prId);
+        BigDecimal bigDecimal = new BigDecimal(d);
         if (d != null){
-            BigDecimal bigDecimal = new BigDecimal(d);
             for (ResultEntity resultEntity : list){
-                average(resultEntity, bigDecimal);
+                devide(resultEntity, bigDecimal);
             }
         }
-
-        /*for (ResultEntity resultEntity : list){
+/*
+        for (ResultEntity resultEntity : list){
             devide(resultEntity, bigDecimal);
         }*/
 
@@ -170,6 +170,8 @@ public class CalculateController {
         resultEntity.setSellStage(toEngineering(new BigDecimal(resultEntity.getSellStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getRecoveryStage()))
         resultEntity.setRecoveryStage(toEngineering(new BigDecimal(resultEntity.getRecoveryStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
+        if (Strings.isNotEmpty(resultEntity.getTotal()))
+            resultEntity.setTotal(toEngineering(new BigDecimal(resultEntity.getTotal()).divide(bigDecimal, ROUND_HALF_DOWN)));
     }
     public void calculateMaterial(int i, List<ResultEntity> list, List<UsageStatisticsEntity> usageStatisticsEntityList) {
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
@@ -530,7 +532,6 @@ public class CalculateController {
     }
 
     public void average(ResultEntity resultEntity , BigDecimal bigDecimal){
-        if (Strings.isNotEmpty(resultEntity.getTotal()))
-            resultEntity.setAverage(toEngineering(new BigDecimal(resultEntity.getTotal()).divide(bigDecimal, ROUND_HALF_DOWN)));
+
     }
 }

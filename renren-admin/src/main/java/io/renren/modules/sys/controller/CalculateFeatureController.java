@@ -7,11 +7,13 @@ import io.renren.common.utils.Query;
 import io.renren.common.utils.R;
 import io.renren.modules.sys.entity.CalculateFeatureEntity;
 import io.renren.modules.sys.entity.DictEntity;
+import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.CalculateFeatureService;
 import io.renren.modules.sys.service.DictService;
 import io.renren.modules.sys.service.impl.CalculateFeatureServiceImpl;
 import io.renren.modules.sys.service.impl.DictServiceImpl;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -89,8 +91,10 @@ public class CalculateFeatureController {
         dictEntity.setTypeId(typeid);
         dictEntity.setSecondName(secondName);
         dictEntity.setUnit(unit);
-        System.out.println("--------" + maxid);
         dictEntity.setSecondId(maxid);
+
+        SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        dictEntity.setUserId(userEntity.getUserId());
 
         List<CalculateFeatureEntity> list = new ArrayList<>();
         for (int i = 1; i <= 14; i++) {

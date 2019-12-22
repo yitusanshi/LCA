@@ -35,8 +35,8 @@
       #{desc}, #{userId}, #{unit})
     </insert>
 
-    <select id="quertByTypeId" parameterType="java.lang.Integer" resultMap="dictMap">
-        SELECT * FROM dict WHERE type_id = #{0}
+    <select id="quertByTypeId"  resultMap="dictMap">
+        SELECT * FROM dict WHERE type_id = #{typeId} AND user_id = #{userid}
     </select>
     <select id="querySystemBoundry" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         SELECT d.second_id FROM product_define p JOIN dict d on p.system_boundary = d.second_id AND p.id = #{0}
