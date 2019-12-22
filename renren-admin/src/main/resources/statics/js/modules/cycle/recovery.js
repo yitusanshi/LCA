@@ -718,10 +718,8 @@ function addTransPort(typeId) {
                             $("#trans_port_weight").val("");
                             layer.close(index);
                             if (typeId == "14") {
-                                alert("刷新14" + typeId);
                                 showMaterial("", vm.materialId, vm.material_name);
                             } else {
-                                alert("99999" + typeId);
                                 vm.reloadTransPort();
                             }
 
