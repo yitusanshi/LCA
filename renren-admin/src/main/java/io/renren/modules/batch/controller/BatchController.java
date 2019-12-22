@@ -13,6 +13,8 @@ import io.renren.modules.batch.vo.BatchVo;
 import io.renren.modules.cycle.entity.UsageStatisticsEntity;
 import io.renren.modules.cycle.service.UsageStatisticsService;
 import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.entity.TransportEntity;
+import io.renren.modules.sys.service.TransportService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +45,9 @@ public class BatchController extends AbstractController {
 
     @Autowired
     private UsageStatisticsService usageStatisticsService;
+
+    @Autowired
+    private TransportService transportService;
 
     /**
      * 列表
@@ -149,11 +154,15 @@ public class BatchController extends AbstractController {
     @RequestMapping("/saveData")
     public R saveDateUsage(@RequestParam Map<String, Object> params) {
         String batchNo = (String) params.get("batchNo");
-        System.out.println("获取的结果值："+params);
-        String datas = params.get("datas").toString();
+        System.out.println("获取的结果值：" + params);
+
         String prUsage = (String) params.get("prUsage");
         String prUnit = (String) params.get("prUnit");
-        if (!StringUtils.isNotBlank(batchNo) || batchNo == null) {
+        String prId = (String) params.get("prId");
+        if (StringUtils.isBlank(prId) || "-1".equals(prId)) {
+            return R.error("请选择需要修改的产品批次号为空！");
+        }
+        if (StringUtils.isBlank(batchNo) || batchNo == null) {
             return R.error("批次号为空！");
         }
         if (StringUtils.isBlank(prUsage) || prUsage == null || "".equals(prUsage)) {
@@ -162,25 +171,16 @@ public class BatchController extends AbstractController {
         if (Double.valueOf(prUsage) <= 0) {
             return R.error("产品使用量不能为0!");
         }
-        System.out.println(datas);
-        if (datas == null || "".equals(datas) || "{}".equals(datas)) {
-            return R.error("没有需要保存的数据");
-        }
-        JSONObject myJson = JSONObject.fromObject(datas);
-
-        List flag = (List) myJson.get("flag");
-        List userId = (List) myJson.get("userId");
-        List formId = (List) myJson.get("formId");
-        List prId = (List) myJson.get("prId");
-        List parentId = (List) myJson.get("parentId");
-        List prName = (List) myJson.get("prName");
-        List materialId = (List) myJson.get("materialId");
-        List materialName = (List) myJson.get("materialName");
-        List materialUsage = (List) myJson.get("materialUsage");
-        List unit = (List) myJson.get("unit");
-
+        String flagForm0 = params.get("flagForm0").toString();
+        String flagForm1 = params.get("flagForm1").toString();
+        String trantForm2 = params.get("trantForm2").toString();
+        String flagForm3 = params.get("flagForm3").toString();
+        String flagForm4 = params.get("flagForm4").toString();
+        String trantForm0 = params.get("trantForm0").toString();
+        String trantForm4 = params.get("trantForm4").toString();
+        System.out.println(flagForm0);
         BatchVo batchVo = new BatchVo();
-        batchVo.setPrId(Integer.valueOf(prId.get(0).toString()));
+        batchVo.setPrId(Integer.valueOf(prId));
         batchVo.setBatchNo(batchNo);
         batchVo.setUserId(getUserId());
         List<BatchEntity> list = batchService.getBatchByBatchVo(batchVo);
@@ -190,7 +190,7 @@ public class BatchController extends AbstractController {
         BatchEntity batch = new BatchEntity();
         batch.setBatchNo(batchNo);
         batch.setUserId(getUserId());
-        batch.setPrId(Integer.valueOf(prId.get(0).toString()));
+        batch.setPrId(Integer.valueOf(prId));
         batch.setPrUsage(Double.valueOf(prUsage));
         batch.setPrUnit(prUnit);
         boolean flags = batchService.save(batch);
@@ -198,24 +198,137 @@ public class BatchController extends AbstractController {
             return R.error("保存批次号出现问题，请联系管理员");
         }
         List<UsageStatisticsEntity> listusageStatistics = new ArrayList<>();
-        for (int i = 0; i < flag.size(); i++) {
-            UsageStatisticsEntity usageStatistics = new UsageStatisticsEntity();
-            usageStatistics.setFlag(Integer.valueOf(flag.get(i).toString()));
-            usageStatistics.setPrId(Integer.valueOf(prId.get(i).toString()));
-            usageStatistics.setPrName((String) prName.get(i));
-            usageStatistics.setMaterialUsage(Double.valueOf(materialUsage.get(i).toString()));
-            usageStatistics.setMaterialName((String) materialName.get(i));
-            usageStatistics.setUnit((String) unit.get(i));
-            usageStatistics.setParentId(Integer.valueOf(parentId.get(i).toString()));
-            usageStatistics.setVersion(batchNo);
-            usageStatistics.setUserId(Long.valueOf(userId.get(i).toString()));
-            usageStatistics.setFormId((String) formId.get(i));
-            usageStatistics.setMaterialId(Integer.valueOf(materialId.get(i).toString()));
-            listusageStatistics.add(usageStatistics);
+
+        if (flagForm0.indexOf("flag") != -1) {
+            listusageStatistics.addAll(getUsageStatisticsBy(flagForm0, batchNo));
         }
-        usageStatisticsService.saveBatch(listusageStatistics);
+        if (flagForm1.indexOf("flag") != -1) {
+            listusageStatistics.addAll(getUsageStatisticsBy(flagForm1, batchNo));
+        }
+        if (flagForm3.indexOf("flag") != -1) {
+            listusageStatistics.addAll(getUsageStatisticsBy(flagForm3, batchNo));
+        }
+        if (flagForm4.indexOf("flag") != -1) {
+            listusageStatistics.addAll(getUsageStatisticsBy(flagForm4, batchNo));
+        }
+        if (listusageStatistics.size() > 0) {
+            usageStatisticsService.saveBatch(listusageStatistics);
+        }
+
+        List<TransportEntity> transportEntities = new ArrayList<>();
+        if (trantForm2.indexOf("flag") != -1) {
+            transportEntities.addAll(getTransportEntityBy(trantForm2, batchNo));
+        }
+        if (trantForm0.indexOf("flag") != -1) {
+            transportEntities.addAll(getTransportEntityBy(trantForm0, batchNo));
+        }
+        if (trantForm4.indexOf("flag") != -1) {
+            transportEntities.addAll(getTransportEntityBy(trantForm4, batchNo));
+        }
+        if (transportEntities.size() > 0) {
+            transportService.saveBatch(transportEntities);
+        }
         return R.ok();
     }
 
+
+    public List<UsageStatisticsEntity> getUsageStatisticsBy(String flagForm, String batchNo) {
+        List<UsageStatisticsEntity> listusageStatistics = new ArrayList<>();
+        JSONObject myJson = JSONObject.fromObject(flagForm);
+
+        if (flagForm.indexOf("[") != -1) {
+            List flag = (List) myJson.get("flag");
+            List userId = (List) myJson.get("userId");
+            List formId = (List) myJson.get("formId");
+            List prId = (List) myJson.get("prId");
+            List parentId = (List) myJson.get("parentId");
+            List prName = (List) myJson.get("prName");
+            List materialId = (List) myJson.get("materialId");
+            List materialName = (List) myJson.get("materialName");
+            List materialUsage = (List) myJson.get("materialUsage");
+            List unit = (List) myJson.get("unit");
+            List sourceFlag = (List) myJson.get("sourceFlag");
+            for (int i = 0; i < flag.size(); i++) {
+                UsageStatisticsEntity usageStatistics = new UsageStatisticsEntity();
+                usageStatistics.setFlag(Integer.valueOf(flag.get(i).toString()));
+                usageStatistics.setPrId(Integer.valueOf(prId.get(i).toString()));
+                usageStatistics.setPrName((String) prName.get(i));
+                usageStatistics.setMaterialUsage(Double.valueOf(materialUsage.get(i).toString()));
+                usageStatistics.setMaterialName((String) materialName.get(i));
+                usageStatistics.setUnit((String) unit.get(i));
+                usageStatistics.setParentId(Integer.valueOf(parentId.get(i).toString()));
+                usageStatistics.setVersion(batchNo);
+                usageStatistics.setUserId(Long.valueOf(userId.get(i).toString()));
+                usageStatistics.setFormId((String) formId.get(i));
+                usageStatistics.setMaterialId(Integer.valueOf(materialId.get(i).toString()));
+                usageStatistics.setSourceFlag(Integer.valueOf(sourceFlag.get(i).toString()));
+                listusageStatistics.add(usageStatistics);
+            }
+        } else {
+            UsageStatisticsEntity usageStatistics = new UsageStatisticsEntity();
+            usageStatistics.setFlag(Integer.valueOf(myJson.get("flag").toString()));
+            usageStatistics.setPrId(Integer.valueOf(myJson.get("prId").toString()));
+            usageStatistics.setPrName(myJson.get("prName").toString());
+            usageStatistics.setMaterialUsage(Double.valueOf(myJson.get("materialUsage").toString()));
+            usageStatistics.setMaterialName((myJson.get("materialName").toString()));
+            usageStatistics.setUnit(myJson.get("unit").toString());
+            usageStatistics.setParentId(Integer.valueOf(myJson.get("parentId").toString()));
+            usageStatistics.setVersion(batchNo);
+            usageStatistics.setUserId(Long.valueOf(myJson.get("userId").toString()));
+            usageStatistics.setFormId(myJson.get("formId").toString());
+            usageStatistics.setMaterialId(Integer.valueOf(myJson.get("materialId").toString()));
+            usageStatistics.setSourceFlag(Integer.valueOf(myJson.get("sourceFlag").toString()));
+            listusageStatistics.add(usageStatistics);
+        }
+        return listusageStatistics;
+    }
+
+    public List<TransportEntity> getTransportEntityBy(String trantForm, String batchNo) {
+        List<TransportEntity> transportEntities = new ArrayList<>();
+        JSONObject myJson = JSONObject.fromObject(trantForm);
+        if (trantForm.indexOf("[") != -1) {
+            List prName = (List) myJson.get("prName");
+            List materialName = (List) myJson.get("materialName");
+            List type = (List) myJson.get("type");
+            List distance = (List) myJson.get("distance");
+            List weight = (List) myJson.get("weight");
+            List source = (List) myJson.get("source");
+            List flag = (List) myJson.get("flag");
+            List userId = (List) myJson.get("userId");
+            List prId = (List) myJson.get("prId");
+            List parentId = (List) myJson.get("parentId");
+            for (int i = 0; i < flag.size(); i++) {
+                TransportEntity transportEntity = new TransportEntity();
+                transportEntity.setPrName((String) prName.get(i));
+                transportEntity.setPrId(Integer.valueOf(prId.get(i).toString()));
+                transportEntity.setUserId(Long.valueOf(userId.get(i).toString()));
+                transportEntity.setWeight(Double.valueOf(weight.get(i).toString()));
+                transportEntity.setDistance(Double.valueOf(distance.get(i).toString()));
+                transportEntity.setType(Integer.valueOf(type.get(i).toString()));
+                transportEntity.setMaterialName(materialName.get(i).toString());
+                transportEntity.setSource(source.get(i).toString());
+                transportEntity.setParentId(Integer.valueOf(parentId.get(i).toString()));
+                transportEntity.setVersion(batchNo);
+                transportEntities.add(transportEntity);
+            }
+        } else {
+            TransportEntity transportEntity = new TransportEntity();
+            transportEntity.setPrName((String) myJson.get("prName"));
+            transportEntity.setPrId(Integer.valueOf(myJson.get("prId").toString()));
+            transportEntity.setUserId(Long.valueOf(myJson.get("userId").toString()));
+            transportEntity.setWeight(Double.valueOf(myJson.get("weight").toString()));
+            transportEntity.setDistance(Double.valueOf(myJson.get("distance").toString()));
+            transportEntity.setType(Integer.valueOf(myJson.get("type").toString()));
+            transportEntity.setMaterialName(myJson.get("materialName").toString());
+            transportEntity.setSource(myJson.get("source").toString());
+            transportEntity.setParentId(Integer.valueOf(myJson.get("parentId").toString()));
+            transportEntity.setVersion(batchNo);
+            transportEntities.add(transportEntity);
+        }
+
+
+        return transportEntities;
+
+    }
 
 }
