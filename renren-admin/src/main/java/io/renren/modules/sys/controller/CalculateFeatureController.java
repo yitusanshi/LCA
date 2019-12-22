@@ -107,7 +107,7 @@ public class CalculateFeatureController {
         }
         calculateFeatureService.saveList(list);
         //最后存入dict表
-        if (typeid == 12) {
+        if (typeid == 12 || typeid == 11) {
             dictEntity.setTypeId(11);
             dictService.save(dictEntity);
             dictEntity.setTypeId(12);
