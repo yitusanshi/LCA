@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -227,7 +229,7 @@ public class CalculateController {
             UsageStatisticsEntity usageStatisticsEntity = usageStatisticsService.getUsageByParm(paraMap);
 
             System.out.println("---------------------" + usageStatisticsEntity.getMaterialName());
-           // divide(json, usageStatisticsEntity.getMaterialUsage());
+           divide(json, usageStatisticsEntity.getMaterialUsage());
 
             if (i == 0){
                 //原料阶段
@@ -474,11 +476,11 @@ public class CalculateController {
         if (bigDecimal == null) {
             return null;
         }
-        BigDecimal flag = new BigDecimal("0.0000001");
+        BigDecimal flag = new BigDecimal("0.0001");
         if (bigDecimal.compareTo(flag) >= 0) {
-            return bigDecimal.setScale(6, ROUND_HALF_DOWN).toString();
+            return bigDecimal.setScale(4, ROUND_HALF_DOWN).toString();
         } else {
-            return new DecimalFormat("#.######E0").format(bigDecimal);
+            return new DecimalFormat("#.####E0").format(bigDecimal);
             //bigDecimal.stripTrailingZeros().toString();
         }
     }
@@ -533,5 +535,11 @@ public class CalculateController {
 
     public void average(ResultEntity resultEntity , BigDecimal bigDecimal){
 
+    }
+
+    public static void main(String[] args) {
+        System.out.println(toEngineering(new BigDecimal("1.00000000000000000012417")));
+        BigDecimal a = new  BigDecimal("0.000051233456", new MathContext(5, RoundingMode.HALF_UP));//构造BigDecimal时指定有效精度
+        System.out.println(a.toEngineeringString());
     }
 }
