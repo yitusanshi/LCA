@@ -13,17 +13,19 @@ function queryData() {
                 for (var i = 0; i < info.length; i++) {
                     var flag = info[i].flag;
                     if (flag == "0") {
-                        $("#flagTbody0").html(getHtmlByFlag0(info[i].materialList));
-                        $("#trantTbody0").html(trTranHtml(info[i].transPortList));
+                        $("#flagTbody0").html(getHtmlByFlag0(info[i].materialList)[0]);
+                        $("#trantTbody00").html(getHtmlByFlag0(info[i].materialList)[1])
+                        $("#trantTbody0").html(trTranHtml(info[i].transPortList, "-1"));
                     } else if (flag == "1") {
                         $("#flagTbody1").html(getHtmlByFlag1(info[i].materialList));
                     } else if (flag == "2") {
-                        $("#trantTbody2").html(trTranHtml(info[i].transPortList));
+                        $("#trantTbody2").html(trTranHtml(info[i].transPortList, "-1"));
                     } else if (flag == "3") {
                         $("#flagTbody3").html(getHtmlByFlag1(info[i].materialList));
                     } else if (flag == "4") {
-                        $("#flagTbody4").html(getHtmlByFlag4(info[i].materialList));
-                        $("#trantTbody4").html(trTranHtml(info[i].transPortList));
+                        $("#flagTbody4").html(getHtmlByFlag4(info[i].materialList)[0]);
+                        $("#trantTbody44").html(getHtmlByFlag4(info[i].materialList)[1])
+                        $("#trantTbody4").html(trTranHtml(info[i].transPortList, "-1"));
                     }
                 }
             } else {
@@ -60,7 +62,7 @@ function getHtmlByFlag0(materialList) {
                     tr += trHtml(materialList[i].materialName, infoList[m], "排放与废弃");
                 }
             } else if (formId == "14") {
-
+                transTr += trTranHtml(infoList, materialList[i].materialName);
             } else if (formId == "15") {
                 for (var m = 0; m < infoList.length; m++) {
                     tr += trHtml(materialList[i].materialName, infoList[m], "包装过程");
@@ -68,9 +70,8 @@ function getHtmlByFlag0(materialList) {
             }
         }
     }
-    return tr;
+    return [tr, transTr];
 }
-
 
 /*
 * 生产阶段
@@ -103,7 +104,7 @@ function getHtmlByFlag1(materialList) {
 /*
 * 回收处理阶段
 * */
-function getHtmlByFlag4(materialList) {
+function getHtmlByFlag4(materialList, materialName) {
     var tr = "";
     var transTr = "";
     for (var i = 0; i < materialList.length; i++) {
@@ -126,7 +127,7 @@ function getHtmlByFlag4(materialList) {
                         tr += trHtml(materialList[i].materialName, infoList[m], "排放与废弃");
                     }
                 } else if (formId == "14") {
-
+                    transTr += trTranHtml(infoList, materialList[i].materialName);
                 } else if (formId == "15") {
                     for (var m = 0; m < infoList.length; m++) {
                         tr += trHtml(materialList[i].materialName, infoList[m], "包装过程");
@@ -135,17 +136,22 @@ function getHtmlByFlag4(materialList) {
             }
         }
     }
-    return tr;
+    return [tr, transTr];
 }
 
-function trTranHtml(objInfos) {
+function trTranHtml(objInfos, materialName) {
     var tr = "";
     for (var i = 0; i < objInfos.length; i++) {
         var objInfo = objInfos[i];
         tr += '<tr>';
         tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + objInfo.prName + '"></td>';
+        if (materialName != "-1") {
+            console.log("9999" + "===" + materialName);
+            tr += '<td><input id="fmaterialName" class="noBorder" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialName + '"></td>';
+        }
+        ;
         tr += '<td><input id="materialName" class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + objInfo.materialName + '"></td>';
-        tr += '<td><input id="type" class="noBorder" name="type" style="width: 120px;" readonly="readonly" value="' + objInfo.type + '"></td>';
+        tr += '<td><input id="typeName" class="noBorder" name="typeName" style="width: 120px;" readonly="readonly" value="' + objInfo.typeName + '"></td>';
         tr += '<td><input id="distance" class="noBorder" type="text" name="distance" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + objInfo.distance + '"></td>';
         tr += '<td><input id="weight" class="noBorder" type="text" name="weight" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + objInfo.weight + '"></td>';
         tr += '<td><input id="source" class="noBorder" name="source" style="width: 120px;" readonly="readonly" value="' + objInfo.source + '"></td>';
@@ -153,8 +159,10 @@ function trTranHtml(objInfos) {
         tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + objInfo.userId + '"></td>';
         tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + objInfo.prId + '"></td>';
         tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + objInfo.parentId + '"></td>';
+        tr += '<td style="display: none"><input id="type" class="noBorder" name="type" style="width: 120px;display: none" readonly="readonly" value="' + objInfo.type + '"></td>';
         tr += "</tr>";
     }
+    console.log(tr);
     return tr;
 
 
@@ -372,13 +380,34 @@ function saveData() {
                 "prUsage": vm.bUsage,
                 "prUnit": vm.bUnit,
                 "prId": vm.prSelect,
+                /*
+                * 原料阶段
+                * */
                 "flagForm0": JSON.stringify($('#flagForm0').serializeObject()),
                 "trantForm0": JSON.stringify($('#trantForm0').serializeObject()),
+                "trantForm00":JSON.stringify($('#trantForm00').serializeObject()),
+
+
+                /*
+                * 生产阶段
+                * */
                 "flagForm1": JSON.stringify($('#flagForm1').serializeObject()),
+
+                /*
+                * 销售阶段
+                * */
                 "trantForm2": JSON.stringify($('#trantForm2').serializeObject()),
 
+                /*
+                * 使用阶段
+                * */
                 "flagForm3": JSON.stringify($('#flagForm3').serializeObject()),
+
+                /*
+                * 回收阶段
+                * */
                 "flagForm4": JSON.stringify($('#flagForm4').serializeObject()),
+                "trantForm44": JSON.stringify($('#trantForm44').serializeObject()),
                 "trantForm4": JSON.stringify($('#trantForm4').serializeObject())
             };
             $.ajax({

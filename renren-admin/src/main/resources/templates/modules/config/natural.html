@@ -11,6 +11,7 @@
             <shiro.hasPermission name="calculateFeature:save">
                 <a class="btn btn-primary" onclick="queryNaturalData()"><i class="fa fa-search"></i>&nbsp;查询</a>
             </shiro.hasPermission>
+
             <shiro.hasPermission name="calculateFeature:save">
                 <a class="btn btn-primary" @click="addBgFactor"><i class="fa fa-plus"></i>&nbsp;新增</a>
             </shiro.hasPermission>
@@ -73,7 +74,8 @@
                     <label class="layui-form-label" style="width: 250px;">初级能源消耗(PED)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg1" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onkeyup="value=value.replace(/[^-\d.]/g,'')">
+                        <!-- onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">-->
                     </div>
                 </div>
                 <div class="layui-inline">

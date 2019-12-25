@@ -92,6 +92,27 @@ function queryNaturalData() {
     vm.reload();
 }
 
+function outData() {
+
+    $("#naturalTable").table2excel({            //exceltable为存放数据的table
+        // 不被导出的表格行的CSS class类
+        exclude: ".noExl",
+        // 导出的Excel文档的名称
+        name: "表格-" + new Date().getTime(),
+        // Excel文件的名称
+        filename: "表格-" + new Date().getTime() + ".xls"
+    });
+
+    /*
+
+        let table2excel = new Table2Excel();
+    // 传入你的tableId即可导出
+        table2excel.export($('#naturalTable'), "your filename");
+    */
+
+}
+
+
 var vm = new Vue({
     el: '#rrapp',
     data: {
@@ -148,9 +169,6 @@ var vm = new Vue({
                     });
                 }
             });
-        },
-        updateBgFactorById: function () {
-
         },
         reload: function (event) {
             vm.showList = true;

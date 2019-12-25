@@ -173,11 +173,16 @@ public class BatchController extends AbstractController {
         }
         String flagForm0 = params.get("flagForm0").toString();
         String flagForm1 = params.get("flagForm1").toString();
-        String trantForm2 = params.get("trantForm2").toString();
+
         String flagForm3 = params.get("flagForm3").toString();
         String flagForm4 = params.get("flagForm4").toString();
+
+
+        String trantForm2 = params.get("trantForm2").toString();
         String trantForm0 = params.get("trantForm0").toString();
         String trantForm4 = params.get("trantForm4").toString();
+        String trantForm00 = params.get("trantForm00").toString();
+        String trantForm44 = params.get("trantForm44").toString();
         System.out.println(flagForm0);
         BatchVo batchVo = new BatchVo();
         batchVo.setPrId(Integer.valueOf(prId));
@@ -224,6 +229,12 @@ public class BatchController extends AbstractController {
         }
         if (trantForm4.indexOf("flag") != -1) {
             transportEntities.addAll(getTransportEntityBy(trantForm4, batchNo));
+        }
+        if (trantForm44.indexOf("flag") != -1) {
+            transportEntities.addAll(getTransportEntityBy(trantForm44, batchNo));
+        }
+        if (trantForm00.indexOf("flag") != -1) {
+            transportEntities.addAll(getTransportEntityBy(trantForm00, batchNo));
         }
         if (transportEntities.size() > 0) {
             transportService.saveBatch(transportEntities);
@@ -307,6 +318,7 @@ public class BatchController extends AbstractController {
                 transportEntity.setType(Integer.valueOf(type.get(i).toString()));
                 transportEntity.setMaterialName(materialName.get(i).toString());
                 transportEntity.setSource(source.get(i).toString());
+                transportEntity.setFlag(Integer.valueOf(flag.get(i).toString()));
                 transportEntity.setParentId(Integer.valueOf(parentId.get(i).toString()));
                 transportEntity.setVersion(batchNo);
                 transportEntities.add(transportEntity);
@@ -314,6 +326,7 @@ public class BatchController extends AbstractController {
         } else {
             TransportEntity transportEntity = new TransportEntity();
             transportEntity.setPrName((String) myJson.get("prName"));
+            transportEntity.setFlag(Integer.valueOf(myJson.get("flag").toString()));
             transportEntity.setPrId(Integer.valueOf(myJson.get("prId").toString()));
             transportEntity.setUserId(Long.valueOf(myJson.get("userId").toString()));
             transportEntity.setWeight(Double.valueOf(myJson.get("weight").toString()));

@@ -203,6 +203,27 @@ function converDate(data) {
 
 }
 
+
+
+function outData() {
+    if (vm.prSelect == "-1") {
+        alert("请选择产品");
+        return;
+    }
+    if (vm.batchSelect == "-1") {
+        alert("请选择批次号");
+        return;
+    }
+
+    $("#resultTable").table2excel({            //exceltable为存放数据的table
+        // 不被导出的表格行的CSS class类
+        exclude: ".noExl",
+        // 导出的Excel文档的名称
+        name: "结果-" + new Date().getTime(),
+        // Excel文件的名称
+        filename: "对比结果-" + new Date().getTime() + ".xls"
+    });
+}
 var vm = new Vue({
     el: '#rrapp',
     data: {
