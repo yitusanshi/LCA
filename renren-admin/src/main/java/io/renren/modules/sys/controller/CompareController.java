@@ -7,9 +7,12 @@ import com.qiniu.util.StringUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.cycle.entity.UsageStatisticsEntity;
 import io.renren.modules.cycle.service.UsageStatisticsService;
+import io.renren.modules.sys.entity.DictEntity;
 import io.renren.modules.sys.entity.ResultEntity;
 import io.renren.modules.sys.entity.TransportEntity;
+import io.renren.modules.sys.service.DictService;
 import io.renren.modules.sys.service.TransportService;
+import io.renren.modules.sys.service.impl.DictServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +42,8 @@ public class CompareController {
 
     @Resource
     private TransportService transportService;
+    @Resource
+    private DictServiceImpl dictService;
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public R getInfo(@RequestParam("batchNo") String batchNo, @RequestParam("prId") int prId) {
@@ -62,7 +67,8 @@ public class CompareController {
             for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
                 JSONObject json = (JSONObject) JSONObject.toJSON(usage);
                 JSONArray array1 = new JSONArray();
-                for (int j = 11; j <= 15; j++) {
+                Integer[] arr = new Integer[]{11,12,13,15};
+                for (int j : arr) {
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("version", version);
                     map1.put("userId", getUserId());
@@ -77,12 +83,32 @@ public class CompareController {
                     json1.put("infoList", entityList);
                     array1.add(json1);
                 }
+                //比如钢帘线的运输
+                if(usage.getMaterialId() != 0){
+                    Map<String, Object> map2 = new HashMap<>();
+                    map2.put("version", version);
+                    map2.put("userId", getUserId());
+                    map2.put("flag", 0);
+                    map2.put("parentId", usage.getMaterialId());
+                    map2.put("prId", prId);
+                    List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map2);
+                    for (TransportEntity transportEntity : transportEntityList){
+                        DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
+                        transportEntity.setTypeName(dictEntity.getSecondName());
+                    }
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("formId", 14);
+                    jsonObject1.put("infoList", transportEntityList);
+                    array1.add(jsonObject1);
+                }
+
+
                 json.put("prNameList", array1);
                 array.add(json);
             }
             jsonObject.put("materialList", array);
 
-
+            //原料阶段的运输
             Map<String, Object> map1 = new HashMap<>();
             map1.put("version", version);
             map1.put("userId", getUserId());
@@ -91,6 +117,10 @@ public class CompareController {
             map1.put("formId", 14);//运输
             map1.put("prId", prId);
             List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map1);
+            for (TransportEntity transportEntity : transportEntityList){
+                DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
+                transportEntity.setTypeName(dictEntity.getSecondName());
+            }
             jsonObject.put("transPortList", transportEntityList);
 
             jsonArray.add(jsonObject);
@@ -194,7 +224,8 @@ public class CompareController {
                     continue;
                 }
                 JSONArray array1 = new JSONArray();
-                for (int j = 11; j <= 15; j++) {
+                Integer[] arr = new Integer[]{11,12,13,15};
+                for (int j : arr) {
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("version", version);
                     map1.put("userId", getUserId());
@@ -209,6 +240,25 @@ public class CompareController {
                     json1.put("infoList", entityList);
                     array1.add(json1);
                 }
+                //比如钢帘线的运输
+                if(usage.getMaterialId() != 0){
+                    Map<String, Object> map2 = new HashMap<>();
+                    map2.put("version", version);
+                    map2.put("userId", getUserId());
+                    map2.put("flag", 4);
+                    map2.put("parentId", usage.getMaterialId());
+                    map2.put("prId", prId);
+                    List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map2);
+                    for (TransportEntity transportEntity : transportEntityList){
+                        DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
+                        transportEntity.setTypeName(dictEntity.getSecondName());
+                    }
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("formId", 14);
+                    jsonObject1.put("infoList", transportEntityList);
+                    array1.add(jsonObject1);
+                }
+
                 json.put("prNameList", array1);
                 array.add(json);
             }
@@ -222,6 +272,10 @@ public class CompareController {
             map1.put("formId", 14);//运输
             map1.put("prId", prId);
             List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map1);
+            for (TransportEntity transportEntity : transportEntityList){
+                DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
+                transportEntity.setTypeName(dictEntity.getSecondName());
+            }
             jsonObject.put("transPortList", transportEntityList);
 
             jsonArray.add(jsonObject);

@@ -75,4 +75,6 @@ public class TransportEntity implements Serializable {
     private int prId;
 
     private String prName;
+
+    private String typeName;
 }
