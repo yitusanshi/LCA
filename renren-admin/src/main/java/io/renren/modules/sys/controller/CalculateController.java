@@ -122,6 +122,9 @@ public class CalculateController {
 
         }
         System.out.println(jsonObject.toJSONString());
+        //查询总量，比如轮胎
+        Double d = batchService.getusageByVersion(version, prId);
+        BigDecimal bigDecimal = new BigDecimal(d);
         //初始化14个对象
         List<ResultEntity> list = initList(prId);
         //不同阶段进行计算
@@ -138,7 +141,7 @@ public class CalculateController {
             assemble(i, json, list);
             //需要计算不同的原料的子消耗，比如钢帘线、炭黑等
             if (i == 0  || i == 4) {
-                calculateMaterial(i, list, usageStatisticsEntityList);
+                calculateMaterial(i, list, usageStatisticsEntityList, bigDecimal);
             }
         }
         //再分别每个阶段的运输（运输是单独一张表，单独计算）
@@ -146,8 +149,7 @@ public class CalculateController {
         //计算合计
         sumTotal(list);
         //平均计算
-        Double d = batchService.getusageByVersion(version, prId);
-        BigDecimal bigDecimal = new BigDecimal(d);
+
         if (d != null){
             for (ResultEntity resultEntity : list){
                 devide(resultEntity, bigDecimal);
@@ -163,19 +165,19 @@ public class CalculateController {
     }
     public void devide(ResultEntity resultEntity, BigDecimal bigDecimal){
         if (Strings.isNotEmpty(resultEntity.getMaterialStage()))
-        resultEntity.setMaterialStage(toEngineering(new BigDecimal(resultEntity.getMaterialStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
+        resultEntity.setMaterialStage(toEngineering(new BigDecimal(resultEntity.getMaterialStage()).divide(bigDecimal,25, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getProductStage()))
-        resultEntity.setProductStage(toEngineering(new BigDecimal(resultEntity.getProductStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
+        resultEntity.setProductStage(toEngineering(new BigDecimal(resultEntity.getProductStage()).divide(bigDecimal,25, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getUseStage()))
-        resultEntity.setUseStage(toEngineering(new BigDecimal(resultEntity.getUseStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
+        resultEntity.setUseStage(toEngineering(new BigDecimal(resultEntity.getUseStage()).divide(bigDecimal,25, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getSellStage()))
-        resultEntity.setSellStage(toEngineering(new BigDecimal(resultEntity.getSellStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
+        resultEntity.setSellStage(toEngineering(new BigDecimal(resultEntity.getSellStage()).divide(bigDecimal,25, ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getRecoveryStage()))
-        resultEntity.setRecoveryStage(toEngineering(new BigDecimal(resultEntity.getRecoveryStage()).divide(bigDecimal, ROUND_HALF_DOWN)));
+        resultEntity.setRecoveryStage(toEngineering(new BigDecimal(resultEntity.getRecoveryStage()).divide(bigDecimal, 25,ROUND_HALF_DOWN)));
         if (Strings.isNotEmpty(resultEntity.getTotal()))
-            resultEntity.setTotal(toEngineering(new BigDecimal(resultEntity.getTotal()).divide(bigDecimal, ROUND_HALF_DOWN)));
+            resultEntity.setTotal(toEngineering(new BigDecimal(resultEntity.getTotal()).divide(bigDecimal,25, ROUND_HALF_DOWN)));
     }
-    public void calculateMaterial(int i, List<ResultEntity> list, List<UsageStatisticsEntity> usageStatisticsEntityList) {
+    public void calculateMaterial(int i, List<ResultEntity> list, List<UsageStatisticsEntity> usageStatisticsEntityList, BigDecimal bigDecimal) {
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
         Map<String, List<UsageStatisticsEntity>> map = new HashMap<>();
@@ -229,7 +231,7 @@ public class CalculateController {
             UsageStatisticsEntity usageStatisticsEntity = usageStatisticsService.getUsageByParm(paraMap);
 
             System.out.println("---------------------" + usageStatisticsEntity.getMaterialName());
-           divide(json, usageStatisticsEntity.getMaterialUsage());
+           divide(json, bigDecimal);
 
             if (i == 0){
                 //原料阶段
@@ -485,12 +487,11 @@ public class CalculateController {
         }
     }
 
-    public void divide(JSONObject json, double usage){
-        BigDecimal bigDecimal = new BigDecimal(usage);
+    public void divide(JSONObject json, BigDecimal bigDecimal){
 
         for (String key : json.keySet()){
             BigDecimal value = (BigDecimal) json.get(key);
-            BigDecimal newValue = value.divide(bigDecimal, 5, ROUND_HALF_DOWN);
+            BigDecimal newValue = value.divide(bigDecimal, 25, ROUND_HALF_DOWN);
             json.put(key, newValue);
         }
     }
@@ -541,5 +542,9 @@ public class CalculateController {
         System.out.println(toEngineering(new BigDecimal("1.00000000000000000012417")));
         BigDecimal a = new  BigDecimal("0.000051233456", new MathContext(5, RoundingMode.HALF_UP));//构造BigDecimal时指定有效精度
         System.out.println(a.toEngineeringString());
+
+
+
+        System.out.println(toEngineering(new BigDecimal(0.0000001).divide(new BigDecimal(3), 20, ROUND_HALF_DOWN)));
     }
 }
