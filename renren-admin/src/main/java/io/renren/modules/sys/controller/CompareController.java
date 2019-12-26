@@ -67,7 +67,7 @@ public class CompareController {
             for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
                 JSONObject json = (JSONObject) JSONObject.toJSON(usage);
                 JSONArray array1 = new JSONArray();
-                Integer[] arr = new Integer[]{11,12,13,15};
+                Integer[] arr = new Integer[]{11, 12, 13, 15};
                 for (int j : arr) {
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("version", version);
@@ -84,7 +84,7 @@ public class CompareController {
                     array1.add(json1);
                 }
                 //比如钢帘线的运输
-                if(usage.getMaterialId() != 0){
+                if (usage.getMaterialId() != 0) {
                     Map<String, Object> map2 = new HashMap<>();
                     map2.put("version", version);
                     map2.put("userId", getUserId());
@@ -92,7 +92,7 @@ public class CompareController {
                     map2.put("parentId", usage.getMaterialId());
                     map2.put("prId", prId);
                     List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map2);
-                    for (TransportEntity transportEntity : transportEntityList){
+                    for (TransportEntity transportEntity : transportEntityList) {
                         DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
                         transportEntity.setTypeName(dictEntity.getSecondName());
                     }
@@ -117,7 +117,7 @@ public class CompareController {
             map1.put("formId", 14);//运输
             map1.put("prId", prId);
             List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map1);
-            for (TransportEntity transportEntity : transportEntityList){
+            for (TransportEntity transportEntity : transportEntityList) {
                 DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
                 transportEntity.setTypeName(dictEntity.getSecondName());
             }
@@ -126,15 +126,13 @@ public class CompareController {
             jsonArray.add(jsonObject);
 
 
-
-
         }
 
         //第二阶段
         if (1 == 1) {
             JSONObject jsonObject = new JSONObject();
             JSONArray array = new JSONArray();
-            for (int j = 11; j <= 14; j++) {
+            for (int j = 11; j <= 15; j++) {
                 Map<String, Object> map1 = new HashMap<>();
                 map1.put("version", version);
                 map1.put("userId", getUserId());
@@ -163,45 +161,35 @@ public class CompareController {
             map1.put("formId", 14);//运输
             map1.put("prId", prId);
             List<TransportEntity> usageStatisticsEntityList = transportService.getMaterialByBatch(map1);
+            for (TransportEntity transportEntity : usageStatisticsEntityList) {
+                DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
+                transportEntity.setTypeName(dictEntity.getSecondName());
+            }
+
             jsonObject.put("transPortList", usageStatisticsEntityList);
             jsonObject.put("flag", 2);
             jsonArray.add(jsonObject);
         }
         if (3 == 3) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("flag", 3);
-            Map<String, Object> map = new HashMap<>();
-            map.put("version", version);
-            map.put("userId", getUserId());
-            map.put("flag", 3);
-            map.put("parentId", 0);//代表原材料
-            map.put("formId", 10);
-            map.put("prId", prId);
-            List<UsageStatisticsEntity> usageStatisticsEntityList = usageStatisticsService.getMaterialByBatch(map);
-            System.out.println("=====" + usageStatisticsEntityList.size());
             JSONArray array = new JSONArray();
-            for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
-                JSONObject json = (JSONObject) JSONObject.toJSON(usage);
-                JSONArray array1 = new JSONArray();
-                for (int j = 11; j <= 15; j++) {
-                    Map<String, Object> map1 = new HashMap<>();
-                    map1.put("version", version);
-                    map1.put("userId", getUserId());
-                    map1.put("flag", 3);
-                    map1.put("parentId", usage.getMaterialId());//查询原材料下的子材料
-                    map1.put("formId", j);
-                    map1.put("prId", prId);
-                    List<UsageStatisticsEntity> entityList = usageStatisticsService.getMaterialByBatch(map1);
-                    System.out.println(entityList.size() + "=========");
-                    JSONObject json1 = new JSONObject();
-                    json1.put("formId", j);
-                    json1.put("infoList", entityList);
-                    array1.add(json1);
-                }
-                json.put("prNameList", array1);
-                array.add(json);
+            for (int j = 11; j <= 14; j++) {
+                Map<String, Object> map1 = new HashMap<>();
+                map1.put("version", version);
+                map1.put("userId", getUserId());
+                map1.put("flag", 3);
+                map1.put("parentId", 0);
+                map1.put("formId", j);
+                map1.put("prId", prId);
+                List<UsageStatisticsEntity> entityList = usageStatisticsService.getMaterialByBatch(map1);
+                System.out.println(entityList.size() + "=========");
+                JSONObject json1 = new JSONObject();
+                json1.put("formId", j);
+                json1.put("infoList", entityList);
+                array.add(json1);
             }
             jsonObject.put("materialList", array);
+            jsonObject.put("flag", 3);
             jsonArray.add(jsonObject);
         }
         if (4 == 4) {
@@ -219,12 +207,12 @@ public class CompareController {
             JSONArray array = new JSONArray();
             for (UsageStatisticsEntity usage : usageStatisticsEntityList) {
                 JSONObject json = (JSONObject) JSONObject.toJSON(usage);
-                if (json.getInteger("formId") != 10 ){
+                if (json.getInteger("formId") != 10) {
                     array.add(json);
                     continue;
                 }
                 JSONArray array1 = new JSONArray();
-                Integer[] arr = new Integer[]{11,12,13,15};
+                Integer[] arr = new Integer[]{11, 12, 13, 15};
                 for (int j : arr) {
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("version", version);
@@ -241,7 +229,7 @@ public class CompareController {
                     array1.add(json1);
                 }
                 //比如钢帘线的运输
-                if(usage.getMaterialId() != 0){
+                if (usage.getMaterialId() != 0) {
                     Map<String, Object> map2 = new HashMap<>();
                     map2.put("version", version);
                     map2.put("userId", getUserId());
@@ -249,7 +237,7 @@ public class CompareController {
                     map2.put("parentId", usage.getMaterialId());
                     map2.put("prId", prId);
                     List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map2);
-                    for (TransportEntity transportEntity : transportEntityList){
+                    for (TransportEntity transportEntity : transportEntityList) {
                         DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
                         transportEntity.setTypeName(dictEntity.getSecondName());
                     }
@@ -272,7 +260,7 @@ public class CompareController {
             map1.put("formId", 14);//运输
             map1.put("prId", prId);
             List<TransportEntity> transportEntityList = transportService.getMaterialByBatch(map1);
-            for (TransportEntity transportEntity : transportEntityList){
+            for (TransportEntity transportEntity : transportEntityList) {
                 DictEntity dictEntity = dictService.getByseconId(transportEntity.getType());
                 transportEntity.setTypeName(dictEntity.getSecondName());
             }
@@ -340,7 +328,7 @@ public class CompareController {
 
         s = "total";
         reduce(json, s, jsonOld.getString(s), jsonNew.getString(s));
-        s= "average";
+        s = "average";
         reduce(json, s, jsonOld.getString(s), jsonNew.getString(s));
         return json;
     }

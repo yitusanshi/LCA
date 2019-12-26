@@ -10,140 +10,185 @@ function queryData() {
         success: function (result) {
             if (result.code == 0) {
                 var info = result.info;
-                var tr = '';
-                tr += '<thead>';
-                tr += '<tr>';
-                tr += '<th style="width: 120px;text-align: center;">产品名称</th>';
-                tr += '<th style="width: 90px;text-align: center;">阶段名称</th>';
-                tr += '<th style="width: 120px;text-align: center;display: none;">阶段标识</th>';
-                tr += '<th style="width: 120px;text-align: center;display: none;">用户ID</th>';
-                tr += '<th style="width: 120px;text-align: center;display: none;">来源ID</th>';
-                tr += '<th style="width: 120px;text-align: center;display: none;">产品ID</th>';
-                tr += '<th style="width: 120px;text-align: center;display: none;">父类ID</th>';
-                tr += '<th style="width: 200px;text-align: center;">所属过程</th>';
-                tr += '<th style="width: 120px;text-align: center;display: none;">物质ID</th>';
-                tr += '<th style="width: 220px;text-align: center;">物质名称</th>';
-                tr += '<th style="width: 120px;text-align: center;">使用量/消耗量/排放量</th>';
-                tr += '<th style="width: 120px;text-align: center;">单位</th>';
-                tr += '</tr></thead><tbody>';
                 for (var i = 0; i < info.length; i++) {
                     var flag = info[i].flag;
-                    var materialList = info[i].materialList;
                     if (flag == "0") {
-                        var materialList = info[i].materialList;
-                        for (var j = 0; j < materialList.length; j++) {
-                            tr += trHtml("原料阶段", materialList[j], materialList[j].materialName);
-                            /*
-                            * 开始各个物质层了
-                            * */
-                            var prNameList = materialList[j].prNameList;
-                            for (var p = 0; p < prNameList.length; p++) {
-                                var infoList = prNameList[p].infoList;
-                                if (prNameList[p].formId == "11") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += trHtml("原料阶段", infoList[m], materialList[j].materialName + "|原材料消耗");
-                                    }
-                                } else if (prNameList[p].formId == "12") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += trHtml("原料阶段", infoList[m], materialList[j].materialName + "|资源能源消耗");
-                                    }
-                                } else if (prNameList[p].formId == "13") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += trHtml("原料阶段", infoList[m], materialList[j].materialName + "|排放与废气");
-                                    }
-                                } else if (prNameList[p].formId == "14") {
-
-                                } else if (prNameList[p].formId == "15") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += trHtml("原料阶段", infoList[m], materialList[j].materialName + "||包装过程");
-                                    }
-                                } else {
-                                    layer.alert("生命周期阶段数据分类有问题，请联系管理员");
-                                }
-                            }
-
-                        }
-
+                        $("#flagTbody0").html(getHtmlByFlag0(info[i].materialList)[0]);
+                        $("#trantTbody00").html(getHtmlByFlag0(info[i].materialList)[1])
+                        $("#trantTbody0").html(trTranHtml(info[i].transPortList, "-1"));
                     } else if (flag == "1") {
-                        var infoLists = info[i].infoList;
-                        for (var k = 0; k < infoLists.length; k++) {
-                            var formId = infoLists[k].formId;
-                            var infoList = infoLists[k].infoList;
-                            if (formId == "11") {
-                                for (var j = 0; j < infoList.length; j++) {
-                                    tr += trHtml("生产阶段", infoList[j], "原材料消耗");
-                                }
-                            } else if (formId == "12") {
-                                for (var j = 0; j < infoList.length; j++) {
-                                    tr += trHtml("生产阶段", infoList[j], "资源能源消耗");
-                                }
-                            } else if (formId == "13") {
-                                for (var j = 0; j < infoList.length; j++) {
-                                    tr += trHtml("生产阶段", infoList[j], "排放与废气");
-                                }
-                            } else if (formId == "14") {
-
-                            } else if (formId == "15") {
-                                for (var j = 0; j < infoList.length; j++) {
-                                    tr += trHtml("生产阶段", infoList[j], "包装过程");
-                                }
-                            }
-
-                        }
+                        $("#flagTbody1").html(getHtmlByFlag1(info[i].materialList));
                     } else if (flag == "2") {
-
+                        $("#trantTbody2").html(trTranHtml(info[i].transPortList, "-1"));
                     } else if (flag == "3") {
-
+                        $("#flagTbody3").html(getHtmlByFlag1(info[i].materialList));
                     } else if (flag == "4") {
-                        /*
-                        * 回收处理阶段
-                        * */
-                        var materialList = info[i].materialList;
-                        for (var j = 0; j < materialList.length; j++) {
-                            tr += trHtml("回收处理阶段", materialList[j], materialList[j].materialName);
-                            /*
-                            * 开始各个物质层了
-                            * */
-                            var prNameList = materialList[j].prNameList;
-                            for (var p = 0; p < prNameList.length; p++) {
-                                var infoList = prNameList[p].infoList;
-                                if (prNameList[p].formId == "11") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += trHtml("回收处理阶段", infoList[m], materialList[j].materialName + "|原材料消耗");
-                                    }
-                                } else if (prNameList[p].formId == "12") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += trHtml("回收处理阶段", infoList[m], materialList[j].materialName + "|资源能源消耗");
-                                    }
-                                } else if (prNameList[p].formId == "13") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += trHtml("回收处理阶段", infoList[m], materialList[j].materialName + "|排放与废气");
-                                    }
-                                } else if (prNameList[p].formId == "14") {
-
-                                } else if (prNameList[p].formId == "15") {
-                                    for (var m = 0; m < infoList.length; m++) {
-                                        tr += trHtml("回收处理阶段", infoList[m], materialList[j].materialName + "|包装过程");
-                                    }
-                                } else {
-                                    layer.alert("生命周期阶段数据分类有问题，请联系管理员");
-                                }
-                            }
-                        }
-                    } else {
-                        layer.alert("生命周期阶段数据有问题，请联系管理员");
+                        $("#flagTbody4").html(getHtmlByFlag4(info[i].materialList)[0]);
+                        $("#trantTbody44").html(getHtmlByFlag4(info[i].materialList)[1])
+                        $("#trantTbody4").html(trTranHtml(info[i].transPortList, "-1"));
                     }
                 }
-                tr += '</tbody>';
-                $('#designTable').html(tr);
-               /* $("#saveId").css("style.disply", "");*/
-                /*css("style.display":"");*/
             } else {
                 layer.alert(result.msg);
             }
+
         }
     });
 }
+
+
+/*
+* 原料阶段
+* */
+function getHtmlByFlag0(materialList) {
+    var tr = "";
+    var transTr = "";
+    for (var i = 0; i < materialList.length; i++) {
+        tr += trHtml(materialList[i].materialName, materialList[i], "无");
+        var prNameList = materialList[i].prNameList;
+        for (var j = 0; j < prNameList.length; j++) {
+            var formId = prNameList[j].formId;
+            var infoList = prNameList[j].infoList;
+            if (formId == "11") {
+                for (var m = 0; m < infoList.length; m++) {
+                    tr += trHtml(materialList[i].materialName, infoList[m], "原材料消耗");
+                }
+            } else if (formId == "12") {
+                for (var m = 0; m < infoList.length; m++) {
+                    tr += trHtml(materialList[i].materialName, infoList[m], "资源能源消耗");
+                }
+            } else if (formId == "13") {
+                for (var m = 0; m < infoList.length; m++) {
+                    tr += trHtml(materialList[i].materialName, infoList[m], "排放与废弃");
+                }
+            } else if (formId == "14") {
+                transTr += trTranHtml(infoList, materialList[i].materialName);
+            } else if (formId == "15") {
+                for (var m = 0; m < infoList.length; m++) {
+                    tr += trHtml(materialList[i].materialName, infoList[m], "包装过程");
+                }
+            }
+        }
+    }
+    return [tr, transTr];
+}
+
+/*
+* 生产阶段
+*
+* */
+
+function getHtmlByFlag1(materialList) {
+    var tr = "";
+    for (var i = 0; i < materialList.length; i++) {
+        var formId = materialList[i].formId;
+        var infoList = materialList[i].infoList;
+        if (formId == "12") {
+            for (var m = 0; m < infoList.length; m++) {
+                tr += trHtmlS("无", infoList[m], "资源能源消耗");
+            }
+        } else if (formId == "13") {
+            for (var m = 0; m < infoList.length; m++) {
+                tr += trHtmlS("无", infoList[m], "排放与废弃");
+            }
+        } else if (formId == "15") {
+            for (var m = 0; m < infoList.length; m++) {
+                tr += trHtmlS("无", infoList[m], "包装过程");
+            }
+        }
+    }
+    return tr;
+}
+
+
+/*
+* 回收处理阶段
+* */
+function getHtmlByFlag4(materialList, materialName) {
+    var tr = "";
+    var transTr = "";
+    for (var i = 0; i < materialList.length; i++) {
+        tr += trHtml(materialList[i].materialName, materialList[i], "无");
+        if (materialList[i].formId == "10") {
+            var prNameList = materialList[i].prNameList;
+            for (var j = 0; j < prNameList.length; j++) {
+                var formId = prNameList[j].formId;
+                var infoList = prNameList[j].infoList;
+                if (formId == "11") {
+                    for (var m = 0; m < infoList.length; m++) {
+                        tr += trHtml(materialList[i].materialName, infoList[m], "原材料消耗");
+                    }
+                } else if (formId == "12") {
+                    for (var m = 0; m < infoList.length; m++) {
+                        tr += trHtml(materialList[i].materialName, infoList[m], "资源能源消耗");
+                    }
+                } else if (formId == "13") {
+                    for (var m = 0; m < infoList.length; m++) {
+                        tr += trHtml(materialList[i].materialName, infoList[m], "排放与废弃");
+                    }
+                } else if (formId == "14") {
+                    transTr += trTranHtml(infoList, materialList[i].materialName);
+                } else if (formId == "15") {
+                    for (var m = 0; m < infoList.length; m++) {
+                        tr += trHtml(materialList[i].materialName, infoList[m], "包装过程");
+                    }
+                }
+            }
+        }
+    }
+    return [tr, transTr];
+}
+
+function trTranHtml(objInfos, materialName) {
+    var tr = "";
+    for (var i = 0; i < objInfos.length; i++) {
+        var objInfo = objInfos[i];
+        tr += '<tr>';
+        tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + objInfo.prName + '"></td>';
+        if (materialName != "-1") {
+            console.log("9999" + "===" + materialName);
+            tr += '<td><input id="fmaterialName" class="noBorder" name="fmaterialName" style="width: 120px;" readonly="readonly" value="' + materialName + '"></td>';
+        }
+        ;
+        tr += '<td><input id="materialName" class="noBorder" name="materialName" style="width: 120px;" readonly="readonly" value="' + objInfo.materialName + '"></td>';
+        tr += '<td><input id="typeName" class="noBorder" name="typeName" style="width: 120px;" readonly="readonly" value="' + objInfo.typeName + '"></td>';
+        tr += '<td><input id="distance" class="noBorder" type="text" name="distance" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + objInfo.distance + '"></td>';
+        tr += '<td><input id="weight" class="noBorder" type="text" name="weight" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + objInfo.weight + '"></td>';
+        tr += '<td><input id="source" class="noBorder" name="source" style="width: 120px;" readonly="readonly" value="' + objInfo.source + '"></td>';
+        tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + objInfo.flag + '"></td>';
+        tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + objInfo.userId + '"></td>';
+        tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + objInfo.prId + '"></td>';
+        tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + objInfo.parentId + '"></td>';
+        tr += '<td style="display: none"><input id="type" class="noBorder" name="type" style="width: 120px;display: none" readonly="readonly" value="' + objInfo.type + '"></td>';
+        tr += "</tr>";
+    }
+    console.log(tr);
+    return tr;
+
+
+}
+
+/*生产阶段*/
+function trHtmlS(stageName, objInfo, materialNames) {
+    var tr = "";
+    tr += "<tr>"
+    tr += '<td><input id="prName" class="noBorder" name="prName" style="width: 120px;" readonly="readonly" value="' + objInfo.prName + '"></td>';
+    tr += '<td style="display: none"><input id="flag" class="noBorder" name="flag" style="display: none" value="' + objInfo.flag + '"></td>';
+    tr += '<td style="display: none"><input id="userId" class="noBorder" name="userId" style="display: none" value="' + objInfo.userId + '"></td>';
+    tr += '<td style="display: none"><input id="formId" class="noBorder" name="formId" style="display: none" value="' + objInfo.formId + '"></td>';
+    tr += '<td style="display: none"><input id="prId" class="noBorder" name="prId" style="display: none" value="' + objInfo.prId + '"></td>';
+    tr += '<td style="display: none"><input id="parentId" class="noBorder" name="parentId" style="display: none" value="' + objInfo.parentId + '"></td>';
+    tr += '<td><input id="fmaterialName" class="noBorder" type="text" name="fmaterialName" style="width: 200px;" readonly="readonly" value="' + materialNames + '"></td>';
+    tr += '<td style="display: none"><input id="materialId" class="noBorder" name="materialId" style="display: none" value="' + objInfo.materialId + '"></td>';
+    tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 220px;" readonly="readonly" value="' + objInfo.materialName + '"></td>';
+    tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + objInfo.materialUsage + '"></td>';
+    tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + objInfo.unit + '"></td>';
+    tr += '<td style="display: none"><input id="sourceFlag" class="noBorder" name="sourceFlag" style="display: none" value="' + objInfo.sourceFlag + '"></td>';
+
+    tr += "</tr>"
+    return tr;
+}
+
 
 function trHtml(stageName, objInfo, materialNames) {
     var tr = "";
@@ -160,6 +205,8 @@ function trHtml(stageName, objInfo, materialNames) {
     tr += '<td><input id="materialName"  class="noBorder" name="materialName" style="width: 220px;" readonly="readonly" value="' + objInfo.materialName + '"></td>';
     tr += '<td><input id="materialUsage" class="noBorder" type="text" name="materialUsage" style="width: 120px;" onkeyup="value=value.replace(/[^\\d{1,}\\.\\d{1,}|\\d{1,}]/g,\'\')" value="' + objInfo.materialUsage + '"></td>';
     tr += '<td><input id="unit" type="text" class="noBorder" name="unit" style="width: 120px;" readonly="readonly" value="' + objInfo.unit + '"></td>';
+    tr += '<td style="display: none"><input id="sourceFlag" class="noBorder" name="sourceFlag" style="display: none" value="' + objInfo.sourceFlag + '"></td>';
+
     tr += "</tr>"
     return tr;
 }
@@ -309,6 +356,16 @@ $.fn.serializeObject = function () {
 };
 
 function saveData() {
+    if (vm.prSelect == "-1") {
+        alert("请选择产品进行保存！")
+        return;
+    }
+    if (vm.bNo == "-1") {
+        alert("请选择产品版本进行保存！")
+        return;
+    }
+
+
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
@@ -322,7 +379,36 @@ function saveData() {
                 "batchNo": vm.bNo,
                 "prUsage": vm.bUsage,
                 "prUnit": vm.bUnit,
-                "datas": JSON.stringify($('#designId').serializeObject())
+                "prId": vm.prSelect,
+                /*
+                * 原料阶段
+                * */
+                "flagForm0": JSON.stringify($('#flagForm0').serializeObject()),
+                "trantForm0": JSON.stringify($('#trantForm0').serializeObject()),
+                "trantForm00":JSON.stringify($('#trantForm00').serializeObject()),
+
+
+                /*
+                * 生产阶段
+                * */
+                "flagForm1": JSON.stringify($('#flagForm1').serializeObject()),
+
+                /*
+                * 销售阶段
+                * */
+                "trantForm2": JSON.stringify($('#trantForm2').serializeObject()),
+
+                /*
+                * 使用阶段
+                * */
+                "flagForm3": JSON.stringify($('#flagForm3').serializeObject()),
+
+                /*
+                * 回收阶段
+                * */
+                "flagForm4": JSON.stringify($('#flagForm4').serializeObject()),
+                "trantForm44": JSON.stringify($('#trantForm44').serializeObject()),
+                "trantForm4": JSON.stringify($('#trantForm4').serializeObject())
             };
             $.ajax({
                 type: "POST",
@@ -344,30 +430,3 @@ function saveData() {
     });
 
 }
-
-/*function mergeCells(data, fieldName, colspan, target) {
-    //声明一个map计算相同属性值在data对象出现的次数和
-    var sortMap = {};
-    for (var i = 0; i < data.length; i++) {
-        for (var prop in data[i]) {
-            if (prop == fieldName) {
-                var key = data[i][prop]
-                if (sortMap.hasOwnProperty(key)) {
-                    sortMap[key] = sortMap[key] * 1 + 1;
-                } else {
-                    sortMap[key] = 1;
-                }
-                break;
-            }
-        }
-    }
-    for (var prop in sortMap) {
-        console.log(prop, sortMap[prop])
-    }
-    var index = 0;
-    for (var prop in sortMap) {
-        var count = sortMap[prop] * 1;
-        $(target).bootstrapTable('mergeCells', {index: index, field: fieldName, colspan: colspan, rowspan: count});
-        index += count;
-    }
-}*/
