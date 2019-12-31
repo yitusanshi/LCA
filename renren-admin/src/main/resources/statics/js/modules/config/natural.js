@@ -113,6 +113,15 @@ function outData() {
 }
 
 
+function validation(value, id) {
+    var regu = /^(\-|\+)?\d+(\.\d+)?$/;
+    if (!regu.test(value)) {
+        $("#" + id).val("");
+        alert("请输入正确的背景因子值（eg:0.00或者-0.00）");
+    }
+}
+
+
 var vm = new Vue({
     el: '#rrapp',
     data: {

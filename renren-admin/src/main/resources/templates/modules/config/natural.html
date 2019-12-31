@@ -74,8 +74,7 @@
                     <label class="layui-form-label" style="width: 250px;">初级能源消耗(PED)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg1" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^-\d.]/g,'')">
-                        <!-- onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">-->
+                               onblur="validation(this.value,'bg1')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -91,7 +90,7 @@
                     <label class="layui-form-label" style="width: 250px;">非生物资源消耗(ADP elements)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg2" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg2')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -107,7 +106,7 @@
                     <label class="layui-form-label" style="width: 250px;">水资源消耗(WU)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg3" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg3')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -122,8 +121,9 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: 250px;">全球变暖(不含生物炭)(GWP)</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="secondName" id="bg4" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                        <input type="text" name="secondName" id="bg4" class="layui-input"
+                               placeholder="背景因子值(eg:0.00|-0.00)"
+                               onblur="validation(this.value,'bg4')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -139,7 +139,7 @@
                     <label class="layui-form-label" style="width: 250px;">臭氧层消耗(ODP)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg5" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg5')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -155,7 +155,7 @@
                     <label class="layui-form-label" style="width: 250px;">酸化(AP)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg6" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg6')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -171,7 +171,7 @@
                     <label class="layui-form-label" style="width: 250px;">可吸入颗粒物</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg7" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg7')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -187,7 +187,7 @@
                     <label class="layui-form-label" style="width: 250px;">光化学烟雾(POCP)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg8" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg8')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -204,7 +204,7 @@
                     <label class="layui-form-label" style="width: 250px;">光化学臭氧合成(POFP)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg9" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg9')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -220,7 +220,7 @@
                     <label class="layui-form-label" style="width: 250px;">富营养化(EP)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg10" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg10')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -237,7 +237,7 @@
                     <label class="layui-form-label" style="width:250px;">生态毒性</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg11" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg11')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -253,7 +253,7 @@
                     <label class="layui-form-label" style="width: 250px;">人体毒性(HTP)</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg12" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg12')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -269,7 +269,7 @@
                     <label class="layui-form-label" style="width: 250px;">人体毒性-致癌</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg13" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg13')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -285,7 +285,7 @@
                     <label class="layui-form-label" style="width: 250px;">人体毒性-非致癌</label>
                     <div class="layui-input-inline">
                         <input type="text" name="secondName" id="bg14" class="layui-input" placeholder="背景因子值(eg:0.00)"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bg14')">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -320,7 +320,7 @@
                     <div class="col-sm-2 control-label">特征化值</div>
                     <div class="col-sm-8 layui-form">
                         <input type="text" class="form-control" id="bgFactor"
-                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                               onblur="validation(this.value,'bgFactor')">
                     </div>
                 </div>
                 <div class="form-group">
@@ -337,8 +337,6 @@
 <script>
     layui.use('form', function () {
         var form = layui.form;
-
-        //各种基于事件的操作，下面会有进一步介绍
     });
 </script>
 
