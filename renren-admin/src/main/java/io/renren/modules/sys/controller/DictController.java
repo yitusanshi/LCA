@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("sys/lcadict")
-public class DictController {
+public class DictController extends AbstractController {
     @Resource
     private DictServiceImpl dictService;
 
@@ -46,6 +47,8 @@ public class DictController {
     //@RequiresPermissions("sys:lcadict:list")
     public R list(@RequestParam Map<String, Object> params) {
         System.out.println(111111);
+        System.out.println("用户ID是:" + getUserId());
+        params.put("userId", getUserId());
         PageUtils page = dictService.queryPage(params);
         return R.ok().put("page", page);
     }
@@ -101,21 +104,26 @@ public class DictController {
 
         return R.ok();
     }
+
     /*
-    * 根据typeid查询
-    * */
+     * 根据typeid查询
+     * */
     @RequestMapping("/query/{typeId}")
     @RequiresPermissions("sys:lcadict:info")
     public R query(@PathVariable("typeId") Integer typeId) {
-        System.out.println("-----"+ typeId);
-        SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
-        Long userid = userEntity.getUserId();
-        List<DictEntity> list = dictService.quertByTypeId(typeId);
+        System.out.println("-----" + typeId);
+        Long userid = getUserId();
+        List<DictEntity> list = new ArrayList<DictEntity>();
+        if (userid == 1 || typeId == 4) {
+            list = dictService.quertByTypeId(typeId);
+        } else {
+            list = dictService.quertByTypeAndUserId(typeId, userid);
+        }
         //保持和前端同步
         return R.ok().put("dictList", list);
     }
 
-/*    *//*
+    /*    *//*
      * 根据typeid查询
      * *//*
     @RequestMapping("/listDict")

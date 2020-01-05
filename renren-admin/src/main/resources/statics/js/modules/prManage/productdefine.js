@@ -3,17 +3,13 @@ $(function () {
         url: baseURL + 'sys/productdefine/list',
         datatype: "json",
         colModel: [
-            {label: '序号', name: 'id', index: 'id', width: 50, key: true},
+            {label: '序号', name: 'id', index: 'id', width: 50, key: true, hidden: true},
             {label: '产品名称', name: 'prName', index: 'pr_name', width: 80},
             {label: '公司名称', name: 'companyName', index: 'company_name', width: 80},
             {label: '所属行业', name: 'industryName', index: 'second_name', width: 80},
             {label: '系统边界', name: 'systemBoundaryName', index: 'system_boundary', width: 80},
-            /*{ label: '规则型号', name: 'modelType', index: 'model_type', width: 80 }, */
-            /*{ label: '产品类别', name: 'productType', index: 'product_type', width: 80 },
-            { label: '形状与形态', name: 'shape', index: 'shape', width: 80 }, 	*/
             {label: '功能单位', name: 'functionUnit', index: 'function_unit', width: 40},
             {label: '评价数量', name: 'evalNum', index: 'eval_num', width: 50},
-
             {label: '评价年份', name: 'year', index: 'year', width: 50},
             {label: '创建时间', name: 'insertTime', index: 'insert_time', width: 100}
         ],
@@ -44,18 +40,19 @@ $(function () {
     });
 
 });
+
 function getSelectedProductRow() {
     var grid = $("#jqGrid");
     var rowKey = grid.getGridParam("selrow");
-    if(!rowKey){
+    if (!rowKey) {
         alert("请选择一条记录");
-        return ;
+        return;
     }
 
     var selectedIDs = grid.getGridParam("selarrrow");
-    if(selectedIDs.length > 1){
+    if (selectedIDs.length > 1) {
         alert("只能选择一条记录");
-        return ;
+        return;
     }
     console.log("data", selectedIDs[0]);
     console.log("data", grid.getCell(selectedIDs[0], "id"));
@@ -67,9 +64,9 @@ function getSelectedProductRow() {
 function getSelectedProductRows() {
     var grid = $("#jqGrid");
     var rowKey = grid.getGridParam("selrow");
-    if(!rowKey){
+    if (!rowKey) {
         alert("请选择一条记录");
-        return ;
+        return;
     }
     var selectedIDs = grid.getGridParam("selarrrow");
     var ids = new Array();

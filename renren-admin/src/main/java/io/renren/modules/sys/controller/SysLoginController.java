@@ -81,10 +81,7 @@ public class SysLoginController {
         } catch (IncorrectCredentialsException e) {
             return R.error("账号或密码不正确");
         } catch (LockedAccountException e) {
-            return R.error("" +
-                    "账号未激活,请联系管理员激活" +
-                    "联系人：张吉春           " +
-                    "电话：13521606046       ");
+            return R.error("账号未激活,请联系管理员激活");
         } catch (AuthenticationException e) {
             return R.error("账户验证失败");
         }

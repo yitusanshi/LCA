@@ -29,7 +29,12 @@ public interface DictDao extends BaseMapper<DictEntity> {
     Integer saveDict(DictEntity dictEntity);
 
     List<DictEntity> quertByTypeId(@Param("typeId") int typeId);
+
+    List<DictEntity> quertByTypeAndUserId(@Param("typeId") int typeId, @Param("userId") long userId);
+
     int querySystemBoundry(int prid);
+
     List<DictEntity> query(Map<String, Object> map);
+
     int maxSecondId();
 }

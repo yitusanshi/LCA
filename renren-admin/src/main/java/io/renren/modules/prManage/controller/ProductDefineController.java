@@ -56,6 +56,7 @@ public class ProductDefineController extends AbstractController {
         for (Map.Entry<String, Object> en : s) {
             System.out.println(en.getKey() + "," + en.getValue());
         }
+
         PageUtils page = productDefineService.queryPage(params);
 
         return R.ok().put("page", page);

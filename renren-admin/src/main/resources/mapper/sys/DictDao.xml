@@ -14,7 +14,10 @@
         <result property="unit" column="unit"/>
     </resultMap>
     <select id="getQueryList" parameterType="java.util.HashMap" resultMap="dictMap">
-        SELECT * FROM dict WHERE type_id = #{typeid} AND user_id = #{userid}
+        SELECT * FROM dict WHERE type_id = #{typeid}
+        <if test='userid gt 1'>
+            AND user_id = #{userid}
+        </if>
     </select>
     <select id="getByseconId" parameterType="java.lang.Integer" resultMap="dictMap">
         SELECT * FROM dict WHERE second_id = #{0}
@@ -54,5 +57,8 @@
     </select>
     <select id="maxSecondId" resultType="java.lang.Integer">
         SELECT MAX(second_id) FROM dict
+    </select>
+    <select id="quertByTypeAndUserId" resultType="io.renren.modules.sys.entity.DictEntity">
+         SELECT * FROM dict WHERE type_id = #{typeId} and user_id=#{userId}
     </select>
 </mapper>

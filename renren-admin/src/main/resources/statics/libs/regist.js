@@ -55,7 +55,7 @@ function submits() {
         success: function (result) {
             console.log(result.code);
             if (result.code == "0") {
-                alert("用户注册成功，联系管理员激活！");
+                alert("用户注册成功，联系管理员激活!\n联系人：张经理\n联系手机：13521606046\n联系电话：010-68588528-102\n联系邮箱：zhang.jichun@kejicc.com");
             } else {
                 alert(result.msg);
             }

@@ -79,7 +79,7 @@
 <script src="${request.contextPath}/statics/libs/app.js"></script>
 <script type="text/javascript">
     function showTel() {
-        alert("联系人：张吉春\n联系电话：13521606046");
+        alert("联系人：张经理\n联系手机：13521606046\n联系电话：010-68588528-102\n联系邮箱：zhang.jichun@kejicc.com");
     }
 
     var vm = new Vue({
@@ -113,7 +113,15 @@
                             parent.location.href = 'index.html';
                         } else {
                             vm.error = true;
-                            vm.errorMsg = result.msg;
+                            if (result.msg.indexOf("账号未激活") != -1) {
+                                alert("用户注册成功，联系管理员激活!\n联系人：张经理\n联系手机：13521606046\n联系电话：010-68588528-102\n联系邮箱：zhang.jichun@kejicc.com");
+                                vm.errorMsg = result.msg;
+                                /*
+                                                                vm.errorMsg = "用户注册成功，联系管理员激活! \n 联系人：张经理 \n 联系手机：13521606046 \n 联系电话：010-68588528-102 \n 联系邮箱：zhang.jichun@kejicc.com";
+                                */
+                            } else {
+                                vm.errorMsg = result.msg;
+                            }
                             vm.refreshCode();
                         }
                     }

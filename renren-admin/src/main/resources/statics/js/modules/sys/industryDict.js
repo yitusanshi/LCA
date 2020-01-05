@@ -3,7 +3,7 @@ $(function () {
         url: baseURL + 'sys/lcadict/list',
         datatype: "json",
         colModel: [
-            {label: '序号', name: 'secondId', index: 'second_id', width: 80},
+            {label: '序号', name: 'secondId', index: 'second_id', width: 80, hidden: true},
             {label: '行业名称', name: 'secondName', index: 'second_name', width: 80},
             {label: '添加时间', name: 'createdTime', index: 'created_time', width: 80},
             {label: '备注', name: 'desc', index: 'desc', width: 80}
@@ -16,7 +16,7 @@ $(function () {
         rownumWidth: 25,
         autowidth: true,
         multiselect: true,
-        postData:{'typeid': '1'},
+        postData: {'typeid': '1'},
         pager: "#jqGridPager",
         jsonReader: {
             root: "page.list",
@@ -40,15 +40,15 @@ $(function () {
 function getSelectedDictRow() {
     var grid = $("#jqGrid");
     var rowKey = grid.getGridParam("selrow");
-    if(!rowKey){
+    if (!rowKey) {
         alert("请选择一条记录");
-        return ;
+        return;
     }
 
     var selectedIDs = grid.getGridParam("selarrrow");
-    if(selectedIDs.length > 1){
+    if (selectedIDs.length > 1) {
         alert("只能选择一条记录");
-        return ;
+        return;
     }
     console.log("data", selectedIDs[0]);
     console.log("data", grid.getCell(selectedIDs[0], "secondId"));
@@ -60,9 +60,9 @@ function getSelectedDictRow() {
 function getSelectedDictRows() {
     var grid = $("#jqGrid");
     var rowKey = grid.getGridParam("selrow");
-    if(!rowKey){
+    if (!rowKey) {
         alert("请选择一条记录");
-        return ;
+        return;
     }
     var selectedIDs = grid.getGridParam("selarrrow");
     var ids = new Array();
@@ -92,7 +92,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.dict = {
-                typeId : 1
+                typeId: 1
             };
         },
         update: function (event) {

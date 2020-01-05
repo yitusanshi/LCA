@@ -28,12 +28,16 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         Integer typeid = Integer.valueOf((String) params.get("typeid"));
+/*
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
-        Long userid = userEntity.getUserId();
+*/
+        Long userid = Long.valueOf(params.get("userId").toString());
         IPage<DictEntity> page = new Query<DictEntity>().getPage(params);
-
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userid", userid);
+        System.out.println("用户id是：" + userid + "==" + typeid);
+        if (userid != 1) {
+            map.put("userid", userid);
+        }
         map.put("typeid", typeid);
         List<DictEntity> list = dictDao.getQueryList(map);
         page.setRecords(list);
@@ -64,6 +68,10 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
 
     public List<DictEntity> quertByTypeId(int typeId) {
         return dictDao.quertByTypeId(typeId);
+    }
+
+    public List<DictEntity> quertByTypeAndUserId(int typeId, long userId) {
+        return dictDao.quertByTypeAndUserId(typeId, userId);
     }
 
     public int querySystemBoundry(int prid) {
