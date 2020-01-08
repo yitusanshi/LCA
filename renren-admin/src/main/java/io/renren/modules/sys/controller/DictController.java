@@ -114,10 +114,10 @@ public class DictController extends AbstractController {
         System.out.println("-----" + typeId);
         Long userid = getUserId();
         List<DictEntity> list = new ArrayList<DictEntity>();
-        if (userid == 1 || typeId == 4) {
-            list = dictService.quertByTypeId(typeId);
-        } else {
+        if (typeId == 1 && userid != 1) {
             list = dictService.quertByTypeAndUserId(typeId, userid);
+        } else {
+            list = dictService.quertByTypeId(typeId);
         }
         //保持和前端同步
         return R.ok().put("dictList", list);
