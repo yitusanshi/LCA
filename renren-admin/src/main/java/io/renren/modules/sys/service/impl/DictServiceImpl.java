@@ -35,11 +35,18 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
         IPage<DictEntity> page = new Query<DictEntity>().getPage(params);
         HashMap<String, Object> map = new HashMap<>();
         System.out.println("用户id是：" + userid + "==" + typeid);
+
+
         if (userid != 1) {
             map.put("userid", userid);
         }
         map.put("typeid", typeid);
+        map.put("page", params.get("page"));
+
+
         List<DictEntity> list = dictDao.getQueryList(map);
+
+
         page.setRecords(list);
         return new PageUtils(page);
     }
