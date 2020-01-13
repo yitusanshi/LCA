@@ -4,7 +4,7 @@ spring:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
       # url: jdbc:mysql://139.129.103.57:3306/renren_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
-      url: jdbc:mysql://127.0.0.1:3306/renren_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+      url: jdbc:mysql://127.0.0.1:3306/renren_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
 
       username: root
       password: bjkj2019
