@@ -44,6 +44,14 @@ function outData() {
 
 
 function queryResylt() {
+    if (vm.prSelect == "-1") {
+        alert("请选择产品");
+        return;
+    }
+    if (vm.batchSelect == "-1") {
+        alert("请选择批次号");
+        return;
+    }
     $.ajax({
         type: "POST",
         url: baseURL + "calculate/info",
@@ -89,6 +97,7 @@ function queryResylt() {
                 tr += '<th colspan="1" style="width: 150px;text-align: center;">销售阶段</th>';
                 tr += '<th colspan="1" style="width: 150px;text-align: center;">使用阶段</th>';
                 tr += '<th colspan="1" style="width: 150px;text-align: center;">回收处理阶段</th>';
+                tr += '<th colspan="1" style="width: 150px;text-align: center;">图表展示</th>';
                 tr += '</tr></thead><tbody>';
                 for (var i = 0; i < resultCal.length; i++) {
                     tr += "<tr>";
@@ -101,7 +110,11 @@ function queryResylt() {
                     tr += "<td style='width: 150px;'>" + converDate(resultCal[i].sellStage) + "</td>";
                     tr += "<td style='width: 150px;'>" + converDate(resultCal[i].useStage) + "</td>";
                     tr += "<td style='width: 150px;'>" + converDate(resultCal[i].recoveryStage) + "</td>";
-
+                    /*
+                    tr += '<th colspan="1" style="width: 150px;text-align: center;"><button class="btn btn-primary btn-xs"  data-toggle="modal" data-target="#showDetail">详情</button></th>';
+                    */
+                    /*var param = */
+                    tr += "<th colspan='1' style='width: 150px;text-align: center;'><button class='btn btn-primary btn-xs' onclick='showTableData1(\"" + resultCal[i].productName + "\",\"" + resultCal[i].typeName + "\",\"" + converDate(resultCal[i].materialStage) + "\",\"" + converDate(resultCal[i].productStage) + "\",\"" + converDate(resultCal[i].sellStage) + "\",\"" + converDate(resultCal[i].useStage) + "\",\"" + converDate(resultCal[i].recoveryStage) + "\")'>详情</button></th>";
                     if (materNames.length > 0) {
                         showTable += '<tr>';
                         showTable += '<td style="width: 150px;">' + resultCal[i].typeName + '</td>';
@@ -126,6 +139,62 @@ function queryResylt() {
     });
 }
 
+function showTableData1(productName, typeName, materialStage, productStage, sellStage, useStage, recoveryStage) {
+    /*
+        alert(productName + "==" + typeName + materialStage + "==" + productStage + "==" + sellStage + "==" + useStage + "==" + recoveryStage);
+    */
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('showDetailId'));
+    console.log(myChart);
+    var option = {
+        title: {
+            text: productName + "图表展示",
+            subtext: "影响类型：" + typeName,
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['原料阶段', '生产阶段', '销售阶段', '使用阶段', '回收处理阶段']
+        },
+        series: [
+            {
+                name: typeName,
+                type: 'pie',
+                radius: '45%',
+                center: ['45%', '50%'],
+                data: [
+                    {value: materialStage, name: '原料阶段'},
+                    {value: productStage, name: '生产阶段'},
+                    {value: sellStage, name: '销售阶段'},
+                    {value: useStage, name: '使用阶段'},
+                    {value: recoveryStage, name: '回收处理阶段'}
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-molv',
+        title: "LCA生命周期阶段占比图表显示",
+        area: ['550px', '450px'],
+        shadeClose: false,
+        content: jQuery("#showEchart")
+    })
+}
 var vm = new Vue({
     el: '#rrapp',
     data: {
