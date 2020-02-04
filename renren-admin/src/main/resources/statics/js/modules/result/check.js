@@ -22,6 +22,23 @@ function converDate(data) {
 
 }
 
+function converData(data) {
+    var dataToStr = 0;
+    if (data == null || data == "" || data == "0E0" || data == "0.0000") {
+        dataToStr = 0;
+    } else {
+        /*if (data < 0) {
+            alert("小于0");
+            console.log("小于0000000000000000");
+            dataToStr = data * (-1);
+            console.log(dataToStr);
+        }*/
+        dataToStr = Math.abs(data);
+    }
+    return dataToStr;
+
+}
+
 function outData() {
     if (vm.prSelect == "-1") {
         alert("请选择产品");
@@ -114,7 +131,7 @@ function queryResylt() {
                     tr += '<th colspan="1" style="width: 150px;text-align: center;"><button class="btn btn-primary btn-xs"  data-toggle="modal" data-target="#showDetail">详情</button></th>';
                     */
                     /*var param = */
-                    tr += "<th colspan='1' style='width: 150px;text-align: center;'><button class='btn btn-primary btn-xs' onclick='showTableData1(\"" + resultCal[i].productName + "\",\"" + resultCal[i].typeName + "\",\"" + converDate(resultCal[i].materialStage) + "\",\"" + converDate(resultCal[i].productStage) + "\",\"" + converDate(resultCal[i].sellStage) + "\",\"" + converDate(resultCal[i].useStage) + "\",\"" + converDate(resultCal[i].recoveryStage) + "\")'>详情</button></th>";
+                    tr += "<th colspan='1' style='width: 150px;text-align: center;'><button class='btn btn-primary btn-xs' onclick='showTableData1(\"" + resultCal[i].productName + "\",\"" + resultCal[i].typeName + "\",\"" + converData(resultCal[i].materialStage) + "\",\"" + converData(resultCal[i].productStage) + "\",\"" + converData(resultCal[i].sellStage) + "\",\"" + converData(resultCal[i].useStage) + "\",\"" + converData(resultCal[i].recoveryStage) + "\")'>详情</button></th>";
                     if (materNames.length > 0) {
                         showTable += '<tr>';
                         showTable += '<td style="width: 150px;">' + resultCal[i].typeName + '</td>';
@@ -140,16 +157,14 @@ function queryResylt() {
 }
 
 function showTableData1(productName, typeName, materialStage, productStage, sellStage, useStage, recoveryStage) {
-    /*
-        alert(productName + "==" + typeName + materialStage + "==" + productStage + "==" + sellStage + "==" + useStage + "==" + recoveryStage);
-    */
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('showDetailId'));
     console.log(myChart);
     var option = {
         title: {
-            text: productName + "图表展示",
-            subtext: "影响类型：" + typeName,
+            text: typeName,
+            /*text: productName + "图表展示",
+            subtext: "影响类型：" + typeName,*/
             left: 'center'
         },
         tooltip: {
@@ -166,7 +181,7 @@ function showTableData1(productName, typeName, materialStage, productStage, sell
                 name: typeName,
                 type: 'pie',
                 radius: '45%',
-                center: ['45%', '50%'],
+                center: ['55%', '55%'],
                 data: [
                     {value: materialStage, name: '原料阶段'},
                     {value: productStage, name: '生产阶段'},
@@ -174,6 +189,20 @@ function showTableData1(productName, typeName, materialStage, productStage, sell
                     {value: useStage, name: '使用阶段'},
                     {value: recoveryStage, name: '回收处理阶段'}
                 ],
+                label: {
+                    formatter: '{b}: {d}%'
+                },
+                /*   label:{            //饼图图形上的文本标签
+                       normal:{
+                           show:true,
+                           position:'inner', //标签的位置
+                           textStyle : {
+                               fontWeight : 300 ,
+                               fontSize : 16    //文字的字体大小
+                           },
+                           formatter:'{d}%'
+                       }
+                   },*/
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -189,12 +218,17 @@ function showTableData1(productName, typeName, materialStage, productStage, sell
     layer.open({
         type: 1,
         skin: 'layui-layer-molv',
-        title: "LCA生命周期阶段占比图表显示",
+        title: productName + "LCA",
         area: ['550px', '450px'],
         shadeClose: false,
         content: jQuery("#showEchart")
     })
 }
+
+function showHelp() {
+    alert("说明：若环境影响类型中某个或者多个阶段的影响数值为负值，则饼图中对应的该阶段影响占比由该阶段影响数值的绝对值计算得出。");
+}
+
 var vm = new Vue({
     el: '#rrapp',
     data: {
