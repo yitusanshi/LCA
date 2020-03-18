@@ -54,7 +54,7 @@ public class ProductDefineController extends AbstractController {
         Set<Map.Entry<String, Object>> s = params.entrySet();
         Set<String> r = params.keySet();
         for (Map.Entry<String, Object> en : s) {
-            System.out.println(en.getKey() + "," + en.getValue());
+            System.out.println("获得的结果是：====" + en.getKey() + "," + en.getValue());
         }
 
         PageUtils page = productDefineService.queryPage(params);
@@ -100,10 +100,33 @@ public class ProductDefineController extends AbstractController {
         dictEntity.setSecondName(productDefine.getCompanyName());
         int id = dictService.saveDict(dictEntity);
         productDefine.setIndustryId(id);*/
+        System.out.println("开始校验产品信息。。。。");
+        if (productDefine.getPrName() == null || "".equals(productDefine.getPrName())) {
+            return R.error("产品名称不能为空！");
+        }
+        if (productDefine.getCompanyName() == null || "".equals(productDefine.getCompanyName())) {
+            return R.error("产品企业名称不能为空！");
+        }
+        if (productDefine.getIndustryId() == null || "".equals(productDefine.getIndustryId())) {
+            return R.error("产品行业不能为空！");
+        }
+        if (productDefine.getSystemBoundary() == null || "".equals(productDefine.getSystemBoundaryName())) {
+            return R.error("系统边界不能为空！");
+        }
+        if (productDefine.getFunctionUnit() == null || "".equals(productDefine.getFunctionUnit())) {
+            return R.error("功能单位不能为空！");
+        }
+        if (productDefine.getYear() == null || "".equals(productDefine.getYear())) {
+            return R.error("产品评价年份不能为空！");
+        }
+        System.out.println("开始存入产品信息。。。");
+
+
         SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         Long userid = userEntity.getUserId();
         productDefine.setUserId(userid);
         productDefineService.save(productDefine);
+        System.out.println("产品信息保存成功。。。。");
         return R.ok();
     }
 

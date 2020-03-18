@@ -31,8 +31,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictDao, SysDictEntity> i
 
         IPage<SysDictEntity> page = this.page(
             new Query<SysDictEntity>().getPage(params),
-            new QueryWrapper<SysDictEntity>()
-                .like(StringUtils.isNotBlank(name),"name", name)
+            new QueryWrapper<SysDictEntity>().like(StringUtils.isNotBlank(name),"name", name)
         );
 
         return new PageUtils(page);

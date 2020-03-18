@@ -45,8 +45,13 @@ public class ProductDefineServiceImpl extends ServiceImpl<ProductDefineDao, Prod
         }
         map.put("prName", prName);
         map.put("industryId", industryId);
+        map.put("page", params.get("page"));
+
+
         IPage<ProductDefineEntity> page = new Query<ProductDefineEntity>().getPage(map);
         List<ProductDefineEntity> list = productDefineDao.getQueryList(map);
+
+
         for (ProductDefineEntity productDefineEntity : list) {
             int i = productDefineEntity.getSystemBoundary();
             DictEntity dictEntity = dictDao.getByseconId(i);

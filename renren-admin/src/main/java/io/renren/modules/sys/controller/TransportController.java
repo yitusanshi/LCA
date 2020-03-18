@@ -77,7 +77,6 @@ public class TransportController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:transport:save")
     public R save(@RequestBody TransportEntity transport) {
-        logger.info("");
         transportService.save(transport);
 
         return R.ok();
@@ -143,11 +142,29 @@ public class TransportController extends AbstractController {
         String version = (String) params.get("batchNo");
         String parentId = (String) params.get("materialId");
         String flag = (String) params.get("flag");
+
         String materialName = (String) params.get("trans_port_name");
         String source = (String) params.get("trans_port_source");
         String type = (String) params.get("trans_port_type");
+
         String distance = (String) params.get("trans_port_distance");
         String weight = (String) params.get("trans_port_weight");
+
+        if (distance == null || "".equals(distance)) {
+            return R.error("运输距离不能为空！");
+        }
+        if (materialName == null || "".equals(materialName)) {
+            return R.error("运输物质名称不能为空！");
+        }
+        if (source == null || "".equals(source)) {
+            return R.error("产地名称不能为空！");
+        }
+        if (weight == null || "".equals(weight)) {
+            return R.error("运输重量不能为空！");
+        }
+        if (type == null || "".equals(type)) {
+            return R.error("运输方式不能为空！");
+        }
         int prId = Integer.valueOf((String) params.get("prId"));
         ProductDefineEntity defineEntity = defineService.getById(prId);
         String prName = defineEntity.getPrName();

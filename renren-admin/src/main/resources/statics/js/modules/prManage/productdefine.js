@@ -123,7 +123,7 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             console.log("123");
-            $('#btnSaveOrUpdate').button('loading').delay(1000).queue(function () {
+            $('#btnSaveOrUpdate').button('loading').delay(100).queue(function () {
                 var url = vm.productDefine.id == null ? "sys/productdefine/save" : "sys/productdefine/update";
                 $.ajax({
                     type: "POST",
@@ -133,7 +133,8 @@ var vm = new Vue({
                     success: function (r) {
                         if (r.code === 0) {
                             layer.msg("操作成功", {icon: 1});
-                            vm.reload();
+                            /*vm.reload();*/
+                            vm.productDefine = {};
                             $('#btnSaveOrUpdate').button('reset');
                             $('#btnSaveOrUpdate').dequeue();
                         } else {
